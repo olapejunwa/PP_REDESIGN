@@ -14,7 +14,7 @@ const Services = () => {
     {
       icon: "/images/7.png",
       title: "OWA by PEPCODE",
-      description: "Comprehensive financial analysis and reporting tools for better business insights.",
+      description: "Helps market women track inventory by converting paper entries into accurate, synced digital records.",
       link: "https://owabypepcode.com.ng/"
     },
     {
