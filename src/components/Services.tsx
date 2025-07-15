@@ -64,7 +64,6 @@ const Services = () => {
                     <img
                       src={service.icon}
                       alt={`${service.title} logo`}
-                      // MODIFIED LINE: Changed object-cover to object-contain
                       className="w-full h-full object-contain transition-transform duration-300"
                       onError={(e) => {
                         console.error(`Failed to load image: ${service.icon}`);
@@ -80,12 +79,12 @@ const Services = () => {
                 ) : (
                   <div className={`w-12 h-12 ${service.color} rounded-lg flex items-center justify-center mb-6 icon-hover-lift group-hover:icon-scale-pulse`}>
                     <service.icon className="w-6 h-6 text-white transition-transform duration-300" />
-                  <service.icon className={`w-6 h-6 text-white transition-transform duration-300 animate-on-hover ${service.animationClass}`} />
+                  </div>
                 )}
                 
                 <h3 className="text-lg font-bold text-gray-900 mb-4">{service.title}</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
-                <service.icon className={`w-6 h-6 text-white transition-transform duration-300 animate-on-hover ${service.animationClass}`} />
+                <div>
                   <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-200">
                     Learn More →
                   </button>
