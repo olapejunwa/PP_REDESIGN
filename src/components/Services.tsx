@@ -7,19 +7,16 @@ const Services = () => {
       icon: "/images/pepcode logo.webp",
       title: "PEPCODE",
       description: "Advanced bookkeeping software designed to simplify your financial management processes.",
-      color: "bg-blue-600"
     },
     {
       icon: "/images/7.png",
       title: "OWA by PEPCODE",
       description: "Comprehensive financial analysis and reporting tools for better business insights.",
-      color: "bg-green-600"
     },
     {
       icon: "/images/auditme.webp",
       title: "AUDITME",
       description: "Fast-tracked audited accounts platform for streamlined compliance and reporting.",
-      color: "bg-purple-600"
     },
     {
       icon: Calculator,
@@ -57,20 +54,20 @@ const Services = () => {
           {services.map((service, index) => (
             <div key={index} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
               <div className="p-8">
-                <div className={`w-12 h-12 ${service.color} rounded-lg flex items-center justify-center mb-6 icon-hover-lift group-hover:icon-scale-pulse`}>
-                  {typeof service.icon === 'string' ? (
-                    <img 
-                      src={service.icon} 
+                {/* MODIFIED LOGIC: Check if the icon is a string (image) or a component */}
+                {typeof service.icon === 'string' ? (
+                  // If it's an image, make it fill the container
+                  <div className="w-12 h-12 rounded-lg mb-6 icon-hover-lift group-hover:icon-scale-pulse overflow-hidden">
+                    <img
+                      src={service.icon}
                       alt={`${service.title} logo`}
-                      className="w-8 h-8 object-contain transition-transform duration-300"
+                      className="w-full h-full object-cover transition-transform duration-300" // <-- KEY CHANGE HERE
                       onError={(e) => {
                         console.error(`Failed to load image: ${service.icon}`);
-                        // Fallback to a default icon or hide the image
-                        const target = e.currentTarget as HTMLImageElement;
+                        const target = e.currentTarget;
                         target.style.display = 'none';
-                        // Show a fallback div with the first letter of the title
                         const fallback = document.createElement('div');
-                        fallback.className = 'w-8 h-8 flex items-center justify-center text-white font-bold text-lg';
+                        fallback.className = `w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 font-bold text-lg`;
                         fallback.textContent = service.title.charAt(0);
                         target.parentNode?.appendChild(fallback);
                       }}
@@ -78,10 +75,14 @@ const Services = () => {
                         console.log(`Successfully loaded: ${service.icon}`);
                       }}
                     />
-                  ) : (
+                  </div>
+                ) : (
+                  // If it's a component, keep the original style with a background color
+                  <div className={`w-12 h-12 ${service.color} rounded-lg flex items-center justify-center mb-6 icon-hover-lift group-hover:icon-scale-pulse`}>
                     <service.icon className="w-6 h-6 text-white transition-transform duration-300" />
-                  )}
-                </div>
+                  </div>
+                )}
+                
                 <h3 className="text-lg font-bold text-gray-900 mb-4">{service.title}</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
                 <div className="mt-6">
