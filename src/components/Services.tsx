@@ -16,7 +16,7 @@ const Services = () => {
       color: "bg-green-600"
     },
     {
-      icon: "/images/auditme-logo.svg",
+      icon: "/images/auditme.webp",
       title: "AUDITME",
       description: "Fast-tracked audited accounts platform for streamlined compliance and reporting.",
       color: "bg-purple-600"
