@@ -16,12 +16,12 @@ const AnimatedTrendingUp: React.FC<AnimatedTrendingUpProps> = ({ className }) =>
     className={className}
   >
     <polyline 
-      className="animate-on-hover animate-draw-line" 
-      style={{ animationDelay: '0.5s' }} 
+      className="animate-draw-line" 
+      style={{ animationDelay: '0.5s' }}
       points="22 7 13.5 15.5 8.5 10.5 2 17" 
     />
     <polyline 
-      className="animate-on-hover animate-draw-arrow" 
+      className="animate-draw-arrow"
       points="16 7 22 7 22 13" 
     />
   </svg>
