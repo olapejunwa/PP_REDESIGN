@@ -4,7 +4,7 @@ import { Calculator, TrendingUp, FileText } from 'lucide-react';
 const Services = () => {
   const services = [
     {
-      icon: "/images/pepcode-logo.svg",
+      icon: "/images/pepcode logo.webp",
       title: "PEPCODE",
       description: "Advanced bookkeeping software designed to simplify your financial management processes.",
       color: "bg-blue-600"
