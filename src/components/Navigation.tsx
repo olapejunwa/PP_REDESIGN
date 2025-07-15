@@ -43,7 +43,7 @@ const Navigation = () => {
   const handleProductMouseLeave = () => {
     const timer = setTimeout(() => {
       setIsProductDropdownOpen(false);
-    }, 5000); // 5-second delay
+    }, 250); // 5-second delay
     setProductCloseTimer(timer);
   };
 
