@@ -29,7 +29,7 @@ const Navigation = () => {
   const handleCompanyMouseLeave = () => {
     const timer = setTimeout(() => {
       setIsCompanyDropdownOpen(false);
-    }, 1000); // 5-second delay
+    }, 250); // 5-second delay
     setCompanyCloseTimer(timer);
   };
 
