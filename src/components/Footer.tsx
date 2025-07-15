@@ -8,8 +8,7 @@ const Footer = () => {
       links: [
         { name: "About Us", href: "#" },
         { name: "Contact", href: "#" },
-        { name: "Careers", href: "#" },
-        { name: "Blog", href: "#" }
+        { name: "Careers", href: "#" }
       ]
     },
     {
@@ -17,28 +16,9 @@ const Footer = () => {
       links: [
         { name: "PEPCODE", href: "#" },
         { name: "OWA by PEPCODE", href: "#" },
-        { name: "AUDITME", href: "#" },
-        { name: "Book-keeping Services", href: "#" }
+        { name: "AUDITME", href: "#" }
       ]
     },
-    {
-      title: "Resources",
-      links: [
-        { name: "Support", href: "#" },
-        { name: "Documentation", href: "#" },
-        { name: "Tutorials", href: "#" },
-        { name: "Community", href: "#" }
-      ]
-    },
-    {
-      title: "Legal",
-      links: [
-        { name: "Terms", href: "#" },
-        { name: "Privacy", href: "#" },
-        { name: "Cookies", href: "#" },
-        { name: "Licenses", href: "#" }
-      ]
-    }
   ];
 
   return (
