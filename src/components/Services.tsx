@@ -4,19 +4,19 @@ import { Calculator, TrendingUp, FileText } from 'lucide-react';
 const Services = () => {
   const services = [
     {
-      icon: "/images/pepcode logo.webp",
+      icon: "/images/pepcode-logo.svg",
       title: "PEPCODE",
       description: "Advanced bookkeeping software designed to simplify your financial management processes.",
       color: "bg-blue-600"
     },
     {
-      icon: "/images/7.png",
+      icon: "/images/owa-logo.svg",
       title: "OWA by PEPCODE",
       description: "Comprehensive financial analysis and reporting tools for better business insights.",
       color: "bg-green-600"
     },
     {
-      icon: "/images/auditme.webp",
+      icon: "/images/auditme-logo.svg",
       title: "AUDITME",
       description: "Fast-tracked audited accounts platform for streamlined compliance and reporting.",
       color: "bg-purple-600"
@@ -62,10 +62,17 @@ const Services = () => {
                     <img 
                       src={service.icon} 
                       alt={`${service.title} logo`}
-                      className="w-8 h-8 object-contain transition-transform duration-300 filter brightness-0 invert"
+                      className="w-8 h-8 object-contain transition-transform duration-300"
                       onError={(e) => {
                         console.error(`Failed to load image: ${service.icon}`);
-                        e.currentTarget.style.display = 'none';
+                        // Fallback to a default icon or hide the image
+                        const target = e.currentTarget as HTMLImageElement;
+                        target.style.display = 'none';
+                        // Show a fallback div with the first letter of the title
+                        const fallback = document.createElement('div');
+                        fallback.className = 'w-8 h-8 flex items-center justify-center text-white font-bold text-lg';
+                        fallback.textContent = service.title.charAt(0);
+                        target.parentNode?.appendChild(fallback);
                       }}
                       onLoad={() => {
                         console.log(`Successfully loaded: ${service.icon}`);
