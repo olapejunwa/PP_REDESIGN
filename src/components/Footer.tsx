@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 
 const Footer = () => {
@@ -6,17 +7,17 @@ const Footer = () => {
     {
       title: "Company",
       links: [
-        { name: "About Us", href: "#" },
-        { name: "Contact", href: "#" },
-        { name: "Careers", href: "#" }
+        { name: "About Us", href: "/about-us", isExternal: false },
+        { name: "Contact", href: "/contact", isExternal: false },
+        { name: "Careers", href: "/careers", isExternal: false }
       ]
     },
     {
       title: "Products",
       links: [
-        { name: "PEPCODE", href: "#" },
-        { name: "OWA by PEPCODE", href: "#" },
-        { name: "AUDITME", href: "#" }
+        { name: "PEPCODE", href: "https://pepcodeinc.com/", isExternal: true },
+        { name: "OWA by PEPCODE", href: "https://owabypepcode.com.ng/", isExternal: true },
+        { name: "AUDITME", href: "https://auditme.com.ng/", isExternal: true }
       ]
     },
   ];
@@ -60,12 +61,23 @@ const Footer = () => {
               <ul className="space-y-2">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <a 
-                      href={link.href}
-                      className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
-                    >
-                      {link.name}
-                    </a>
+                    {link.isExternal ? (
+                      <a 
+                        href={link.href}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                      >
+                        {link.name}
+                      </a>
+                    ) : (
+                      <Link 
+                        to={link.href}
+                        className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

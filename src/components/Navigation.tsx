@@ -94,12 +94,12 @@ const Navigation = () => {
                         </div>
                         <span className="font-medium">About us</span>
                       </Link>
-                      <a href="#" className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
+                      <Link to="/contact" className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center icon-hover-lift">
                           <Mail className="w-4 h-4 text-blue-600 transition-transform duration-300" />
                         </div>
                         <span className="font-medium">Contact Us</span>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 )}
@@ -156,26 +156,26 @@ const Navigation = () => {
 
                         {/* PEPCODE - Larger card */}
                         <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                          <Link to="/products" className="block hover:bg-blue-100 rounded-lg p-2 transition-all duration-200">
+                          <a href="https://pepcodeinc.com/" target="_blank" rel="noopener noreferrer" className="block hover:bg-blue-100 rounded-lg p-2 transition-all duration-200">
                             <div className="font-semibold text-blue-900">PEPCODE</div>
                             <div className="text-xs text-blue-700 mt-1">Bookkeeping Software</div>
-                          </Link>
+                          </a>
                         </div>
 
                         {/* AUDITME - Smaller overlapping card */}
                         <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                          <Link to="/products" className="block hover:bg-blue-100 rounded-lg p-2 transition-all duration-200">
+                          <a href="https://auditme.com.ng/" target="_blank" rel="noopener noreferrer" className="block hover:bg-blue-100 rounded-lg p-2 transition-all duration-200">
                             <div className="font-semibold text-blue-900">AUDITME</div>
                             <div className="text-xs text-blue-700 mt-1">Audit Platform</div>
-                          </Link>
+                          </a>
                         </div>
 
                         {/* OWA by PEPCODE - Larger card */}
                         <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                          <Link to="/products" className="block hover:bg-blue-100 rounded-lg p-2 transition-all duration-200">
+                          <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="block hover:bg-blue-100 rounded-lg p-2 transition-all duration-200">
                             <div className="font-semibold text-blue-900">OWA by PEPCODE</div>
                             <div className="text-xs text-blue-700 mt-1">Paperless Bookkeeping</div>
-                          </Link>
+                          </a>
                         </div>
                       </div>
                     </div>
