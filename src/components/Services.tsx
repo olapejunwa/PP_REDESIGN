@@ -4,19 +4,22 @@ import { Calculator, TrendingUp, FileText } from 'lucide-react';
 const Services = () => {
   const services = [
     {
-      icon: "/images/pepcode-logo.svg",
+      icon: "/images/pepcode logo.webp",
       title: "PEPCODE",
-      description: "Advanced bookkeeping software designed to simplify your financial management processes."
+      description: "Advanced bookkeeping software designed to simplify your financial management processes.",
+      color: "bg-blue-600"
     },
     {
-      icon: "/images/owa-logo.svg",
+      icon: "/images/7.png",
       title: "OWA by PEPCODE",
-      description: "Comprehensive financial analysis and reporting tools for better business insights."
+      description: "Comprehensive financial analysis and reporting tools for better business insights.",
+      color: "bg-green-600"
     },
     {
-      icon: "/images/auditme-logo.svg",
+      icon: "/images/auditme.webp",
       title: "AUDITME",
-      description: "Fast-tracked audited accounts platform for streamlined compliance and reporting."
+      description: "Fast-tracked audited accounts platform for streamlined compliance and reporting.",
+      color: "bg-purple-600"
     },
     {
       icon: Calculator,
@@ -59,7 +62,14 @@ const Services = () => {
                     <img 
                       src={service.icon} 
                       alt={`${service.title} logo`}
-                      className="w-6 h-6 transition-transform duration-300"
+                      className="w-8 h-8 object-contain transition-transform duration-300 filter brightness-0 invert"
+                      onError={(e) => {
+                        console.error(`Failed to load image: ${service.icon}`);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                      onLoad={() => {
+                        console.log(`Successfully loaded: ${service.icon}`);
+                      }}
                     />
                   ) : (
                     <service.icon className="w-6 h-6 text-white transition-transform duration-300" />
