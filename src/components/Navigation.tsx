@@ -174,7 +174,7 @@ const Navigation = () => {
                         <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
                           <Link to="/products" className="block hover:bg-blue-100 rounded-lg p-2 transition-all duration-200">
                             <div className="font-semibold text-blue-900">OWA by PEPCODE</div>
-                            <div className="text-xs text-blue-700 mt-1">Financial Analysis</div>
+                            <div className="text-xs text-blue-700 mt-1">Paperless Bookkeeping</div>
                           </Link>
                         </div>
                       </div>
