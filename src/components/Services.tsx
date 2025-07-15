@@ -1,5 +1,7 @@
 import React from 'react';
-import { Calculator, TrendingUp, FileText } from 'lucide-react';
+import { Calculator } from 'lucide-react';
+import AnimatedFileText from './AnimatedFileText';
+import AnimatedTrendingUp from './AnimatedTrendingUp';
 
 const Services = () => {
   const services = [
@@ -22,19 +24,22 @@ const Services = () => {
       icon: Calculator,
       title: "Tax Services",
       description: "Expert tax preparation and planning services to optimize your financial position.",
-      color: "bg-orange-600"
+      color: "bg-orange-600",
+      animationClass: "animate-bounce-custom"
     },
     {
-      icon: FileText,
+      icon: AnimatedFileText,
       title: "Book-keeping Services",
       description: "Professional bookkeeping services to maintain accurate financial records.",
-      color: "bg-teal-600"
+      color: "bg-teal-600",
+      animationClass: ""
     },
     {
-      icon: TrendingUp,
+      icon: AnimatedTrendingUp,
       title: "Inventory Management",
       description: "Efficient inventory tracking and management solutions for your business.",
-      color: "bg-red-600"
+      color: "bg-red-600",
+      animationClass: ""
     }
   ];
 
@@ -75,12 +80,12 @@ const Services = () => {
                 ) : (
                   <div className={`w-12 h-12 ${service.color} rounded-lg flex items-center justify-center mb-6 icon-hover-lift group-hover:icon-scale-pulse`}>
                     <service.icon className="w-6 h-6 text-white transition-transform duration-300" />
-                  </div>
+                  <service.icon className={`w-6 h-6 text-white transition-transform duration-300 animate-on-hover ${service.animationClass}`} />
                 )}
                 
                 <h3 className="text-lg font-bold text-gray-900 mb-4">{service.title}</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
-                <div className="mt-6">
+                <service.icon className={`w-6 h-6 text-white transition-transform duration-300 animate-on-hover ${service.animationClass}`} />
                   <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-200">
                     Learn More →
                   </button>
