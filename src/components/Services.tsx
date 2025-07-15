@@ -54,30 +54,25 @@ const Services = () => {
           {services.map((service, index) => (
             <div key={index} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
               <div className="p-8">
-                {/* MODIFIED LOGIC: Check if the icon is a string (image) or a component */}
                 {typeof service.icon === 'string' ? (
-                  // If it's an image, make it fill the container
-                  <div className="w-12 h-12 rounded-lg mb-6 icon-hover-lift group-hover:icon-scale-pulse overflow-hidden">
+                  <div className="w-12 h-12 rounded-lg mb-6 flex items-center justify-center icon-hover-lift group-hover:icon-scale-pulse">
                     <img
                       src={service.icon}
                       alt={`${service.title} logo`}
-                      className="w-full h-full object-cover transition-transform duration-300" // <-- KEY CHANGE HERE
+                      // MODIFIED LINE: Changed object-cover to object-contain
+                      className="w-full h-full object-contain transition-transform duration-300"
                       onError={(e) => {
                         console.error(`Failed to load image: ${service.icon}`);
                         const target = e.currentTarget;
                         target.style.display = 'none';
                         const fallback = document.createElement('div');
-                        fallback.className = `w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 font-bold text-lg`;
+                        fallback.className = `w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 font-bold text-lg rounded-lg`;
                         fallback.textContent = service.title.charAt(0);
                         target.parentNode?.appendChild(fallback);
-                      }}
-                      onLoad={() => {
-                        console.log(`Successfully loaded: ${service.icon}`);
                       }}
                     />
                   </div>
                 ) : (
-                  // If it's a component, keep the original style with a background color
                   <div className={`w-12 h-12 ${service.color} rounded-lg flex items-center justify-center mb-6 icon-hover-lift group-hover:icon-scale-pulse`}>
                     <service.icon className="w-6 h-6 text-white transition-transform duration-300" />
                   </div>
