@@ -10,7 +10,7 @@ const Services = () => {
       color: "bg-blue-600"
     },
     {
-      icon: "/images/owa-logo.svg",
+      icon: "/images/7.png",
       title: "OWA by PEPCODE",
       description: "Comprehensive financial analysis and reporting tools for better business insights.",
       color: "bg-green-600"
