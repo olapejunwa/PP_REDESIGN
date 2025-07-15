@@ -87,6 +87,7 @@ const Services = () => {
                 <div>
                   <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-200">
                     Learn More →
+                  </button>
                   <service.icon className={`w-6 h-6 text-white transition-transform duration-300 ${service.animationClass || ''}`} />
                 </div>
               </div>
