@@ -1,7 +1,7 @@
 import React from 'react';
 import { Calculator } from 'lucide-react';
-import AnimatedFileText from './AnimatedFileText';
-import AnimatedTrendingUp from './AnimatedTrendingUp';
+import AnimatedFileText from './AnimatedFileText'; // Make sure the path is correct
+import AnimatedTrendingUp from './AnimatedTrendingUp'; // Make sure the path is correct
 
 const Services = () => {
   const services = [
@@ -9,37 +9,43 @@ const Services = () => {
       icon: "/images/pepcode logo.webp",
       title: "PEPCODE",
       description: "Advanced bookkeeping software designed to simplify your financial management processes.",
+      link: "https://pepcodeinc.com/"
     },
     {
       icon: "/images/7.png",
       title: "OWA by PEPCODE",
       description: "Comprehensive financial analysis and reporting tools for better business insights.",
+      link: "https://owabypepcode.com.ng/"
     },
     {
       icon: "/images/auditme.webp",
       title: "AUDITME",
       description: "Fast-tracked audited accounts platform for streamlined compliance and reporting.",
+      link: "https://auditme.com.ng/"
     },
     {
       icon: Calculator,
       title: "Tax Services",
       description: "Expert tax preparation and planning services to optimize your financial position.",
       color: "bg-orange-600",
-      animationClass: "animate-bounce-custom"
+      animationClass: "animate-bounce-custom",
+      link: "#" // Placeholder link
     },
     {
       icon: AnimatedFileText,
       title: "Book-keeping Services",
       description: "Professional bookkeeping services to maintain accurate financial records.",
       color: "bg-teal-600",
-      animationClass: ""
+      animationClass: "",
+      link: "#" // Placeholder link
     },
     {
       icon: AnimatedTrendingUp,
       title: "Inventory Management",
       description: "Efficient inventory tracking and management solutions for your business.",
       color: "bg-red-600",
-      animationClass: ""
+      animationClass: "",
+      link: "#" // Placeholder link
     }
   ];
 
@@ -57,14 +63,21 @@ const Services = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+            // The entire card is now a link that opens in a new tab
+            <a 
+              key={index} 
+              href={service.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group block"
+            >
               <div className="p-8">
                 {typeof service.icon === 'string' ? (
-                  <div className="w-12 h-12 rounded-lg mb-6 flex items-center justify-center icon-hover-lift group-hover:icon-scale-pulse">
+                  <div className="w-12 h-12 rounded-lg mb-6 flex items-center justify-center">
                     <img
                       src={service.icon}
                       alt={`${service.title} logo`}
-                      className="w-full h-full object-contain transition-transform duration-300"
+                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
                       onError={(e) => {
                         console.error(`Failed to load image: ${service.icon}`);
                         const target = e.currentTarget;
@@ -77,23 +90,20 @@ const Services = () => {
                     />
                   </div>
                 ) : (
-                  <div className={`w-12 h-12 ${service.color} rounded-lg flex items-center justify-center mb-6 icon-hover-lift group-hover:icon-scale-pulse`}>
-                    <service.icon className="w-6 h-6 text-white transition-transform duration-300" />
+                  <div className={`w-12 h-12 ${service.color} rounded-lg flex items-center justify-center mb-6`}>
+                    <service.icon className={`w-6 h-6 text-white transition-transform duration-300 ${service.animationClass || ''}`} />
                   </div>
                 )}
                 
                 <h3 className="text-lg font-bold text-gray-900 mb-4">{service.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
-                <div>
-                  <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-200">
-                    Learn More →
-                  </button>
-                  {typeof service.icon !== 'string' && (
-                    <service.icon className={`w-6 h-6 text-white transition-transform duration-300 ${service.animationClass || ''}`} />
-                  )}
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">{service.description}</p>
+                
+                {/* Changed button to a div for semantic correctness inside an <a> tag */}
+                <div className="text-blue-600 font-semibold group-hover:text-blue-700 transition-colors duration-200">
+                  Learn More →
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
