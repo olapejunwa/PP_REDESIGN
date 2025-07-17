@@ -29,7 +29,7 @@ const Navigation = () => {
   const handleCompanyMouseLeave = () => {
     const timer = setTimeout(() => {
       setIsCompanyDropdownOpen(false);
-    }, 250); // 5-second delay
+    }, 250); 
     setCompanyCloseTimer(timer);
   };
 
@@ -43,7 +43,7 @@ const Navigation = () => {
   const handleProductMouseLeave = () => {
     const timer = setTimeout(() => {
       setIsProductDropdownOpen(false);
-    }, 250); // 5-second delay
+    }, 250);
     setProductCloseTimer(timer);
   };
 
@@ -149,34 +149,37 @@ const Navigation = () => {
                       </div>
 
                       {/* Main Products - Right side cards */}
-                      <div className="w-48 space-y-3">
+                      <div className="w-56 space-y-2">
                         <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                           Main Products
                         </div>
 
-                        {/* PEPCODE - Larger card */}
-                        <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                          <a href="https://pepcodeinc.com/" target="_blank" rel="noopener noreferrer" className="block hover:bg-blue-100 rounded-lg p-2 transition-all duration-200">
-                            <div className="font-semibold text-blue-900">PEPCODE</div>
-                            <div className="text-xs text-blue-700 mt-1">Bookkeeping Software</div>
-                          </a>
-                        </div>
+                        {/* PEPCODE */}
+                        <a href="https://pepcodeinc.com/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 hover:bg-blue-50 rounded-xl transition-all duration-200">
+                          <img src="/images/pepcode logo.webp" alt="PEPCODE Logo" className="w-8 h-8 mr-3 object-contain"/>
+                          <div>
+                              <div className="font-semibold text-blue-900">PEPCODE</div>
+                              <div className="text-xs text-blue-700 mt-1">Bookkeeping Software</div>
+                          </div>
+                        </a>
 
-                        {/* AUDITME - Smaller overlapping card */}
-                        <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                          <a href="https://auditme.com.ng/" target="_blank" rel="noopener noreferrer" className="block hover:bg-blue-100 rounded-lg p-2 transition-all duration-200">
-                            <div className="font-semibold text-blue-900">AUDITME</div>
-                            <div className="text-xs text-blue-700 mt-1">Audit Platform</div>
-                          </a>
-                        </div>
+                        {/* AUDITME */}
+                        <a href="https://auditme.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 hover:bg-blue-50 rounded-xl transition-all duration-200">
+                            <img src="/images/auditme.webp" alt="AUDITME Logo" className="w-8 h-8 mr-3 object-contain"/>
+                            <div>
+                                <div className="font-semibold text-blue-900">AUDITME</div>
+                                <div className="text-xs text-blue-700 mt-1">Audit Platform</div>
+                            </div>
+                        </a>
 
-                        {/* OWA by PEPCODE - Larger card */}
-                        <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                          <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="block hover:bg-blue-100 rounded-lg p-2 transition-all duration-200">
-                            <div className="font-semibold text-blue-900">OWA by PEPCODE</div>
-                            <div className="text-xs text-blue-700 mt-1">Paperless Bookkeeping</div>
-                          </a>
-                        </div>
+                        {/* OWA by PEPCODE */}
+                        <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 hover:bg-blue-50 rounded-xl transition-all duration-200">
+                            <img src="/images/7.png" alt="OWA by PEPCODE Logo" className="w-8 h-8 mr-3 object-contain"/>
+                            <div>
+                                <div className="font-semibold text-blue-900">OWA by PEPCODE</div>
+                                <div className="text-xs text-blue-700 mt-1">Paperless Bookkeeping</div>
+                            </div>
+                        </a>
                       </div>
                     </div>
                   </div>
