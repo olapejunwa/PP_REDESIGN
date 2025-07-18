@@ -89,11 +89,11 @@ const About = () => {
       {/* Curved separator from hero to about */}
       <CurvedSeparator 
         position="top" 
-        backgroundColor="#1a1a1a" 
+        backgroundColor="#111827" 
         height={120}
       />
       
-      <section className="py-20 bg-matte-black text-white overflow-hidden">
+      <section className="py-20 bg-matte-dark-blue text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
