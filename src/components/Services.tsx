@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Calculator, ChevronLeft, ChevronRight } from 'lucide-react';
+import CurvedSeparator from './CurvedSeparator';
 import AnimatedFileText from './AnimatedFileText';
 import AnimatedTrendingUp from './AnimatedTrendingUp';
 
@@ -86,13 +87,21 @@ const Services = () => {
   };
 
   return (
-    <section className="py-20 bg-gray-50">
+    <>
+      {/* Curved separator from about to services */}
+      <CurvedSeparator 
+        position="bottom" 
+        backgroundColor="#1a1a1a" 
+        height={120}
+      />
+      
+      <section className="py-20 bg-matte-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Our Comprehensive Services
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-300 max-w-3xl mx-auto">
             From cutting-edge software solutions to expert professional services, we provide everything you need for financial success.
           </p>
         </div>
@@ -129,16 +138,17 @@ const Services = () => {
           </div>
           
           {/* Carousel Controls */}
-          <button onClick={goToPrevious} className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white">
-            <ChevronLeft className="w-6 h-6 text-gray-800" />
+          <button onClick={goToPrevious} className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800/80 rounded-full p-2 shadow-md hover:bg-gray-700">
+            <ChevronLeft className="w-6 h-6 text-white" />
           </button>
-          <button onClick={goToNext} className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white">
-            <ChevronRight className="w-6 h-6 text-gray-800" />
+          <button onClick={goToNext} className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800/80 rounded-full p-2 shadow-md hover:bg-gray-700">
+            <ChevronRight className="w-6 h-6 text-white" />
           </button>
         </div>
 
       </div>
     </section>
+    </>
   );
 };
 
