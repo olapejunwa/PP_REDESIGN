@@ -3,18 +3,8 @@ import { Calculator, ChevronLeft, ChevronRight } from 'lucide-react';
 import CurvedSeparator from './CurvedSeparator';
 import AnimatedFileText from './AnimatedFileText';
 import AnimatedTrendingUp from './AnimatedTrendingUp';
-// ... (imports and component start)
-  return (
-    <>
-      {/* Curved separator from about to services */}
-      <CurvedSeparator 
-        position="top"  // Changed from "bottom" to "top"
-        backgroundColor="#1a1a1a" 
-        height={120}
-      />
-      
-      <section className="py-20 bg-matte-black text-white">
-        {const Services = () => {
+
+const Services = () => {
   const services = [
     {
       icon: "/images/pepcode logo.webp",
@@ -100,7 +90,7 @@ import AnimatedTrendingUp from './AnimatedTrendingUp';
     <>
       {/* Curved separator from about to services */}
       <CurvedSeparator 
-        position="bottom" 
+        position="top"
         backgroundColor="#1a1a1a" 
         height={120}
       />
@@ -163,4 +153,3 @@ import AnimatedTrendingUp from './AnimatedTrendingUp';
 };
 
 export default Services;
-}
