@@ -1,5 +1,3 @@
-import React, { useEffect, useRef } from 'react';
-import * as THREE from 'three';
 
 const AnimatedTargetIcon = () => {
   const mountRef = useRef(null);
@@ -14,123 +12,122 @@ const AnimatedTargetIcon = () => {
     renderer.setSize(192, 192);
     currentMount.appendChild(renderer.domElement);
 
-    camera.position.z = 10;
+    camera.position.z = 8;
 
-    // --- Animation Objects ---
+    // Create scattered pieces that will form a chart
+    const pieces = [];
+    const finalPositions = [
+      { x: -2, y: -1, width: 0.8, height: 2 },    // Left bar
+      { x: 0, y: -0.5, width: 0.8, height: 3 },   // Middle bar (tallest)
+      { x: 2, y: -0.8, width: 0.8, height: 2.4 }  // Right bar
+    ];
 
-    // 1. Receipts
-    const receipts = [];
-    const receiptMaterial = new THREE.MeshBasicMaterial({ color: 0x60a5fa, side: THREE.DoubleSide }); // Lighter blue for receipts
-    const receiptGeometry = new THREE.PlaneGeometry(1.5, 3); // Tall rectangle shape
-
-    for (let i = 0; i < 15; i++) {
-      const receipt = new THREE.Mesh(receiptGeometry, receiptMaterial);
-      receipt.position.set(
-        (Math.random() - 0.5) * 20,
-        (Math.random() - 0.5) * 20,
-        (Math.random() - 0.5) * 5
+    // Create scattered pieces
+    for (let i = 0; i < 3; i++) {
+      const geometry = new THREE.PlaneGeometry(finalPositions[i].width, finalPositions[i].height);
+      const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
+      const piece = new THREE.Mesh(geometry, material);
+      
+      // Start at random scattered positions
+      piece.position.set(
+        (Math.random() - 0.5) * 12,
+        (Math.random() - 0.5) * 8,
+        0
       );
-      receipt.rotation.set(
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-        Math.random() * Math.PI
-      );
-      scene.add(receipt);
-      receipts.push(receipt);
+      
+      // Store final position
+      piece.userData.finalPosition = {
+        x: finalPositions[i].x,
+        y: finalPositions[i].y,
+        z: 0
+      };
+      
+      // Add random rotation
+      piece.rotation.z = (Math.random() - 0.5) * Math.PI;
+      piece.userData.finalRotation = 0;
+      
+      scene.add(piece);
+      pieces.push(piece);
     }
 
-    // 2. Dashboard
-    const dashboardGroup = new THREE.Group();
-    const dashboardMaterial = new THREE.MeshBasicMaterial({ color: 0x2563eb });
-    const dashboardGeometry = new THREE.PlaneGeometry(8, 5);
-    const dashboard = new THREE.Mesh(dashboardGeometry, dashboardMaterial);
-    dashboardGroup.add(dashboard);
-    dashboardGroup.visible = false; // Initially hidden
-    scene.add(dashboardGroup);
-    
-    // 3. Dashboard elements (charts)
-    const barMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const bar1 = new THREE.Mesh(new THREE.PlaneGeometry(1, 2), barMaterial);
-    bar1.position.set(-2.5, -0.5, 0.1);
-    dashboardGroup.add(bar1);
+    // Create chart base/background
+    const baseGeometry = new THREE.PlaneGeometry(6, 4);
+    const baseMaterial = new THREE.MeshBasicMaterial({ 
+      color: 0xf8f9fa, 
+      transparent: true, 
+      opacity: 0 
+    });
+    const chartBase = new THREE.Mesh(baseGeometry, baseMaterial);
+    chartBase.position.z = -0.1;
+    scene.add(chartBase);
 
-    const bar2 = new THREE.Mesh(new THREE.PlaneGeometry(1, 3), barMaterial);
-    bar2.position.set(0, 0, 0.1);
-    dashboardGroup.add(bar2);
-    
-    const bar3 = new THREE.Mesh(new THREE.PlaneGeometry(1, 1.5), barMaterial);
-    bar3.position.set(2.5, -0.75, 0.1);
-    dashboardGroup.add(bar3);
-
-
-    // --- Animation Logic ---
-    let phase = 'scattering'; // scattering -> transforming -> revealing
-    let phaseTime = 0;
+    // Animation state
+    let animationTime = 0;
+    const animationDuration = 3; // 3 seconds total
     const clock = new THREE.Clock();
 
     const animate = function () {
       requestAnimationFrame(animate);
       const deltaTime = clock.getDelta();
-      phaseTime += deltaTime;
-
-      if (phase === 'scattering') {
-        receipts.forEach(r => {
-            r.visible = true;
-            // Gently float around
-            r.rotation.x += deltaTime * 0.2;
-            r.rotation.y += deltaTime * 0.2;
-        });
-        if (phaseTime > 3) {
-            phaseTime = 0;
-            phase = 'transforming';
+      animationTime += deltaTime;
+      
+      // Calculate animation progress (0 to 1)
+      const progress = Math.min(animationTime / animationDuration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease-out cubic
+      
+      // Animate pieces moving to their final positions
+      pieces.forEach((piece) => {
+        const startPos = piece.userData.startPosition || {
+          x: piece.position.x,
+          y: piece.position.y,
+          z: piece.position.z
+        };
+        
+        // Store start position on first frame
+        if (!piece.userData.startPosition) {
+          piece.userData.startPosition = { ...startPos };
+          piece.userData.startRotation = piece.rotation.z;
         }
-      } else if (phase === 'transforming') {
-          receipts.forEach(r => {
-              r.position.lerp(new THREE.Vector3(0,0,0), deltaTime * 2);
-              r.scale.lerp(new THREE.Vector3(0.1, 0.1, 0.1), deltaTime * 2);
-          });
-          if (phaseTime > 2) {
-              phaseTime = 0;
-              phase = 'revealing';
-              receipts.forEach(r => r.visible = false);
-              dashboardGroup.visible = true;
-              dashboardGroup.scale.set(0,0,0);
-              bar1.scale.y = 0;
-              bar2.scale.y = 0;
-              bar3.scale.y = 0;
-          }
-      } else if (phase === 'revealing') {
-          dashboardGroup.scale.lerp(new THREE.Vector3(1,1,1), deltaTime * 3);
-          
-          // Animate bars growing
-          if(bar1.scale.y < 1) bar1.scale.y += deltaTime * 2;
-          if(bar2.scale.y < 1) bar2.scale.y += deltaTime * 1.5;
-          if(bar3.scale.y < 1) bar3.scale.y += deltaTime * 2.5;
-
-          if (phaseTime > 4) {
-              phaseTime = 0;
-              phase = 'scattering';
-              dashboardGroup.visible = false;
-              // Reset receipts for next loop
-              receipts.forEach(r => {
-                r.position.set(
-                    (Math.random() - 0.5) * 20,
-                    (Math.random() - 0.5) * 20,
-                    (Math.random() - 0.5) * 5
-                );
-                r.scale.set(1,1,1);
-              });
-          }
+        
+        // Interpolate position
+        piece.position.x = startPos.x + (piece.userData.finalPosition.x - startPos.x) * easeProgress;
+        piece.position.y = startPos.y + (piece.userData.finalPosition.y - startPos.y) * easeProgress;
+        piece.position.z = startPos.z + (piece.userData.finalPosition.z - startPos.z) * easeProgress;
+        
+        // Interpolate rotation
+        piece.rotation.z = piece.userData.startRotation + (piece.userData.finalRotation - piece.userData.startRotation) * easeProgress;
+      });
+      
+      // Fade in chart background as pieces assemble
+      chartBase.material.opacity = easeProgress * 0.1;
+      
+      // Reset animation after completion + pause
+      if (animationTime > animationDuration + 2) {
+        animationTime = 0;
+        // Reset pieces to new random positions
+        pieces.forEach((piece) => {
+          piece.position.set(
+            (Math.random() - 0.5) * 12,
+            (Math.random() - 0.5) * 8,
+            0
+          );
+          piece.rotation.z = (Math.random() - 0.5) * Math.PI;
+          piece.userData.startPosition = null; // Reset for next cycle
+        });
+        chartBase.material.opacity = 0;
       }
-
+      
       renderer.render(scene, camera);
     };
 
     animate();
 
     return () => {
-      currentMount.removeChild(renderer.domElement);
-    };
+      if (currentMount && renderer.domElement) {
+        currentMount.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
+    }
   }, []);
 
   return <div ref={mountRef} style={{ width: '192px', height: '192px' }} />;
