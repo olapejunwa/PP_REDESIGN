@@ -18,8 +18,9 @@ const LavaLampBackground = () => {
         this.r = r;
         this.color1 = color1;
         this.color2 = color2;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
+        // Increased the multiplier from 0.5 to 1.0 to make blobs move faster
+        this.vx = (Math.random() - 0.5) * 1.0;
+        this.vy = (Math.random() - 0.5) * 1.0;
       }
 
       draw() {
