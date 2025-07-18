@@ -1,29 +1,32 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const MagnifierReveal = () => {
+const AnimatedStarIcon = () => {
   const mountRef = useRef(null);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
-    // ─── Scene, Camera, Renderer ────────────────────────────────────────────────
+    const width = 256;
+    const height = 192;
+
+    // --- Scene, Camera, Renderer ---
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
     camera.position.set(0, 0, 20);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(300, 300);
+    renderer.setSize(width, height);
     mount.appendChild(renderer.domElement);
 
-    // ─── Lights ─────────────────────────────────────────────────────────────────
+    // --- Lights ---
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));
     const pt = new THREE.PointLight(0xffffff, 0.8);
     pt.position.set(10, 10, 10);
     scene.add(pt);
 
-    // ─── 1) Document Group (fade-in) ────────────────────────────────────────────
+    // --- 1) Document Group (fade-in) ---
     const docGroup = new THREE.Group();
     docGroup.scale.set(0, 0, 0);
     scene.add(docGroup);
@@ -44,13 +47,13 @@ const MagnifierReveal = () => {
       geom.translate(0, h / 2, 0); // pivot at base
       const mat = new THREE.MeshStandardMaterial({ color: 0x2563eb, emissive: 0x000000 });
       const bar = new THREE.Mesh(geom, mat);
-      bar.position.set(barX[i], -2, 0.1);
+      bar.position.set(barX[i], -4, 0.1); // Adjusted y-position for better framing
       barGroup.add(bar);
       bars.push(bar);
     });
     docGroup.add(barGroup);
 
-    // ─── 2) Magnifier Group (hidden initially) ─────────────────────────────────
+    // --- 2) Magnifier Group (hidden initially) ---
     const magnifier = new THREE.Group();
     magnifier.visible = false;
     scene.add(magnifier);
@@ -82,11 +85,11 @@ const MagnifierReveal = () => {
     handle.rotation.z = -Math.PI / 4;
     magnifier.add(handle);
 
-    // ─── Easing ─────────────────────────────────────────────────────────────────
+    // --- Easing ---
     const easeOutQuad = t => t * (2 - t);
 
-    // ─── Animation Phases & Timing ──────────────────────────────────────────────
-    let phase = 0;    // 0 = fadeIn, 1 = sweep, 2 = pulse, 3 = retreat, 4 = hold
+    // --- Animation Phases & Timing ---
+    let phase = 0; // 0 = fadeIn, 1 = sweep, 2 = pulse, 3 = retreat, 4 = hold
     let t = 0;
     const clock = new THREE.Clock();
 
@@ -107,7 +110,7 @@ const MagnifierReveal = () => {
       const delta = clock.getDelta();
       t += delta;
 
-      // ── Phase 0: Document fade-in (0.5s) ───────────────────────────────────
+      // Phase 0: Document fade-in (0.5s)
       if (phase === 0) {
         const p = Math.min(t / 0.5, 1);
         const e = easeOutQuad(p);
@@ -116,7 +119,7 @@ const MagnifierReveal = () => {
           phase = 1; t = 0;
         }
       }
-      // ── Phase 1: Sweep magnifier (1s) ───────────────────────────────────────
+      // Phase 1: Sweep magnifier (1s)
       else if (phase === 1) {
         if (!magnifier.visible) magnifier.visible = true;
         const p = Math.min(t / 1, 1);
@@ -145,7 +148,7 @@ const MagnifierReveal = () => {
           phase = 2; t = 0;
         }
       }
-      // ── Phase 2: Pulse over key KPI (0.6s) ────────────────────────────────
+      // Phase 2: Pulse over key KPI (0.6s)
       else if (phase === 2) {
         const keyBar = bars[1];
         magnifier.position.set(keyBar.position.x, 0, 0.2);
@@ -157,7 +160,7 @@ const MagnifierReveal = () => {
           phase = 3; t = 0;
         }
       }
-      // ── Phase 3: Retreat magnifier (1s) ───────────────────────────────────
+      // Phase 3: Retreat magnifier (1s)
       else if (phase === 3) {
         const p = Math.min(t / 1, 1);
         const e = easeOutQuad(p);
@@ -168,7 +171,7 @@ const MagnifierReveal = () => {
           phase = 4; t = 0;
         }
       }
-      // ── Phase 4: Hold (1s) then reset ───────────────────────────────────────
+      // Phase 4: Hold (1s) then reset
       else if (phase === 4) {
         if (t > 1) {
           phase = 0; t = 0;
@@ -186,7 +189,7 @@ const MagnifierReveal = () => {
 
   }, []);
 
-  return <div ref={mountRef} style={{ width: 300, height: 300 }} />;
+  return <div ref={mountRef} style={{ width: 256, height: 192 }} />;
 };
 
-export default MagnifierReveal;
+export default AnimatedStarIcon;
