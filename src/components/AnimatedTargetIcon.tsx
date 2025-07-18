@@ -16,35 +16,22 @@ const AnimatedTargetIcon = () => {
 
     camera.position.z = 8;
 
-    // Create scattered pieces that will form a chart
+    // --- Chart Bars ---
     const pieces = [];
     const finalPositions = [
-      { x: -2, y: -1, width: 0.8, height: 2 },    // Left bar
-      { x: 0, y: -0.5, width: 0.8, height: 3 },   // Middle bar (tallest)
-      { x: 2, y: -0.8, width: 0.8, height: 2.4 }  // Right bar
+      { x: -2, y: -1.5, width: 0.8, height: 2 },   // Left bar
+      { x: 0, y: -1, width: 0.8, height: 3 },     // Middle bar (tallest)
+      { x: 2, y: -1.3, width: 0.8, height: 2.4 }  // Right bar
     ];
 
-    // Create scattered pieces
     for (let i = 0; i < 3; i++) {
       const geometry = new THREE.PlaneGeometry(finalPositions[i].width, finalPositions[i].height);
       const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
       const piece = new THREE.Mesh(geometry, material);
       
-      // Start at random scattered positions
-      piece.position.set(
-        (Math.random() - 0.5) * 12,
-        (Math.random() - 0.5) * 8,
-        0
-      );
+      piece.position.set((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 8, 0);
+      piece.userData.finalPosition = new THREE.Vector3(finalPositions[i].x, finalPositions[i].y, 0);
       
-      // Store final position
-      piece.userData.finalPosition = {
-        x: finalPositions[i].x,
-        y: finalPositions[i].y,
-        z: 0
-      };
-      
-      // Add random rotation
       piece.rotation.z = (Math.random() - 0.5) * Math.PI;
       piece.userData.finalRotation = 0;
       
@@ -52,18 +39,27 @@ const AnimatedTargetIcon = () => {
       pieces.push(piece);
     }
 
-    // Create chart base/background
-    const baseGeometry = new THREE.PlaneGeometry(6, 4);
-    const baseMaterial = new THREE.MeshBasicMaterial({ 
-      color: 0xf8f9fa, 
-      transparent: true, 
-      opacity: 0 
+    // --- Chart Axes ---
+    const axisMaterial = new THREE.LineBasicMaterial({
+        color: 0xadb5bd, // A light gray color for the axes
+        transparent: true,
+        opacity: 0
     });
-    const chartBase = new THREE.Mesh(baseGeometry, baseMaterial);
-    chartBase.position.z = -0.1;
-    scene.add(chartBase);
 
-    // Animation state
+    // Y-Axis
+    const yAxisPoints = [new THREE.Vector3(-3.5, -3, -0.1), new THREE.Vector3(-3.5, 2, -0.1)];
+    const yAxisGeom = new THREE.BufferGeometry().setFromPoints(yAxisPoints);
+    const yAxis = new THREE.Line(yAxisGeom, axisMaterial.clone());
+    scene.add(yAxis);
+
+    // X-Axis
+    const xAxisPoints = [new THREE.Vector3(-3.5, -3, -0.1), new THREE.Vector3(3.5, -3, -0.1)];
+    const xAxisGeom = new THREE.BufferGeometry().setFromPoints(xAxisPoints);
+    const xAxis = new THREE.Line(xAxisGeom, axisMaterial.clone());
+    scene.add(xAxis);
+
+
+    // --- Animation Logic ---
     let animationTime = 0;
     const animationDuration = 3; // 3 seconds total
     const clock = new THREE.Clock();
@@ -73,50 +69,34 @@ const AnimatedTargetIcon = () => {
       const deltaTime = clock.getDelta();
       animationTime += deltaTime;
       
-      // Calculate animation progress (0 to 1)
       const progress = Math.min(animationTime / animationDuration, 1);
       const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease-out cubic
       
       // Animate pieces moving to their final positions
       pieces.forEach((piece) => {
-        const startPos = piece.userData.startPosition || {
-          x: piece.position.x,
-          y: piece.position.y,
-          z: piece.position.z
-        };
-        
-        // Store start position on first frame
         if (!piece.userData.startPosition) {
-          piece.userData.startPosition = { ...startPos };
+          piece.userData.startPosition = piece.position.clone();
           piece.userData.startRotation = piece.rotation.z;
         }
         
-        // Interpolate position
-        piece.position.x = startPos.x + (piece.userData.finalPosition.x - startPos.x) * easeProgress;
-        piece.position.y = startPos.y + (piece.userData.finalPosition.y - startPos.y) * easeProgress;
-        piece.position.z = startPos.z + (piece.userData.finalPosition.z - startPos.z) * easeProgress;
-        
-        // Interpolate rotation
-        piece.rotation.z = piece.userData.startRotation + (piece.userData.finalRotation - piece.userData.startRotation) * easeProgress;
+        piece.position.lerpVectors(piece.userData.startPosition, piece.userData.finalPosition, easeProgress);
+        piece.rotation.z = THREE.MathUtils.lerp(piece.userData.startRotation, piece.userData.finalRotation, easeProgress);
       });
       
-      // Fade in chart background as pieces assemble
-      chartBase.material.opacity = easeProgress * 0.1;
+      // Fade in axes as pieces assemble
+      xAxis.material.opacity = easeProgress;
+      yAxis.material.opacity = easeProgress;
       
       // Reset animation after completion + pause
       if (animationTime > animationDuration + 2) {
         animationTime = 0;
-        // Reset pieces to new random positions
         pieces.forEach((piece) => {
-          piece.position.set(
-            (Math.random() - 0.5) * 12,
-            (Math.random() - 0.5) * 8,
-            0
-          );
+          piece.position.set((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 8, 0);
           piece.rotation.z = (Math.random() - 0.5) * Math.PI;
           piece.userData.startPosition = null; // Reset for next cycle
         });
-        chartBase.material.opacity = 0;
+        xAxis.material.opacity = 0;
+        yAxis.material.opacity = 0;
       }
       
       renderer.render(scene, camera);
