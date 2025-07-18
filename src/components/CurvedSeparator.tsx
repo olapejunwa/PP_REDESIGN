@@ -12,51 +12,48 @@ interface CurvedSeparatorProps {
 }
 
 /**
- * CurvedSeparator creates a curved divider between sections
- * Inspired by modern web design patterns with smooth curves
+ * CurvedSeparator creates a smooth, wave-like divider between sections
+ * using SVG paths for a modern and fluid design.
  */
 const CurvedSeparator: React.FC<CurvedSeparatorProps> = ({
   position = 'top',
-  backgroundColor = '#1a1a1a',
+  backgroundColor = '#1a1a1a', // Corresponds to bg-matte-black
   height = 120,
-  className = ''
+  className = '',
 }) => {
-  // Create the curved path for the separator
-  const createCurvePath = () => {
-    if (position === 'top') {
-      return `polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%)`;
-    } else {
-      return `polygon(0 40%, 50% 0, 100% 40%, 100% 100%, 0 100%)`;
-    }
-  };
-
   const separatorStyle: React.CSSProperties = {
-    position: 'relative',
     width: '100%',
     height: `${height}px`,
-    overflow: 'hidden',
     backgroundColor: 'transparent',
   };
 
-  const curveStyle: React.CSSProperties = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: backgroundColor,
-    clipPath: createCurvePath(),
-    transition: 'all 0.3s ease',
-  };
+  // SVG path definitions for smooth curves
+  const topPathD = "M0,0 L100,0 L100,20 C75,100 25,100 0,20 Z";
+  const bottomPathD = "M0,100 L100,100 L100,80 C75,0 25,0 0,80 Z";
 
   return (
-    <div 
+    <div
       className={`curved-separator ${className}`}
       style={separatorStyle}
       role="presentation"
       aria-hidden="true"
     >
-      <div style={curveStyle} />
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <path
+          d={position === 'top' ? topPathD : bottomPathD}
+          fill={backgroundColor}
+        />
+      </svg>
     </div>
   );
 };
