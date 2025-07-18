@@ -50,24 +50,5 @@ const Hero = () => {
     </>
   );
 };
-        
-        <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-          <Link 
-            to="/contact" 
-            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold text-base hover:bg-gray-200 transition-colors duration-200 shadow-lg"
-          >
-            Get Started
-          </Link>
-          <Link 
-            to="/about-us" 
-            className="border-2 border-gray-800 text-gray-900 px-8 py-3 rounded-lg font-semibold text-base hover:bg-gray-900 hover:text-white transition-colors duration-200"
-          >
-            Learn More
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-};
 
 export default Hero;
