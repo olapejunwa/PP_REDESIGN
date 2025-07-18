@@ -36,9 +36,6 @@ const Hero = () => {
           </Link>
         </div>
       </div>
-      
-      {/* Smooth transition to next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-blue-500/20 pointer-events-none"></div>
     </section>
   );
 };
