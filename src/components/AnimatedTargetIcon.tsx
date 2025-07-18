@@ -1,3 +1,5 @@
+import React, { useRef, useEffect } from 'react';
+import * as THREE from 'three';
 
 const AnimatedTargetIcon = () => {
   const mountRef = useRef(null);
