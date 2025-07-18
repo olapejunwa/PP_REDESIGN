@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const AnimatedStarIcon = () => {
+const AnimatedTargetIcon = () => {
   const mountRef = useRef(null);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const AnimatedStarIcon = () => {
 
     // 1. Receipts
     const receipts = [];
-    const receiptMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    const receiptMaterial = new THREE.MeshBasicMaterial({ color: 0x60a5fa, side: THREE.DoubleSide }); // Lighter blue for receipts
     const receiptGeometry = new THREE.PlaneGeometry(1.5, 3); // Tall rectangle shape
 
     for (let i = 0; i < 15; i++) {
@@ -136,4 +136,4 @@ const AnimatedStarIcon = () => {
   return <div ref={mountRef} style={{ width: '192px', height: '192px' }} />;
 };
 
-export default AnimatedStarIcon;
+export default AnimatedTargetIcon;
