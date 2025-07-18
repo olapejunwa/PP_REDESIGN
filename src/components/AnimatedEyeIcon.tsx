@@ -11,21 +11,21 @@ const AnimatedEyeIcon = () => {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(64, 64);
+    renderer.setSize(192, 192);
     currentMount.appendChild(renderer.domElement);
 
-    camera.position.z = 5;
+    camera.position.z = 9; // Pulled camera back
 
     // Bullseye
     for (let i = 1; i <= 3; i++) {
-        const geometry = new THREE.RingGeometry(i * 0.5, i * 0.5 + 0.2, 32);
+        const geometry = new THREE.RingGeometry(i * 1.2, i * 1.2 + 0.4, 32); // Increased ring sizes
         const material = new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? 0xffffff : 0x2563eb, side: THREE.DoubleSide });
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
     }
 
     // Arrow
-    const arrowGeometry = new THREE.ConeGeometry(0.3, 1, 32);
+    const arrowGeometry = new THREE.ConeGeometry(0.6, 2, 32); // Increased arrow size
     const arrowMaterial = new THREE.MeshBasicMaterial({ color: 0xef4444 });
     const arrow = new THREE.Mesh(arrowGeometry, arrowMaterial);
     arrow.rotation.x = Math.PI / 2;
@@ -33,9 +33,9 @@ const AnimatedEyeIcon = () => {
 
     const animate = function () {
       requestAnimationFrame(animate);
-      arrow.position.z += 0.1;
-      if (arrow.position.z > 2) {
-        arrow.position.z = -5;
+      arrow.position.z += 0.2; // Faster animation
+      if (arrow.position.z > 4) {
+        arrow.position.z = -8;
       }
       renderer.render(scene, camera);
     };
@@ -47,7 +47,7 @@ const AnimatedEyeIcon = () => {
     };
   }, []);
 
-  return <div ref={mountRef} style={{ width: '64px', height: '64px' }} />;
+  return <div ref={mountRef} style={{ width: '192px', height: '192px' }} />;
 };
 
 export default AnimatedEyeIcon;
