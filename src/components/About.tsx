@@ -46,8 +46,8 @@ const ValueItem = ({ value, index }) => {
         isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       } ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`} // Alternates layout
     >
-      {/* Icon Container */}
-      <div className="w-48 h-48 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+      {/* Icon Container - Changed to a rounded rectangle with varied colors */}
+      <div className={`w-64 h-48 ${value.bgColor} rounded-2xl flex items-center justify-center flex-shrink-0 p-4`}>
         <value.icon />
       </div>
 
@@ -65,17 +65,20 @@ const About = () => {
     {
       icon: AnimatedTargetIcon,
       title: "Simplified Financial Management",
-      description: "We aim to demystify the complexities of bookkeeping and financial management, making it accessible and understandable for everyone, regardless of their level of financial expertise."
+      description: "We aim to demystify the complexities of bookkeeping and financial management, making it accessible and understandable for everyone, regardless of their level of financial expertise.",
+      bgColor: 'bg-green-100' // Added background color
     },
     {
       icon: AnimatedEyeIcon,
       title: "Efficiency and Accuracy",
-      description: "Our team is dedicated to the utilization of automated, repetitive tasks, reduce manual errors, and improve the accuracy of financial data. By automating routine bookkeeping processes, we help our customers save time and focus on growing their businesses."
+      description: "Our team is dedicated to the utilization of automated, repetitive tasks, reduce manual errors, and improve the accuracy of financial data. By automating routine bookkeeping processes, we help our customers save time and focus on growing their businesses.",
+      bgColor: 'bg-blue-100' // Added background color
     },
     {
       icon: AnimatedStarIcon,
       title: "Insightful Reporting",
-      description: "Our bookkeeping software provides real-time insights and business finances through customizable reports and dashboards. By offering valuable financial insights, we empower our customers to make informed business decisions."
+      description: "Our bookkeeping software provides real-time insights and business finances through customizable reports and dashboards. By offering valuable financial insights, we empower our customers to make informed business decisions.",
+      bgColor: 'bg-orange-100' // Added background color
     }
   ];
 
