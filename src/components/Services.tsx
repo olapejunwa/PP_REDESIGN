@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Calculator, ChevronLeft, ChevronRight } from 'lucide-react';
-import CurvedSeparator from './CurvedSeparator';
 import AnimatedFileText from './AnimatedFileText';
 import AnimatedTrendingUp from './AnimatedTrendingUp';
 
@@ -88,14 +87,7 @@ const Services = () => {
 
   return (
     <>
-      {/* Curved separator from about to services */}
-      <CurvedSeparator 
-        position="top"
-        backgroundColor="#111827" 
-        height={120}
-      />
-      
-      <section className="py-20 bg-matte-dark-blue text-white">
+      <section className="py-20 bg-matte-dark-blue text-white section-seamless">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
@@ -148,7 +140,6 @@ const Services = () => {
 
       </div>
     </section>
-    </>
   );
 };
 
