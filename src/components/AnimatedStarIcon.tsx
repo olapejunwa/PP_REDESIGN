@@ -62,7 +62,7 @@ const AnimatedStarIcon = () => {
 
     // 2a) Lens
     const lensGeom = new THREE.CircleGeometry(lensRadius, 64);
-    const lensMat = new THREE.MeshBasicMaterial({
+    const lensMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       transparent: true,
       opacity: 0.3,
@@ -73,20 +73,20 @@ const AnimatedStarIcon = () => {
 
     // 2b) Rim
     const rimGeom = new THREE.TorusGeometry(lensRadius, 0.15, 16, 100);
-    const rimMat  = new THREE.MeshBasicMaterial({ color: 0x333333 });
+    const rimMat  = new THREE.MeshStandardMaterial({ color: 0x6b7280 }); // gray-500
     const rim     = new THREE.Mesh(rimGeom, rimMat);
     magnifier.add(rim);
 
-    // 2c) Handle
+    // 2c) Handle - Corrected Formation
     const handleGroup = new THREE.Group();
     const handleLength = 4;
     const handleGeom   = new THREE.CylinderGeometry(0.2, 0.2, handleLength, 12);
-    handleGeom.translate(0, -handleLength / 2, 0); // Set pivot to the top
-
-    const handleMat = new THREE.MeshBasicMaterial({ color: 0x333333 });
+    const handleMat = new THREE.MeshStandardMaterial({ color: 0x6b7280 });
     const handle    = new THREE.Mesh(handleGeom, handleMat);
+    handle.position.y = -handleLength / 2; // Position cylinder relative to group
+    handleGroup.add(handle);
     
-    // Position the handle group on the rim and rotate it
+    // Position and rotate the handle group to attach to the rim
     const angle = -Math.PI / 4;
     handleGroup.position.set(
       Math.cos(angle) * lensRadius,
@@ -94,7 +94,6 @@ const AnimatedStarIcon = () => {
       0
     );
     handleGroup.rotation.z = angle;
-    handleGroup.add(handle);
     magnifier.add(handleGroup);
 
 
@@ -129,12 +128,12 @@ const AnimatedStarIcon = () => {
         docGroup.scale.set(e, e, e);
         if (p === 1) { phase = 1; t = 0; }
       } 
-      else if (phase === 1) { // Phase 1: Sweep magnifier (2.5s)
+      else if (phase === 1) { // Phase 1: Sweep magnifier with zig-zag (3s)
         if (!magnifier.visible) magnifier.visible = true;
-        const p = Math.min(t / 2.5, 1);
+        const p = Math.min(t / 3, 1);
         const e = easeOutQuad(p);
         const x = -12 + (24 * e);
-        const y = Math.sin(p * Math.PI * 4) * 2;
+        const y = Math.sin(p * Math.PI * 4) * 2; // Zig-zag motion
         magnifier.position.set(x, y, 0.2);
 
         bars.forEach(bar => {
@@ -148,7 +147,7 @@ const AnimatedStarIcon = () => {
       else if (phase === 2) { // Phase 2: Move to Center (0.5s)
         const p = Math.min(t / 0.5, 1);
         const e = easeOutQuad(p);
-        const startPos = new THREE.Vector3(12, 0, 0.2);
+        const startPos = magnifier.position.clone();
         const endPos = new THREE.Vector3(bars[1].position.x, 0, 0.2);
         magnifier.position.lerpVectors(startPos, endPos, e);
         if (p === 1) { phase = 3; t = 0; }
