@@ -53,104 +53,132 @@ const AnimatedStarIcon = () => {
     });
     docGroup.add(barGroup);
 
-   // --- 2) Magnifier Group (hidden initially) ---
-const magnifier = new THREE.Group();
-magnifier.visible = false;
-scene.add(magnifier);
+    // --- 2) Magnifier Group (hidden initially) ---
+    const magnifier = new THREE.Group();
+    magnifier.visible = false;
+    scene.add(magnifier);
 
-const lensRadius = 3;
+    const lensRadius = 3;
 
-// 2a) Lens
-const lensGeom = new THREE.CircleGeometry(lensRadius, 64);
-const lensMat = new THREE.MeshBasicMaterial({
-  color: 0xffffff,
-  transparent: true,
-  opacity: 0.3,
-  depthWrite: false
-});
-const lens = new THREE.Mesh(lensGeom, lensMat);
-magnifier.add(lens);
+    // 2a) Lens
+    const lensGeom = new THREE.CircleGeometry(lensRadius, 64);
+    const lensMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.3,
+      depthWrite: false
+    });
+    const lens = new THREE.Mesh(lensGeom, lensMat);
+    magnifier.add(lens);
 
-// 2b) Rim
-const rimGeom = new THREE.TorusGeometry(lensRadius, 0.15, 16, 100);
-const rimMat  = new THREE.MeshBasicMaterial({ color: 0x333333 });
-const rim     = new THREE.Mesh(rimGeom, rimMat);
-magnifier.add(rim);
+    // 2b) Rim
+    const rimGeom = new THREE.TorusGeometry(lensRadius, 0.15, 16, 100);
+    const rimMat  = new THREE.MeshBasicMaterial({ color: 0x333333 });
+    const rim     = new THREE.Mesh(rimGeom, rimMat);
+    magnifier.add(rim);
 
-// 2c) Handle
-// Create a cylinder whose pivot is at the top end
-const handleLength = 4;
-const handleGeom   = new THREE.CylinderGeometry(0.15, 0.15, handleLength, 12);
-// move geometry down so its top sits at (0,0,0)
-handleGeom.translate(0, -handleLength / 2, 0);
+    // 2c) Handle
+    const handleGroup = new THREE.Group();
+    const handleLength = 4;
+    const handleGeom   = new THREE.CylinderGeometry(0.2, 0.2, handleLength, 12);
+    handleGeom.translate(0, -handleLength / 2, 0); // Set pivot to the top
 
-const handleMat = new THREE.MeshBasicMaterial({ color: 0x333333 });
-const handle    = new THREE.Mesh(handleGeom, handleMat);
+    const handleMat = new THREE.MeshBasicMaterial({ color: 0x333333 });
+    const handle    = new THREE.Mesh(handleGeom, handleMat);
+    
+    // Position the handle group on the rim and rotate it
+    const angle = -Math.PI / 4;
+    handleGroup.position.set(
+      Math.cos(angle) * lensRadius,
+      Math.sin(angle) * lensRadius,
+      0
+    );
+    handleGroup.rotation.z = angle;
+    handleGroup.add(handle);
+    magnifier.add(handleGroup);
 
-// position it at a 45° angle on the rim
-const angle = -Math.PI / 4;
-handle.position.set(
-  Math.cos(angle) * lensRadius,
-  Math.sin(angle) * lensRadius,
-  0
-);
-handle.rotation.z = angle;
 
-magnifier.add(handle);
+    // --- Easing ---
+    const easeOutQuad = t => t * (2 - t);
 
-    // --- 3) Animation Timeline ---
-    let startTime = Date.now();
-    const PHASE_DURATION = 2000; // 2 seconds per phase
+    // --- Animation Phases & Timing ---
+    let phase = 0; // 0=fadeIn, 1=sweep, 2=moveToCenter, 3=pulse, 4=hold
+    let t = 0;
+    const clock = new THREE.Clock();
+
+    function reset() {
+      docGroup.scale.set(0, 0, 0);
+      magnifier.visible = false;
+      magnifier.position.set(0, 0, 0);
+      magnifier.scale.set(1, 1, 1);
+      bars.forEach(bar => {
+        bar.material.emissiveIntensity = 0;
+        bar.scale.y = 1;
+      });
+    }
+    reset();
 
     function animate() {
-      const elapsed = Date.now() - startTime;
-      const phase = Math.floor(elapsed / PHASE_DURATION) % 3;
-      const t = (elapsed % PHASE_DURATION) / PHASE_DURATION;
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+      t += delta;
 
-      if (phase === 0) {
-        // Phase 1: Document fades in
-        const scale = Math.min(t * 2, 1);
-        docGroup.scale.setScalar(scale);
-        magnifier.visible = false;
-      } else if (phase === 1) {
-        // Phase 2: Bars grow
-        docGroup.scale.setScalar(1);
-        bars.forEach((bar, i) => {
-          const targetHeight = barHeights[i];
-          const currentHeight = targetHeight * Math.min(t * 1.5, 1);
-          bar.scale.y = currentHeight / targetHeight;
+      if (phase === 0) { // Phase 0: Document fade-in (0.5s)
+        const p = Math.min(t / 0.5, 1);
+        const e = easeOutQuad(p);
+        docGroup.scale.set(e, e, e);
+        if (p === 1) { phase = 1; t = 0; }
+      } 
+      else if (phase === 1) { // Phase 1: Sweep magnifier (2.5s)
+        if (!magnifier.visible) magnifier.visible = true;
+        const p = Math.min(t / 2.5, 1);
+        const e = easeOutQuad(p);
+        const x = -12 + (24 * e);
+        const y = Math.sin(p * Math.PI * 4) * 2;
+        magnifier.position.set(x, y, 0.2);
+
+        bars.forEach(bar => {
+          const dist = magnifier.position.distanceTo(bar.position);
+          bar.material.emissiveIntensity = THREE.MathUtils.lerp(bar.material.emissiveIntensity, dist < lensRadius ? 0.5 : 0, delta * 5);
+          bar.scale.y = THREE.MathUtils.lerp(bar.scale.y, dist < lensRadius ? 1.2 : 1, delta * 5);
         });
-        magnifier.visible = false;
-      } else {
-        // Phase 3: Magnifier appears and moves
-        docGroup.scale.setScalar(1);
-        bars.forEach((bar, i) => {
-          bar.scale.y = 1;
-        });
-        magnifier.visible = true;
-        
-        // Move magnifier in a circular pattern
-        const angle = t * Math.PI * 2;
-        magnifier.position.x = Math.cos(angle) * 3;
-        magnifier.position.y = Math.sin(angle) * 2;
+
+        if (p === 1) { phase = 2; t = 0; }
+      } 
+      else if (phase === 2) { // Phase 2: Move to Center (0.5s)
+        const p = Math.min(t / 0.5, 1);
+        const e = easeOutQuad(p);
+        const startPos = new THREE.Vector3(12, 0, 0.2);
+        const endPos = new THREE.Vector3(bars[1].position.x, 0, 0.2);
+        magnifier.position.lerpVectors(startPos, endPos, e);
+        if (p === 1) { phase = 3; t = 0; }
+      }
+      else if (phase === 3) { // Phase 3: Pulse over key KPI (1.2s)
+        const pulse = Math.sin((t / 0.6) * Math.PI * 2) * 0.1 + 1;
+        magnifier.scale.set(pulse, pulse, 1);
+        bars[1].material.emissiveIntensity = 0.7;
+        bars[1].scale.y = 1.2;
+        if (t > 1.2) { phase = 4; t = 0; }
+      } 
+      else if (phase === 4) { // Phase 4: Hold (1.5s) then reset
+        magnifier.scale.set(1, 1, 1);
+        if (t > 1.5) { phase = 0; t = 0; reset(); }
       }
 
       renderer.render(scene, camera);
-      requestAnimationFrame(animate);
     }
 
     animate();
 
-    // Cleanup function
     return () => {
-      if (mount && mount.contains(renderer.domElement)) {
-        mount.removeChild(renderer.domElement);
-      }
-      renderer.dispose();
+        if (mount && renderer.domElement) {
+            mount.removeChild(renderer.domElement);
+        }
     };
+
   }, []);
 
-  return <div ref={mountRef} style={{ width: '256px', height: '192px' }} />;
+  return <div ref={mountRef} style={{ width: 256, height: 192 }} />;
 };
 
 export default AnimatedStarIcon;
