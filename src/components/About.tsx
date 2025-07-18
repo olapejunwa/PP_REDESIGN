@@ -1,7 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AnimatedTargetIcon from './AnimatedTargetIcon';
 import AnimatedEyeIcon from './AnimatedEyeIcon';
 import AnimatedStarIcon from './AnimatedStarIcon';
+
+// Custom hook to detect when an element enters the viewport
+const useInView = (options) => {
+  const ref = useRef(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      // Trigger when the element is intersecting
+      if (entry.isIntersecting) {
+        setIsInView(true);
+        // Stop observing the element once it has been seen
+        observer.unobserve(entry.target);
+      }
+    }, options);
+
+    const currentRef = ref.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [ref, options]);
+
+  return [ref, isInView];
+};
+
+// A component for each individual value item to handle its own animation state
+const ValueItem = ({ value, index }) => {
+  // Trigger the animation when 30% of the item is visible
+  const [ref, isInView] = useInView({ threshold: 0.3 });
+  const isEven = index % 2 === 0;
+
+  return (
+    <div
+      ref={ref}
+      className={`flex flex-col md:flex-row items-center gap-12 transition-all ease-in-out duration-1000 ${
+        isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      } ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`} // Alternates layout
+    >
+      {/* Icon Container */}
+      <div className="w-48 h-48 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+        <value.icon />
+      </div>
+
+      {/* Text Content Container */}
+      <div className={`text-center ${isEven ? 'md:text-left' : 'md:text-right'}`}>
+        <h3 className="text-2xl font-bold text-gray-900 mb-4">{value.title}</h3>
+        <p className="text-base text-gray-600 leading-relaxed">{value.description}</p>
+      </div>
+    </div>
+  );
+};
 
 const About = () => {
   const values = [
@@ -23,7 +80,7 @@ const About = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
@@ -34,15 +91,10 @@ const About = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Vertical layout with spacing */}
+        <div className="space-y-24 mt-24">
           {values.map((value, index) => (
-            <div key={index} className="text-center group">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 icon-pulse-glow group-hover:icon-float">
-                <value.icon />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4">{value.title}</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">{value.description}</p>
-            </div>
+            <ValueItem key={index} value={value} index={index} />
           ))}
         </div>
       </div>
