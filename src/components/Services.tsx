@@ -90,7 +90,7 @@ const Services = () => {
     <>
       {/* Curved separator from about to services */}
       <CurvedSeparator 
-        position="top"
+        position="top" 
         backgroundColor="#1a1a1a" 
         height={120}
       />
