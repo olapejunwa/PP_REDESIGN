@@ -18,72 +18,61 @@ const AnimatedStarIcon = () => {
 
     // --- Animation Objects ---
 
-    // 1. Chart Bars and Axes
-    const chartGroup = new THREE.Group();
+    // 1. Unfolding Paper
+    const reportGroup = new THREE.Group();
+    const paperMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    const paperGeometry = new THREE.PlaneGeometry(8, 10);
+    
+    const leftHalf = new THREE.Mesh(paperGeometry, paperMaterial);
+    leftHalf.position.x = -4;
+    
+    const rightHalf = new THREE.Mesh(paperGeometry, paperMaterial);
+    rightHalf.position.x = 4;
+
+    const hinge = new THREE.Group();
+    hinge.add(leftHalf);
+    hinge.add(rightHalf);
+    
+    reportGroup.add(hinge);
+    scene.add(reportGroup);
+    
+    // 2. Report Metrics (KPIs, Charts)
+    const metricsGroup = new THREE.Group();
+    metricsGroup.visible = false;
+    reportGroup.add(metricsGroup);
+
+    // Simple bar chart
     const barMaterial = new THREE.MeshBasicMaterial({ color: 0x2563eb });
-    
-    const barGeometries = [
-        new THREE.BoxGeometry(1.5, 4, 1.5),
-        new THREE.BoxGeometry(1.5, 6, 1.5),
-        new THREE.BoxGeometry(1.5, 3, 1.5)
-    ];
+    const bar1 = new THREE.Mesh(new THREE.BoxGeometry(1, 2, 0.1), barMaterial);
+    bar1.position.set(-2, -2, 0.1);
+    metricsGroup.add(bar1);
 
-    const bars = barGeometries.map((geom, index) => {
-        const bar = new THREE.Mesh(geom, barMaterial);
-        // Position bars so their base is at y = -3
-        bar.position.set((index - 1) * 2.5, geom.parameters.height / 2 - 3, 0);
-        chartGroup.add(bar);
-        return bar;
-    });
-    
-    // Add Axes
-    const axisMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa });
-    
-    // Y-Axis
-    const yAxisPoints = [new THREE.Vector3(-4, -3, 0), new THREE.Vector3(-4, 4, 0)];
-    const yAxisGeometry = new THREE.BufferGeometry().setFromPoints(yAxisPoints);
-    const yAxis = new THREE.Line(yAxisGeometry, axisMaterial);
-    chartGroup.add(yAxis);
+    const bar2 = new THREE.Mesh(new THREE.BoxGeometry(1, 3, 0.1), barMaterial);
+    bar2.position.set(0, -1.5, 0.1);
+    metricsGroup.add(bar2);
 
-    // X-Axis
-    const xAxisPoints = [new THREE.Vector3(-4, -3, 0), new THREE.Vector3(4, -3, 0)];
-    const xAxisGeometry = new THREE.BufferGeometry().setFromPoints(xAxisPoints);
-    const xAxis = new THREE.Line(xAxisGeometry, axisMaterial);
-    chartGroup.add(xAxis);
+    const bar3 = new THREE.Mesh(new THREE.BoxGeometry(1, 1.5, 0.1), barMaterial);
+    bar3.position.set(2, -2.25, 0.1);
+    metricsGroup.add(bar3);
 
-    scene.add(chartGroup);
-
-
-    // 2. Lightbulb
-    const lightbulbGroup = new THREE.Group();
-    const bulbMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0xffff00, 
-        emissive: 0xffff00, 
-        emissiveIntensity: 0, // Initially off
-        metalness: 0.5,
-        roughness: 0.5
-    });
-    const bulbGeometry = new THREE.SphereGeometry(2.5, 32, 32);
-    const bulb = new THREE.Mesh(bulbGeometry, bulbMaterial);
-    bulb.position.y = 1;
-    lightbulbGroup.add(bulb);
-    
-    const baseMaterial = new THREE.MeshBasicMaterial({ color: 0x888888 });
-    const baseGeometry = new THREE.CylinderGeometry(1, 1, 1.5, 32);
-    const base = new THREE.Mesh(baseGeometry, baseMaterial);
-    base.position.y = -1.5;
-    lightbulbGroup.add(base);
-    
-    lightbulbGroup.visible = false;
-    scene.add(lightbulbGroup);
-
-    // Add a point light to make the bulb glow
-    const pointLight = new THREE.PointLight(0xffff00, 0, 100);
-    lightbulbGroup.add(pointLight);
+    // 3. Checkmark
+    const checkmarkMaterial = new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x10b981, emissiveIntensity: 0 });
+    const checkmarkShape = new THREE.Shape();
+    checkmarkShape.moveTo(-1.5, 0);
+    checkmarkShape.lineTo(0, 1.5);
+    checkmarkShape.lineTo(2.5, -1);
+    checkmarkShape.lineTo(2, -1.5);
+    checkmarkShape.lineTo(0, 0.5);
+    checkmarkShape.lineTo(-1, -0.5);
+    const checkmarkGeometry = new THREE.ShapeGeometry(checkmarkShape);
+    const checkmark = new THREE.Mesh(checkmarkGeometry, checkmarkMaterial);
+    checkmark.position.set(0, 1, 0.2);
+    checkmark.visible = false;
+    metricsGroup.add(checkmark);
 
 
     // --- Animation Logic ---
-    let phase = 'chart_growing'; // chart_growing -> morphing -> glowing -> reset
+    let phase = 'unfolding'; // unfolding -> metrics -> checkmark -> folding
     let phaseTime = 0;
     const clock = new THREE.Clock();
 
@@ -92,67 +81,46 @@ const AnimatedStarIcon = () => {
       const deltaTime = clock.getDelta();
       phaseTime += deltaTime;
 
-      if (phase === 'chart_growing') {
-          chartGroup.visible = true;
-          lightbulbGroup.visible = false;
-          bars[0].scale.y = Math.min(1, phaseTime / 1);
-          bars[1].scale.y = Math.min(1, phaseTime / 1.5);
-          bars[2].scale.y = Math.min(1, phaseTime / 1.2);
-
-          if (phaseTime > 2) {
-              phaseTime = 0;
-              phase = 'morphing';
-          }
-      } else if (phase === 'morphing') {
-          // Move bars and axes to center and shrink
-          chartGroup.children.forEach(child => {
-              child.position.lerp(new THREE.Vector3(0, 0, 0), deltaTime * 3);
-              child.scale.lerp(new THREE.Vector3(0.1, 0.1, 0.1), deltaTime * 3);
-          });
-          
-          if (phaseTime > 1.5) {
-              phaseTime = 0;
-              phase = 'glowing';
-              chartGroup.visible = false;
-              lightbulbGroup.visible = true;
-              bulbMaterial.emissiveIntensity = 0;
-              pointLight.intensity = 0;
-          }
-
-      } else if (phase === 'glowing') {
-          // Pulse the lightbulb
-          const intensity = (Math.sin(phaseTime * 3) + 1) / 2; // Pulsing effect
-          bulbMaterial.emissiveIntensity = intensity * 2;
-          pointLight.intensity = intensity * 5;
-
-          if (phaseTime > 4) {
-              phaseTime = 0;
-              phase = 'reset';
-          }
-      } else if (phase === 'reset') {
-          // Fade out lightbulb
-          bulbMaterial.emissiveIntensity *= 0.9;
-          pointLight.intensity *= 0.9;
-
-          if (phaseTime > 1.5) {
-              phaseTime = 0;
-              phase = 'chart_growing';
-              // Reset bars and axes
-              bars.forEach((bar, index) => {
-                const height = barGeometries[index].parameters.height;
-                bar.position.set((index - 1) * 2.5, height / 2 - 3, 0);
-                bar.scale.set(1, 0, 1); // Reset scale for next growth animation
-              });
-              xAxis.position.set(0,0,0);
-              yAxis.position.set(0,0,0);
-              xAxis.scale.set(1,1,1);
-              yAxis.scale.set(1,1,1);
-          }
+      if (phase === 'unfolding') {
+        rightHalf.rotation.y = THREE.MathUtils.lerp(rightHalf.rotation.y, 0, deltaTime * 5);
+        if (phaseTime > 2) {
+          phaseTime = 0;
+          phase = 'metrics';
+          metricsGroup.visible = true;
+          metricsGroup.children.forEach(c => c.scale.set(0,0,0));
+        }
+      } else if (phase === 'metrics') {
+        metricsGroup.children.forEach(child => {
+            child.scale.lerp(new THREE.Vector3(1,1,1), deltaTime * 4);
+        });
+        if (phaseTime > 1.5) {
+          phaseTime = 0;
+          phase = 'checkmark';
+          checkmark.visible = true;
+        }
+      } else if (phase === 'checkmark') {
+        checkmarkMaterial.emissiveIntensity = (Math.sin(phaseTime * 5) + 1) / 2; // Glow
+        if (phaseTime > 2.5) {
+          phaseTime = 0;
+          phase = 'folding';
+        }
+      } else if (phase === 'folding') {
+        metricsGroup.visible = false;
+        checkmark.visible = false;
+        checkmarkMaterial.emissiveIntensity = 0;
+        rightHalf.rotation.y = THREE.MathUtils.lerp(rightHalf.rotation.y, -Math.PI, deltaTime * 5);
+        if (phaseTime > 2) {
+          phaseTime = 0;
+          phase = 'unfolding';
+        }
       }
-
+      
+      reportGroup.rotation.y += deltaTime * 0.1;
       renderer.render(scene, camera);
     };
-
+    
+    // Initial state
+    rightHalf.rotation.y = -Math.PI;
     animate();
 
     return () => {
