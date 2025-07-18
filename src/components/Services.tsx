@@ -1,7 +1,7 @@
-import React from 'react';
-import { Calculator } from 'lucide-react';
-import AnimatedFileText from './AnimatedFileText'; // Make sure the path is correct
-import AnimatedTrendingUp from './AnimatedTrendingUp'; // Make sure the path is correct
+import React, { useState, useEffect, useRef } from 'react';
+import { Calculator, ChevronLeft, ChevronRight } from 'lucide-react';
+import AnimatedFileText from './AnimatedFileText';
+import AnimatedTrendingUp from './AnimatedTrendingUp';
 
 const Services = () => {
   const services = [
@@ -9,45 +9,81 @@ const Services = () => {
       icon: "/images/pepcode logo.webp",
       title: "PEPCODE",
       description: "Advanced bookkeeping software designed to simplify your financial management processes.",
-      link: "https://pepcodeinc.com/"
+      link: "https://pepcodeinc.com/",
+      cardColor: "bg-green-500"
     },
     {
       icon: "/images/7.png",
       title: "OWA by PEPCODE",
       description: "Helps market women track inventory by converting paper entries into accurate, synced digital records.",
-      link: "https://owabypepcode.com.ng/"
+      link: "https://owabypepcode.com.ng/",
+      cardColor: "bg-blue-800"
     },
     {
       icon: "/images/auditme.webp",
       title: "AUDITME",
       description: "Fast-tracked audited accounts platform for streamlined compliance and reporting.",
-      link: "https://auditme.com.ng/"
+      link: "https://auditme.com.ng/",
+      cardColor: "bg-orange-400"
     },
     {
       icon: Calculator,
       title: "Tax Services",
       description: "Expert tax preparation and planning services to optimize your financial position.",
-      color: "bg-orange-600",
-      animationClass: "animate-bounce-custom",
-      link: "#" // Placeholder link
+      link: "/tax-services",
+      cardColor: "bg-teal-500"
     },
     {
       icon: AnimatedFileText,
       title: "Book-keeping Services",
       description: "Professional bookkeeping services to maintain accurate financial records.",
-      color: "bg-teal-600",
-      animationClass: "",
-      link: "#" // Placeholder link
+      link: "/bookkeeping-services",
+      cardColor: "bg-indigo-500"
     },
     {
       icon: AnimatedTrendingUp,
       title: "Inventory Management",
       description: "Efficient inventory tracking and management solutions for your business.",
-      color: "bg-red-600",
-      animationClass: "",
-      link: "#" // Placeholder link
+      link: "/inventory-management",
+      cardColor: "bg-red-500"
     }
   ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const timeoutRef = useRef(null);
+
+  const resetTimeout = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  useEffect(() => {
+    resetTimeout();
+    timeoutRef.current = setTimeout(
+      () =>
+        setCurrentIndex((prevIndex) =>
+          prevIndex === services.length - 1 ? 0 : prevIndex + 1
+        ),
+      3000 // Change slide every 3 seconds
+    );
+
+    return () => {
+      resetTimeout();
+    };
+  }, [currentIndex, services.length]);
+
+  const goToPrevious = () => {
+    const isFirstSlide = currentIndex === 0;
+    const newIndex = isFirstSlide ? services.length - 1 : currentIndex - 1;
+    setCurrentIndex(newIndex);
+  };
+
+  const goToNext = () => {
+    const isLastSlide = currentIndex === services.length - 1;
+    const newIndex = isLastSlide ? 0 : currentIndex + 1;
+    setCurrentIndex(newIndex);
+  };
 
   return (
     <section className="py-20 bg-gray-50">
@@ -61,51 +97,46 @@ const Services = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            // The entire card is now a link that opens in a new tab
-            <a 
-              key={index} 
-              href={service.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group block"
+        <div className="relative">
+          <div className="overflow-hidden">
+            <div 
+              className="flex transition-transform ease-in-out duration-500"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-              <div className="p-8">
-                {typeof service.icon === 'string' ? (
-                  <div className="w-12 h-12 rounded-lg mb-6 flex items-center justify-center">
-                    <img
-                      src={service.icon}
-                      alt={`${service.title} logo`}
-                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
-                      onError={(e) => {
-                        console.error(`Failed to load image: ${service.icon}`);
-                        const target = e.currentTarget;
-                        target.style.display = 'none';
-                        const fallback = document.createElement('div');
-                        fallback.className = `w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 font-bold text-lg rounded-lg`;
-                        fallback.textContent = service.title.charAt(0);
-                        target.parentNode?.appendChild(fallback);
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className={`w-12 h-12 ${service.color} rounded-lg flex items-center justify-center mb-6`}>
-                    <service.icon className={`w-6 h-6 text-white transition-transform duration-300 ${service.animationClass || ''}`} />
-                  </div>
-                )}
-                
-                <h3 className="text-lg font-bold text-gray-900 mb-4">{service.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">{service.description}</p>
-                
-                {/* Changed button to a div for semantic correctness inside an <a> tag */}
-                <div className="text-blue-600 font-semibold group-hover:text-blue-700 transition-colors duration-200">
-                  Learn More →
+              {services.map((service, index) => (
+                <div key={index} className="flex-shrink-0 w-full px-2">
+                  <a
+                    href={service.link}
+                    target={service.link.startsWith('http') ? '_blank' : '_self'}
+                    rel="noopener noreferrer"
+                    className={`block p-8 rounded-2xl text-white h-80 flex flex-col justify-between ${service.cardColor}`}
+                  >
+                    <div>
+                      <h3 className="text-2xl font-bold mb-4">“{service.title}”</h3>
+                      <p className="text-base opacity-90">{service.description}</p>
+                    </div>
+                    <div className="w-20 h-20 self-end">
+                      {typeof service.icon === 'string' ? (
+                        <img src={service.icon} alt={`${service.title} logo`} className="w-full h-full object-contain"/>
+                      ) : (
+                        <service.icon className="w-full h-full text-white/50"/>
+                      )}
+                    </div>
+                  </a>
                 </div>
-              </div>
-            </a>
-          ))}
+              ))}
+            </div>
+          </div>
+          
+          {/* Carousel Controls */}
+          <button onClick={goToPrevious} className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white">
+            <ChevronLeft className="w-6 h-6 text-gray-800" />
+          </button>
+          <button onClick={goToNext} className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white">
+            <ChevronRight className="w-6 h-6 text-gray-800" />
+          </button>
         </div>
+
       </div>
     </section>
   );
