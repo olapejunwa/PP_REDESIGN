@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
-const AnimatedTargetIcon = () => {
+const AnimatedStarIcon = () => {
   const mountRef = useRef(null);
 
   useEffect(() => {
@@ -16,48 +14,113 @@ const AnimatedTargetIcon = () => {
     renderer.setSize(192, 192);
     currentMount.appendChild(renderer.domElement);
 
-    camera.position.z = 10; // Pulled camera back to fit larger elements
+    camera.position.z = 10;
 
-    // "Waste" text
-    const loader = new FontLoader();
-    loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-      const textGeometry = new TextGeometry('WASTE', {
-        font: font,
-        size: 2, // Increased font size
-        height: 0.25,
-      });
-      const textMaterial = new THREE.MeshBasicMaterial({ color: 0x2563eb });
-      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-      textMesh.position.set(-5, 2, 0); // Adjusted position
-      scene.add(textMesh);
-    });
+    // --- Animation Objects ---
 
-    // Downward trending line
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0xef4444, linewidth: 4 }); // Thicker line
-    const points = [];
-    points.push(new THREE.Vector3(-4, 0, 0)); // Wider line
-    points.push(new THREE.Vector3(0, -2, 0));
-    points.push(new THREE.Vector3(4, -1.5, 0));
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-    const line = new THREE.Line(lineGeometry, lineMaterial);
-    scene.add(line);
+    // 1. Receipts
+    const receipts = [];
+    const receiptMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    const receiptGeometry = new THREE.PlaneGeometry(1.5, 3); // Tall rectangle shape
+
+    for (let i = 0; i < 15; i++) {
+      const receipt = new THREE.Mesh(receiptGeometry, receiptMaterial);
+      receipt.position.set(
+        (Math.random() - 0.5) * 20,
+        (Math.random() - 0.5) * 20,
+        (Math.random() - 0.5) * 5
+      );
+      receipt.rotation.set(
+        Math.random() * Math.PI,
+        Math.random() * Math.PI,
+        Math.random() * Math.PI
+      );
+      scene.add(receipt);
+      receipts.push(receipt);
+    }
+
+    // 2. Dashboard
+    const dashboardGroup = new THREE.Group();
+    const dashboardMaterial = new THREE.MeshBasicMaterial({ color: 0x2563eb });
+    const dashboardGeometry = new THREE.PlaneGeometry(8, 5);
+    const dashboard = new THREE.Mesh(dashboardGeometry, dashboardMaterial);
+    dashboardGroup.add(dashboard);
+    dashboardGroup.visible = false; // Initially hidden
+    scene.add(dashboardGroup);
     
-    let lineProgress = 0;
+    // 3. Dashboard elements (charts)
+    const barMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const bar1 = new THREE.Mesh(new THREE.PlaneGeometry(1, 2), barMaterial);
+    bar1.position.set(-2.5, -0.5, 0.1);
+    dashboardGroup.add(bar1);
+
+    const bar2 = new THREE.Mesh(new THREE.PlaneGeometry(1, 3), barMaterial);
+    bar2.position.set(0, 0, 0.1);
+    dashboardGroup.add(bar2);
+    
+    const bar3 = new THREE.Mesh(new THREE.PlaneGeometry(1, 1.5), barMaterial);
+    bar3.position.set(2.5, -0.75, 0.1);
+    dashboardGroup.add(bar3);
+
+
+    // --- Animation Logic ---
+    let phase = 'scattering'; // scattering -> transforming -> revealing
+    let phaseTime = 0;
+    const clock = new THREE.Clock();
 
     const animate = function () {
       requestAnimationFrame(animate);
-      
-      lineProgress += 0.01;
-      if (lineProgress > 1) lineProgress = 0;
-      
-      const subPoints = points.slice(0, Math.floor(lineProgress * points.length) + 1);
-      if(subPoints.length > 1) {
-        const lastSegmentProgress = (lineProgress * points.length) % 1;
-        const lastPoint = subPoints[subPoints.length - 1];
-        const secondLastPoint = subPoints[subPoints.length - 2];
-        const interpolatedPoint = new THREE.Vector3().lerpVectors(secondLastPoint, lastPoint, lastSegmentProgress);
-        const dynamicPoints = [...subPoints.slice(0, -1), interpolatedPoint];
-        line.geometry.setFromPoints(dynamicPoints);
+      const deltaTime = clock.getDelta();
+      phaseTime += deltaTime;
+
+      if (phase === 'scattering') {
+        receipts.forEach(r => {
+            r.visible = true;
+            // Gently float around
+            r.rotation.x += deltaTime * 0.2;
+            r.rotation.y += deltaTime * 0.2;
+        });
+        if (phaseTime > 3) {
+            phaseTime = 0;
+            phase = 'transforming';
+        }
+      } else if (phase === 'transforming') {
+          receipts.forEach(r => {
+              r.position.lerp(new THREE.Vector3(0,0,0), deltaTime * 2);
+              r.scale.lerp(new THREE.Vector3(0.1, 0.1, 0.1), deltaTime * 2);
+          });
+          if (phaseTime > 2) {
+              phaseTime = 0;
+              phase = 'revealing';
+              receipts.forEach(r => r.visible = false);
+              dashboardGroup.visible = true;
+              dashboardGroup.scale.set(0,0,0);
+              bar1.scale.y = 0;
+              bar2.scale.y = 0;
+              bar3.scale.y = 0;
+          }
+      } else if (phase === 'revealing') {
+          dashboardGroup.scale.lerp(new THREE.Vector3(1,1,1), deltaTime * 3);
+          
+          // Animate bars growing
+          if(bar1.scale.y < 1) bar1.scale.y += deltaTime * 2;
+          if(bar2.scale.y < 1) bar2.scale.y += deltaTime * 1.5;
+          if(bar3.scale.y < 1) bar3.scale.y += deltaTime * 2.5;
+
+          if (phaseTime > 4) {
+              phaseTime = 0;
+              phase = 'scattering';
+              dashboardGroup.visible = false;
+              // Reset receipts for next loop
+              receipts.forEach(r => {
+                r.position.set(
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 5
+                );
+                r.scale.set(1,1,1);
+              });
+          }
       }
 
       renderer.render(scene, camera);
@@ -73,4 +136,4 @@ const AnimatedTargetIcon = () => {
   return <div ref={mountRef} style={{ width: '192px', height: '192px' }} />;
 };
 
-export default AnimatedTargetIcon;
+export default AnimatedStarIcon;
