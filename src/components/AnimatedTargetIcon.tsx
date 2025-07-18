@@ -1,13 +1,26 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 
-const AnimatedTargetIcon = () => {
-  const mountRef = useRef(null);
+interface AnimatedTargetIconProps {
+  scatterRadius?: number;
+  animationDuration?: number;
+  staggerDelay?: number;
+  className?: string;
+}
+
+const AnimatedTargetIcon: React.FC<AnimatedTargetIconProps> = ({
+  scatterRadius = 8,
+  animationDuration = 2.5,
+  staggerDelay = 0.2,
+  className
+}) => {
+  const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const currentMount = mountRef.current;
     if (!currentMount) return;
 
+    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -16,103 +29,243 @@ const AnimatedTargetIcon = () => {
 
     camera.position.z = 8;
 
-    // --- Chart Bars ---
-    const pieces = [];
-    const finalPositions = [
-      { x: -2, y: -1.5, width: 0.8, height: 2 },   // Left bar
-      { x: 0, y: -1, width: 0.8, height: 3 },     // Middle bar (tallest)
-      { x: 2, y: -1.3, width: 0.8, height: 2.4 }  // Right bar
+    // Chart elements configuration
+    const chartElements = [
+      // Chart bars
+      {
+        type: 'bar',
+        geometry: new THREE.PlaneGeometry(0.6, 1.8),
+        material: new THREE.MeshBasicMaterial({ color: 0x3b82f6 }),
+        finalPosition: new THREE.Vector3(-1.5, -0.5, 0),
+        animationDelay: 0
+      },
+      {
+        type: 'bar',
+        geometry: new THREE.PlaneGeometry(0.6, 2.8),
+        material: new THREE.MeshBasicMaterial({ color: 0x3b82f6 }),
+        finalPosition: new THREE.Vector3(0, -0.1, 0),
+        animationDelay: staggerDelay
+      },
+      {
+        type: 'bar',
+        geometry: new THREE.PlaneGeometry(0.6, 2.2),
+        material: new THREE.MeshBasicMaterial({ color: 0x3b82f6 }),
+        finalPosition: new THREE.Vector3(1.5, -0.3, 0),
+        animationDelay: staggerDelay * 2
+      },
+      // Y-Axis
+      {
+        type: 'axis',
+        geometry: new THREE.PlaneGeometry(0.08, 4),
+        material: new THREE.MeshBasicMaterial({ color: 0x6b7280 }),
+        finalPosition: new THREE.Vector3(-2.5, 0, -0.1),
+        animationDelay: staggerDelay * 3
+      },
+      // X-Axis
+      {
+        type: 'axis',
+        geometry: new THREE.PlaneGeometry(4.5, 0.08),
+        material: new THREE.MeshBasicMaterial({ color: 0x6b7280 }),
+        finalPosition: new THREE.Vector3(-0.25, -2, -0.1),
+        animationDelay: staggerDelay * 4
+      },
+      // Grid lines (optional decorative elements)
+      {
+        type: 'grid',
+        geometry: new THREE.PlaneGeometry(4, 0.02),
+        material: new THREE.MeshBasicMaterial({ color: 0xe5e7eb, transparent: true, opacity: 0.5 }),
+        finalPosition: new THREE.Vector3(-0.25, 0.5, -0.2),
+        animationDelay: staggerDelay * 5
+      },
+      {
+        type: 'grid',
+        geometry: new THREE.PlaneGeometry(4, 0.02),
+        material: new THREE.MeshBasicMaterial({ color: 0xe5e7eb, transparent: true, opacity: 0.5 }),
+        finalPosition: new THREE.Vector3(-0.25, 1, -0.2),
+        animationDelay: staggerDelay * 6
+      }
     ];
 
-    for (let i = 0; i < 3; i++) {
-      const geometry = new THREE.PlaneGeometry(finalPositions[i].width, finalPositions[i].height);
-      const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
-      const piece = new THREE.Mesh(geometry, material);
-      
-      piece.position.set((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 8, 0);
-      piece.userData.finalPosition = new THREE.Vector3(finalPositions[i].x, finalPositions[i].y, 0);
-      
-      piece.rotation.z = (Math.random() - 0.5) * Math.PI;
-      piece.userData.finalRotation = 0;
-      
-      scene.add(piece);
-      pieces.push(piece);
-    }
+    // Create mesh objects and set initial scattered positions
+    const meshes: Array<{
+      mesh: THREE.Mesh;
+      finalPosition: THREE.Vector3;
+      scatteredPosition: THREE.Vector3;
+      animationDelay: number;
+      startTime?: number;
+    }> = [];
 
-    // --- Chart Axes ---
-    const axisMaterial = new THREE.LineBasicMaterial({
-        color: 0xadb5bd, // A light gray color for the axes
-        transparent: true,
-        opacity: 0
+    chartElements.forEach((element) => {
+      const mesh = new THREE.Mesh(element.geometry, element.material);
+      
+      // Generate random scattered position
+      const scatteredPosition = new THREE.Vector3(
+        (Math.random() - 0.5) * scatterRadius * 2,
+        (Math.random() - 0.5) * scatterRadius * 2,
+        (Math.random() - 0.5) * 2
+      );
+      
+      // Set initial position to scattered
+      mesh.position.copy(scatteredPosition);
+      
+      // Add random rotation for more dramatic scatter effect
+      mesh.rotation.z = (Math.random() - 0.5) * Math.PI;
+      
+      scene.add(mesh);
+      
+      meshes.push({
+        mesh,
+        finalPosition: element.finalPosition,
+        scatteredPosition,
+        animationDelay: element.animationDelay
+      });
     });
 
-    // Y-Axis
-    const yAxisPoints = [new THREE.Vector3(-3.5, -3, -0.1), new THREE.Vector3(-3.5, 2, -0.1)];
-    const yAxisGeom = new THREE.BufferGeometry().setFromPoints(yAxisPoints);
-    const yAxis = new THREE.Line(yAxisGeom, axisMaterial.clone());
-    scene.add(yAxis);
-
-    // X-Axis
-    const xAxisPoints = [new THREE.Vector3(-3.5, -3, -0.1), new THREE.Vector3(3.5, -3, -0.1)];
-    const xAxisGeom = new THREE.BufferGeometry().setFromPoints(xAxisPoints);
-    const xAxis = new THREE.Line(xAxisGeom, axisMaterial.clone());
-    scene.add(xAxis);
-
-
-    // --- Animation Logic ---
-    let animationTime = 0;
-    const animationDuration = 3; // 3 seconds total
+    // Animation variables
+    let animationStartTime = 0;
     const clock = new THREE.Clock();
+    let isAnimating = true;
 
-    const animate = function () {
+    // Easing function (ease-out cubic)
+    const easeOutCubic = (t: number): number => {
+      return 1 - Math.pow(1 - t, 3);
+    };
+
+    // Animation loop
+    const animate = () => {
       requestAnimationFrame(animate);
-      const deltaTime = clock.getDelta();
-      animationTime += deltaTime;
       
-      const progress = Math.min(animationTime / animationDuration, 1);
-      const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease-out cubic
+      const elapsedTime = clock.getElapsedTime();
       
-      // Animate pieces moving to their final positions
-      pieces.forEach((piece) => {
-        if (!piece.userData.startPosition) {
-          piece.userData.startPosition = piece.position.clone();
-          piece.userData.startRotation = piece.rotation.z;
-        }
+      if (animationStartTime === 0) {
+        animationStartTime = elapsedTime;
+      }
+      
+      const totalElapsed = elapsedTime - animationStartTime;
+      
+      // Animate each mesh with staggered timing
+      meshes.forEach((item) => {
+        const elementStartTime = item.animationDelay;
+        const elementElapsed = Math.max(0, totalElapsed - elementStartTime);
+        const progress = Math.min(elementElapsed / animationDuration, 1);
         
-        piece.position.lerpVectors(piece.userData.startPosition, piece.userData.finalPosition, easeProgress);
-        piece.rotation.z = THREE.MathUtils.lerp(piece.userData.startRotation, piece.userData.finalRotation, easeProgress);
+        if (progress > 0) {
+          // Apply easing
+          const easedProgress = easeOutCubic(progress);
+          
+          // Interpolate position
+          item.mesh.position.lerpVectors(
+            item.scatteredPosition,
+            item.finalPosition,
+            easedProgress
+          );
+          
+          // Interpolate rotation back to 0
+          const initialRotation = item.mesh.userData.initialRotation || item.mesh.rotation.z;
+          if (!item.mesh.userData.initialRotation) {
+            item.mesh.userData.initialRotation = item.mesh.rotation.z;
+          }
+          
+          item.mesh.rotation.z = THREE.MathUtils.lerp(
+            initialRotation,
+            0,
+            easedProgress
+          );
+          
+          // Fade in effect
+          if (item.mesh.material instanceof THREE.MeshBasicMaterial) {
+            const targetOpacity = item.mesh.material.userData.targetOpacity || 1;
+            if (!item.mesh.material.userData.targetOpacity) {
+              item.mesh.material.userData.targetOpacity = item.mesh.material.opacity;
+              item.mesh.material.transparent = true;
+              item.mesh.material.opacity = 0;
+            }
+            
+            item.mesh.material.opacity = THREE.MathUtils.lerp(
+              0,
+              targetOpacity,
+              easedProgress
+            );
+          }
+        }
       });
       
-      // Fade in axes as pieces assemble
-      xAxis.material.opacity = easeProgress;
-      yAxis.material.opacity = easeProgress;
-      
-      // Reset animation after completion + pause
-      if (animationTime > animationDuration + 2) {
-        animationTime = 0;
-        pieces.forEach((piece) => {
-          piece.position.set((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 8, 0);
-          piece.rotation.z = (Math.random() - 0.5) * Math.PI;
-          piece.userData.startPosition = null; // Reset for next cycle
-        });
-        xAxis.material.opacity = 0;
-        yAxis.material.opacity = 0;
+      // Check if animation is complete
+      const totalAnimationTime = animationDuration + (meshes.length - 1) * staggerDelay;
+      if (totalElapsed > totalAnimationTime + 1.5 && isAnimating) {
+        // Reset animation after a pause
+        setTimeout(() => {
+          // Reset all elements to scattered positions
+          meshes.forEach((item) => {
+            // Generate new random scattered position
+            item.scatteredPosition.set(
+              (Math.random() - 0.5) * scatterRadius * 2,
+              (Math.random() - 0.5) * scatterRadius * 2,
+              (Math.random() - 0.5) * 2
+            );
+            
+            item.mesh.position.copy(item.scatteredPosition);
+            item.mesh.rotation.z = (Math.random() - 0.5) * Math.PI;
+            item.mesh.userData.initialRotation = item.mesh.rotation.z;
+            
+            if (item.mesh.material instanceof THREE.MeshBasicMaterial) {
+              item.mesh.material.opacity = 0;
+            }
+          });
+          
+          // Restart animation
+          animationStartTime = 0;
+          clock.start();
+        }, 500);
       }
       
       renderer.render(scene, camera);
     };
 
-    animate();
+    // Handle reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (prefersReducedMotion) {
+      // Skip animation and show final state
+      meshes.forEach((item) => {
+        item.mesh.position.copy(item.finalPosition);
+        item.mesh.rotation.z = 0;
+        if (item.mesh.material instanceof THREE.MeshBasicMaterial) {
+          item.mesh.material.opacity = item.mesh.material.userData.targetOpacity || 1;
+        }
+      });
+      renderer.render(scene, camera);
+    } else {
+      animate();
+    }
 
+    // Cleanup function
     return () => {
       if (currentMount && renderer.domElement) {
         currentMount.removeChild(renderer.domElement);
       }
+      
+      // Dispose of geometries and materials
+      meshes.forEach((item) => {
+        item.mesh.geometry.dispose();
+        if (item.mesh.material instanceof THREE.Material) {
+          item.mesh.material.dispose();
+        }
+      });
+      
       renderer.dispose();
-    }
-  }, []);
+    };
+  }, [scatterRadius, animationDuration, staggerDelay]);
 
-  return <div ref={mountRef} style={{ width: '192px', height: '192px' }} />;
+  return (
+    <div 
+      ref={mountRef} 
+      className={className}
+      style={{ width: '192px', height: '192px' }}
+      role="img"
+      aria-label="Animated chart formation"
+    />
+  );
 };
 
 export default AnimatedTargetIcon;
