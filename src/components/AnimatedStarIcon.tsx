@@ -1,131 +1,227 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const FileChartPop = () => {
+const DataNodeNetworkBloom = () => {
   const mountRef = useRef(null);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
-    // Scene + Camera
+    // ─── Scene, Camera, Renderer ────────────────────────────────────────────────
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
-    camera.position.set(0, 5, 20);
+    camera.position.set(0, 0, 20);
+
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(200, 200);
+    renderer.setSize(300, 300);
     mount.appendChild(renderer.domElement);
 
-    // Lights
+    // ─── Lights ─────────────────────────────────────────────────────────────────
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-    const pt = new THREE.PointLight(0xffffff, 0.8);
-    pt.position.set(10, 15, 10);
-    scene.add(pt);
+    const point = new THREE.PointLight(0xffffff, 0.8);
+    point.position.set(10, 10, 10);
+    scene.add(point);
 
-    // File halves
-    const fileGroup = new THREE.Group();
-    scene.add(fileGroup);
-    const w = 8, h = 10;
-    const mat = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, side: THREE.DoubleSide });
+    // ─── 1) Document Fade-In ────────────────────────────────────────────────────
+    const docMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0
+    });
+    const docGeom = new THREE.PlaneGeometry(8, 10);
+    const documentMesh = new THREE.Mesh(docGeom, docMat);
+    scene.add(documentMesh);
 
-    const leftGeom = new THREE.PlaneGeometry(w, h);
-    leftGeom.translate(w / 2, 0, 0);
-    const left = new THREE.Mesh(leftGeom, mat);
-    left.position.x = -w/2;
-    fileGroup.add(left);
+    // ─── 2) Network Group (nodes, lines, arrow, central) ───────────────────────
+    const network = new THREE.Group();
+    network.visible = false;
+    scene.add(network);
 
-    const rightGeom = new THREE.PlaneGeometry(w, h);
-    rightGeom.translate(-w / 2, 0, 0);
-    const right = new THREE.Mesh(rightGeom, mat);
-    right.position.x = w/2;
-    fileGroup.add(right);
+    // — Central KPI Node —
+    const centralMat = new THREE.MeshStandardMaterial({ color: 0x10b981 });
+    const central = new THREE.Mesh(
+      new THREE.SphereGeometry(0.3, 16, 16),
+      centralMat
+    );
+    network.add(central);
 
-    // Chart group (hidden initially)
-    const chart = new THREE.Group();
-    chart.visible = false;
-    fileGroup.add(chart);
+    // — Outer Data Nodes —
+    const nodeCount = 12;
+    const radius = 6;
+    const outerNodes = [];
+    const nodeMat = new THREE.MeshStandardMaterial({ color: 0x2563eb });
+    for (let i = 0; i < nodeCount; i++) {
+      const angle = (i / nodeCount) * Math.PI * 2;
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+      const node = new THREE.Mesh(
+        new THREE.SphereGeometry(0.2, 12, 12),
+        nodeMat
+      );
+      node.position.set(x, y, 0.1);
+      node.scale.set(0, 0, 0);
+      outerNodes.push(node);
+      network.add(node);
+    }
 
-    // Bar chart
-    const barMat = new THREE.MeshStandardMaterial({ color: 0x2563eb });
-    [1.5, 2.5, 3.5].forEach((height, i) => {
-      const bar = new THREE.Mesh(new THREE.BoxGeometry(1, height, 1), barMat);
-      bar.position.set(-3 + i*3, height/2 - 2, 0);
-      chart.add(bar);
+    // — Connection Lines —
+    const lines = [];
+    const lineMat = new THREE.LineBasicMaterial({ color: 0xcccccc });
+    outerNodes.forEach((node) => {
+      const pts = [node.position.clone(), central.position.clone()];
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const line = new THREE.Line(geo, lineMat);
+      line.visible = false;
+      lines.push(line);
+      network.add(line);
     });
 
-    // Line graph + arrow
-    const lineMat = new THREE.LineBasicMaterial({ color: 0xff7f0e, linewidth: 2 });
-    const points = [
-      new THREE.Vector3(-4, -2, 0),
-      new THREE.Vector3(-2, -1, 0),
-      new THREE.Vector3(0, 0, 0),
-      new THREE.Vector3(2, 1, 0),
-      new THREE.Vector3(4, 2, 0),
-    ];
-    const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-    const line = new THREE.Line(lineGeo, lineMat);
-    chart.add(line);
+    // — Rising Trend Arrow —
+    const arrowGroup = new THREE.Group();
+    // compute start/end
+    const start = new THREE.Vector3(-4, -4, 0);
+    const end   = new THREE.Vector3( 4,  4, 0);
+    const dir   = new THREE.Vector3().subVectors(end, start).normalize();
+    const len   = start.distanceTo(end);
+    const midpoint = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
 
-    // Arrow head
-    const arrowHead = new THREE.Mesh(
-      new THREE.ConeGeometry(0.3, 1, 16),
-      new THREE.MeshStandardMaterial({ color: 0xff7f0e })
+    // shaft
+    const shaftGeo = new THREE.CylinderGeometry(0.05, 0.05, len, 8);
+    const shaftMat = new THREE.MeshStandardMaterial({ color: 0xff7f0e });
+    const shaft = new THREE.Mesh(shaftGeo, shaftMat);
+    shaft.position.copy(midpoint);
+    shaft.quaternion.setFromUnitVectors(
+      new THREE.Vector3(0, 1, 0),
+      dir
     );
-    arrowHead.position.copy(points[points.length - 1]);
-    arrowHead.rotation.z = -Math.PI / 4;
-    chart.add(arrowHead);
+    arrowGroup.add(shaft);
 
-    // Animation timing
-    const clock = new THREE.Clock();
-    let phase = 0; // 0=open, 1=show chart, 2=reset
-    let t = 0;
+    // head
+    const headGeo = new THREE.ConeGeometry(0.2, 0.8, 16);
+    const head = new THREE.Mesh(headGeo, shaftMat);
+    head.position.copy(end);
+    head.quaternion.copy(shaft.quaternion);
+    arrowGroup.add(head);
 
-    const animate = () => {
-      requestAnimationFrame(animate);
-      const dt = clock.getDelta();
-      t += dt;
+    arrowGroup.scale.set(0, 0, 0);
+    arrowGroup.visible = false;
+    network.add(arrowGroup);
 
-      if (phase === 0) {
-        // unfold over 1.5s
-        const p = Math.min(t / 1.5, 1);
-        left.rotation.y  = p * Math.PI / 2;
-        right.rotation.y = -p * Math.PI / 2;
-        if (p === 1) { phase = 1; t = 0; chart.visible = true; }
-      } else if (phase === 1) {
-        // pop chart scale in 1s
-        const p = Math.min(t / 1, 1);
-        const s = p;
-        chart.scale.set(s, s, s);
-        if (p === 1) phase = 2;
-      } else if (phase === 2 && t > 2) {
-        // reset after 2s
-        phase = 3; t = 0;
-      } else if (phase === 3) {
-        // fold back over 1.5s
-        const p = Math.min(t / 1.5, 1);
-        const q = 1 - p;
-        left.rotation.y  = q * Math.PI / 2;
-        right.rotation.y = -q * Math.PI / 2;
-        chart.scale.set(0, 0, 0);
-        chart.visible = false;
-        if (p === 1) { phase = 0; t = 0; }
-      }
-
-      // gentle rotation
-      fileGroup.rotation.y += dt * 0.05;
-      renderer.render(scene, camera);
+    // ─── Easing Functions ───────────────────────────────────────────────────────
+    const easeOutBack = (t) => {
+      const c1 = 1.70158, c3 = c1 + 1;
+      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
     };
 
-    // start closed
-    left.rotation.y = 0;
-    right.rotation.y = 0;
-    chart.scale.set(0,0,0);
+    // ─── Animation Phases & Timing ──────────────────────────────────────────────
+    const docFadeDur       = 0.4;
+    const spawnInterval    = 0.2;
+    const connectInterval  = 0.15;
+    const arrowDur         = 0.5;
+    const pulseDur         = 1;
+    const holdDur          = 1;
+
+    let phase = 0, timer = 0;
+    const clock = new THREE.Clock();
+
+    function resetAll() {
+      docMat.opacity = 0;
+      network.visible = false;
+      outerNodes.forEach(n => n.scale.set(0, 0, 0));
+      lines.forEach(l => (l.visible = false));
+      arrowGroup.visible = false;
+      arrowGroup.scale.set(0, 0, 0);
+      central.scale.set(1, 1, 1);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = clock.getDelta();
+      timer += dt;
+
+      // ── Phase 0: Document Fade-In ───────────────────────────────────────────
+      if (phase === 0) {
+        const t = Math.min(timer / docFadeDur, 1);
+        docMat.opacity = t;
+        if (t === 1) {
+          phase = 1;
+          timer = 0;
+          network.visible = true;
+        }
+      }
+      // ── Phase 1: Spawn Nodes ────────────────────────────────────────────────
+      else if (phase === 1) {
+        outerNodes.forEach((node, i) => {
+          const startT = i * spawnInterval;
+          if (timer >= startT) {
+            const localT = Math.min((timer - startT) / spawnInterval, 1);
+            const s = easeOutBack(localT);
+            node.scale.set(s, s, s);
+          }
+        });
+        if (timer >= nodeCount * spawnInterval) {
+          phase = 2;
+          timer = 0;
+        }
+      }
+      // ── Phase 2: Connect Lines & Arrow ──────────────────────────────────────
+      else if (phase === 2) {
+        lines.forEach((line, i) => {
+          if (timer >= i * connectInterval) line.visible = true;
+        });
+        if (timer >= nodeCount * connectInterval) {
+          arrowGroup.visible = true;
+          phase = 3;
+          timer = 0;
+        }
+      }
+      // ── Phase 3: Arrow Pop ─────────────────────────────────────────────────
+      else if (phase === 3) {
+        const t = Math.min(timer / arrowDur, 1);
+        const s = easeOutBack(t);
+        arrowGroup.scale.set(s, s, s);
+        if (t === 1) {
+          phase = 4;
+          timer = 0;
+        }
+      }
+      // ── Phase 4: Center Pulse ───────────────────────────────────────────────
+      else if (phase === 4) {
+        const p = Math.sin((timer / pulseDur) * Math.PI * 2) * 0.2 + 1;
+        central.scale.set(p, p, p);
+        if (timer >= pulseDur) {
+          phase = 5;
+          timer = 0;
+        }
+      }
+      // ── Phase 5: Hold, then Reset ───────────────────────────────────────────
+      else if (phase === 5) {
+        if (timer >= holdDur) {
+          phase = 0;
+          timer = 0;
+          resetAll();
+        }
+      }
+
+      // gentle background rotation
+      network.rotation.y += dt * 0.02;
+
+      renderer.render(scene, camera);
+    }
+
+    // kick things off
+    resetAll();
     animate();
 
-    return () => mount.removeChild(renderer.domElement);
+    // cleanup
+    return () => {
+      mount.removeChild(renderer.domElement);
+    };
   }, []);
 
-  return <div ref={mountRef} style={{ width: 200, height: 200 }} />;
+  return <div ref={mountRef} style={{ width: 300, height: 300 }} />;
 };
 
-export default FileChartPop;
+export default DataNodeNetworkBloom;
