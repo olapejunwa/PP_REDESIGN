@@ -14,46 +14,119 @@ const AnimatedStarIcon = () => {
     renderer.setSize(192, 192);
     currentMount.appendChild(renderer.domElement);
 
-    camera.position.z = 10; // Pulled camera back
+    camera.position.z = 10;
 
-    // Scattered numbers
-    const numbers = [];
-    for (let i = 0; i < 30; i++) {
-      const geometry = new THREE.BoxGeometry(0.8, 0.8, 0.8); // Larger boxes
-      const material = new THREE.MeshBasicMaterial({ color: 0xcccccc });
-      const cube = new THREE.Mesh(geometry, material);
-      cube.position.x = (Math.random() - 0.5) * 14;
-      cube.position.y = (Math.random() - 0.5) * 14;
-      scene.add(cube);
-      numbers.push(cube);
-    }
+    // --- Animation Objects ---
+
+    // 1. Chart Bars
+    const chartGroup = new THREE.Group();
+    const barMaterial = new THREE.MeshBasicMaterial({ color: 0x2563eb });
     
-    // Magnifying glass
-    const group = new THREE.Group();
-    const ringGeometry = new THREE.RingGeometry(1.8, 2.2, 32); // Larger ring
-    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x333333, side: THREE.DoubleSide });
-    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-    group.add(ring);
+    const barGeometries = [
+        new THREE.BoxGeometry(1.5, 4, 1.5),
+        new THREE.BoxGeometry(1.5, 6, 1.5),
+        new THREE.BoxGeometry(1.5, 3, 1.5)
+    ];
 
-    const handleGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3, 32); // Larger handle
-    const handleMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
-    const handle = new THREE.Mesh(handleGeometry, handleMaterial);
-    handle.position.y = -3;
-    group.add(handle);
-    scene.add(group);
+    const bars = barGeometries.map((geom, index) => {
+        const bar = new THREE.Mesh(geom, barMaterial);
+        bar.position.set((index - 1) * 2.5, 0, 0);
+        chartGroup.add(bar);
+        return bar;
+    });
+    scene.add(chartGroup);
 
+
+    // 2. Lightbulb
+    const lightbulbGroup = new THREE.Group();
+    const bulbMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xffff00, 
+        emissive: 0xffff00, 
+        emissiveIntensity: 0, // Initially off
+        metalness: 0.5,
+        roughness: 0.5
+    });
+    const bulbGeometry = new THREE.SphereGeometry(2.5, 32, 32);
+    const bulb = new THREE.Mesh(bulbGeometry, bulbMaterial);
+    bulb.position.y = 1;
+    lightbulbGroup.add(bulb);
+    
+    const baseMaterial = new THREE.MeshBasicMaterial({ color: 0x888888 });
+    const baseGeometry = new THREE.CylinderGeometry(1, 1, 1.5, 32);
+    const base = new THREE.Mesh(baseGeometry, baseMaterial);
+    base.position.y = -1.5;
+    lightbulbGroup.add(base);
+    
+    lightbulbGroup.visible = false;
+    scene.add(lightbulbGroup);
+
+    // Add a point light to make the bulb glow
+    const pointLight = new THREE.PointLight(0xffff00, 0, 100);
+    lightbulbGroup.add(pointLight);
+
+
+    // --- Animation Logic ---
+    let phase = 'chart_growing'; // chart_growing -> morphing -> glowing -> reset
+    let phaseTime = 0;
+    const clock = new THREE.Clock();
 
     const animate = function () {
       requestAnimationFrame(animate);
-      group.position.x = Math.sin(Date.now() * 0.0008) * 5;
-      
-      numbers.forEach(num => {
-          if (num.position.distanceTo(group.position) < 2.5) {
-              num.material.color.set(0x2563eb);
-          } else {
-              num.material.color.set(0xcccccc);
+      const deltaTime = clock.getDelta();
+      phaseTime += deltaTime;
+
+      if (phase === 'chart_growing') {
+          chartGroup.visible = true;
+          lightbulbGroup.visible = false;
+          bars[0].scale.y = Math.min(1, phaseTime / 1);
+          bars[1].scale.y = Math.min(1, phaseTime / 1.5);
+          bars[2].scale.y = Math.min(1, phaseTime / 1.2);
+
+          if (phaseTime > 2) {
+              phaseTime = 0;
+              phase = 'morphing';
           }
-      });
+      } else if (phase === 'morphing') {
+          // Move bars to center and shrink
+          bars.forEach(bar => {
+              bar.position.lerp(new THREE.Vector3(0, 0, 0), deltaTime * 3);
+              bar.scale.lerp(new THREE.Vector3(0.1, 0.1, 0.1), deltaTime * 3);
+          });
+          
+          if (phaseTime > 1.5) {
+              phaseTime = 0;
+              phase = 'glowing';
+              chartGroup.visible = false;
+              lightbulbGroup.visible = true;
+              bulbMaterial.emissiveIntensity = 0;
+              pointLight.intensity = 0;
+          }
+
+      } else if (phase === 'glowing') {
+          // Pulse the lightbulb
+          const intensity = (Math.sin(phaseTime * 3) + 1) / 2; // Pulsing effect
+          bulbMaterial.emissiveIntensity = intensity * 2;
+          pointLight.intensity = intensity * 5;
+
+          if (phaseTime > 4) {
+              phaseTime = 0;
+              phase = 'reset';
+          }
+      } else if (phase === 'reset') {
+          // Fade out lightbulb
+          bulbMaterial.emissiveIntensity *= 0.9;
+          pointLight.intensity *= 0.9;
+
+          if (phaseTime > 1.5) {
+              phaseTime = 0;
+              phase = 'chart_growing';
+              // Reset bars
+              bars.forEach((bar, index) => {
+                bar.position.set((index - 1) * 2.5, 0, 0);
+                bar.scale.set(1, 0, 1); // Reset scale for next growth animation
+              });
+          }
+      }
 
       renderer.render(scene, camera);
     };
