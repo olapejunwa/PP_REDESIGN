@@ -1,35 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import LavaLampBackground from './LavaLampBackground'; // Import the new background component
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-      {/* Base blue gradient background */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(to bottom right, #a0d8f0, #27abed)'
-        }}
-      />
-      
-      {/* Transparent overlay based on your color description */}
-      <div 
-        className="absolute inset-0 z-10"
-        style={{
-          background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.28), rgba(39, 171, 237, 0.28))'
-        }}
-      />
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Animated Lava Lamp Background */}
+      <LavaLampBackground />
       
       {/* Content */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
           YOUR PARTNER IN
         </h1>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mt-2 leading-tight">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mt-2 leading-tight">
           BOOKKEEPING SUCCESS
         </h2>
         
-        <p className="mt-8 text-lg text-gray-800 max-w-3xl mx-auto leading-relaxed">
+        <p className="mt-8 text-lg md:text-xl text-gray-800 max-w-3xl mx-auto leading-relaxed">
           Empowering businesses with simplified financial management solutions and expert guidance for sustainable growth.
         </p>
         
