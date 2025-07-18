@@ -18,7 +18,7 @@ const AnimatedStarIcon = () => {
 
     // --- Animation Objects ---
 
-    // 1. Chart Bars
+    // 1. Chart Bars and Axes
     const chartGroup = new THREE.Group();
     const barMaterial = new THREE.MeshBasicMaterial({ color: 0x2563eb });
     
@@ -30,10 +30,27 @@ const AnimatedStarIcon = () => {
 
     const bars = barGeometries.map((geom, index) => {
         const bar = new THREE.Mesh(geom, barMaterial);
-        bar.position.set((index - 1) * 2.5, 0, 0);
+        // Position bars so their base is at y = -3
+        bar.position.set((index - 1) * 2.5, geom.parameters.height / 2 - 3, 0);
         chartGroup.add(bar);
         return bar;
     });
+    
+    // Add Axes
+    const axisMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa });
+    
+    // Y-Axis
+    const yAxisPoints = [new THREE.Vector3(-4, -3, 0), new THREE.Vector3(-4, 4, 0)];
+    const yAxisGeometry = new THREE.BufferGeometry().setFromPoints(yAxisPoints);
+    const yAxis = new THREE.Line(yAxisGeometry, axisMaterial);
+    chartGroup.add(yAxis);
+
+    // X-Axis
+    const xAxisPoints = [new THREE.Vector3(-4, -3, 0), new THREE.Vector3(4, -3, 0)];
+    const xAxisGeometry = new THREE.BufferGeometry().setFromPoints(xAxisPoints);
+    const xAxis = new THREE.Line(xAxisGeometry, axisMaterial);
+    chartGroup.add(xAxis);
+
     scene.add(chartGroup);
 
 
@@ -87,10 +104,10 @@ const AnimatedStarIcon = () => {
               phase = 'morphing';
           }
       } else if (phase === 'morphing') {
-          // Move bars to center and shrink
-          bars.forEach(bar => {
-              bar.position.lerp(new THREE.Vector3(0, 0, 0), deltaTime * 3);
-              bar.scale.lerp(new THREE.Vector3(0.1, 0.1, 0.1), deltaTime * 3);
+          // Move bars and axes to center and shrink
+          chartGroup.children.forEach(child => {
+              child.position.lerp(new THREE.Vector3(0, 0, 0), deltaTime * 3);
+              child.scale.lerp(new THREE.Vector3(0.1, 0.1, 0.1), deltaTime * 3);
           });
           
           if (phaseTime > 1.5) {
@@ -120,11 +137,16 @@ const AnimatedStarIcon = () => {
           if (phaseTime > 1.5) {
               phaseTime = 0;
               phase = 'chart_growing';
-              // Reset bars
+              // Reset bars and axes
               bars.forEach((bar, index) => {
-                bar.position.set((index - 1) * 2.5, 0, 0);
+                const height = barGeometries[index].parameters.height;
+                bar.position.set((index - 1) * 2.5, height / 2 - 3, 0);
                 bar.scale.set(1, 0, 1); // Reset scale for next growth animation
               });
+              xAxis.position.set(0,0,0);
+              yAxis.position.set(0,0,0);
+              xAxis.scale.set(1,1,1);
+              yAxis.scale.set(1,1,1);
           }
       }
 
