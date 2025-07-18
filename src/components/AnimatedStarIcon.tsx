@@ -97,3 +97,60 @@ handle.position.set(
 handle.rotation.z = angle;
 
 magnifier.add(handle);
+
+    // --- 3) Animation Timeline ---
+    let startTime = Date.now();
+    const PHASE_DURATION = 2000; // 2 seconds per phase
+
+    function animate() {
+      const elapsed = Date.now() - startTime;
+      const phase = Math.floor(elapsed / PHASE_DURATION) % 3;
+      const t = (elapsed % PHASE_DURATION) / PHASE_DURATION;
+
+      if (phase === 0) {
+        // Phase 1: Document fades in
+        const scale = Math.min(t * 2, 1);
+        docGroup.scale.setScalar(scale);
+        magnifier.visible = false;
+      } else if (phase === 1) {
+        // Phase 2: Bars grow
+        docGroup.scale.setScalar(1);
+        bars.forEach((bar, i) => {
+          const targetHeight = barHeights[i];
+          const currentHeight = targetHeight * Math.min(t * 1.5, 1);
+          bar.scale.y = currentHeight / targetHeight;
+        });
+        magnifier.visible = false;
+      } else {
+        // Phase 3: Magnifier appears and moves
+        docGroup.scale.setScalar(1);
+        bars.forEach((bar, i) => {
+          bar.scale.y = 1;
+        });
+        magnifier.visible = true;
+        
+        // Move magnifier in a circular pattern
+        const angle = t * Math.PI * 2;
+        magnifier.position.x = Math.cos(angle) * 3;
+        magnifier.position.y = Math.sin(angle) * 2;
+      }
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Cleanup function
+    return () => {
+      if (mount && mount.contains(renderer.domElement)) {
+        mount.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
+    };
+  }, []);
+
+  return <div ref={mountRef} style={{ width: '256px', height: '192px' }} />;
+};
+
+export default AnimatedStarIcon;
