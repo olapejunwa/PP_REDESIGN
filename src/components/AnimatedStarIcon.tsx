@@ -74,16 +74,13 @@ const AnimatedStarIcon = () => {
     magnifier.add(rim);
 
     // Handle
-    const handleGeom = new THREE.CylinderGeometry(0.15, 0.15, 4, 12);
+    const handleGeom = new THREE.CylinderGeometry(0.2, 0.2, 4, 12);
     const handleMat = new THREE.MeshStandardMaterial({ color: 0x999999 });
     const handle = new THREE.Mesh(handleGeom, handleMat);
-    handle.position.set(
-      lensRadius * Math.cos(-Math.PI / 4),
-      lensRadius * Math.sin(-Math.PI / 4),
-      0
-    );
-    handle.rotation.z = -Math.PI / 4;
+    handle.position.set(0, -lensRadius - 1.8, 0); // Positioned below the rim
     magnifier.add(handle);
+    magnifier.rotation.z = -Math.PI / 4; // Rotated the whole magnifier for a better angle
+
 
     // --- Easing ---
     const easeOutQuad = t => t * (2 - t);
@@ -119,18 +116,22 @@ const AnimatedStarIcon = () => {
           phase = 1; t = 0;
         }
       }
-      // Phase 1: Sweep magnifier (1s)
+      // Phase 1: Sweep magnifier (2.5s for slower zig-zag)
       else if (phase === 1) {
         if (!magnifier.visible) magnifier.visible = true;
-        const p = Math.min(t / 1, 1);
+        const p = Math.min(t / 2.5, 1);
         const e = easeOutQuad(p);
         const xStart = -12, xEnd = 12;
         const x = xStart + (xEnd - xStart) * e;
-        magnifier.position.set(x, 0, 0.2);
+        
+        // Zig-zag motion for y
+        const y = Math.sin(p * Math.PI * 4) * 2; // 4 half-cycles = 2 full zig-zags
+
+        magnifier.position.set(x, y, 0.2);
 
         // Highlight bars under lens
         bars.forEach(bar => {
-          const dist = Math.abs(bar.position.x - x);
+          const dist = magnifier.position.distanceTo(bar.position);
           if (dist < lensRadius) {
             bar.material.emissiveIntensity = THREE.MathUtils.lerp(
               bar.material.emissiveIntensity, 0.5, delta * 5
@@ -151,7 +152,7 @@ const AnimatedStarIcon = () => {
       // Phase 2: Pulse over key KPI (0.6s)
       else if (phase === 2) {
         const keyBar = bars[1];
-        magnifier.position.set(keyBar.position.x, 0, 0.2);
+        magnifier.position.lerp(new THREE.Vector3(keyBar.position.x, 0, 0.2), delta * 5);
         const pulse = Math.sin((t / 0.6) * Math.PI * 2) * 0.2 + 1;
         magnifier.scale.set(pulse, pulse, 1);
         keyBar.material.emissiveIntensity = 0.7;
