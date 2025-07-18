@@ -1,271 +1,173 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 
+// Define TypeScript types for the component's props
 interface AnimatedTargetIconProps {
+  /** The radius from the center where elements will scatter. Default: 8 */
   scatterRadius?: number;
+  /** The total duration of the formation animation in seconds. Default: 2 */
   animationDuration?: number;
-  staggerDelay?: number;
-  className?: string;
 }
 
 const AnimatedTargetIcon: React.FC<AnimatedTargetIconProps> = ({
   scatterRadius = 8,
-  animationDuration = 2.5,
-  staggerDelay = 0.2,
-  className
+  animationDuration = 2,
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const animationFrameId = useRef<number | null>(null);
 
   useEffect(() => {
-    const currentMount = mountRef.current;
-    if (!currentMount) return;
+    const mount = mountRef.current;
+    if (!mount) return;
 
-    // Scene setup
+    // --- Reduced Motion Check ---
+    // Provides a fallback for users who prefer less motion.
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // --- Scene Setup ---
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(192, 192);
-    currentMount.appendChild(renderer.domElement);
-
     camera.position.z = 8;
 
-    // Chart elements configuration
-    const chartElements = [
-      // Chart bars
-      {
-        type: 'bar',
-        geometry: new THREE.PlaneGeometry(0.6, 1.8),
-        material: new THREE.MeshBasicMaterial({ color: 0x3b82f6 }),
-        finalPosition: new THREE.Vector3(-1.5, -0.5, 0),
-        animationDelay: 0
-      },
-      {
-        type: 'bar',
-        geometry: new THREE.PlaneGeometry(0.6, 2.8),
-        material: new THREE.MeshBasicMaterial({ color: 0x3b82f6 }),
-        finalPosition: new THREE.Vector3(0, -0.1, 0),
-        animationDelay: staggerDelay
-      },
-      {
-        type: 'bar',
-        geometry: new THREE.PlaneGeometry(0.6, 2.2),
-        material: new THREE.MeshBasicMaterial({ color: 0x3b82f6 }),
-        finalPosition: new THREE.Vector3(1.5, -0.3, 0),
-        animationDelay: staggerDelay * 2
-      },
-      // Y-Axis
-      {
-        type: 'axis',
-        geometry: new THREE.PlaneGeometry(0.08, 4),
-        material: new THREE.MeshBasicMaterial({ color: 0x6b7280 }),
-        finalPosition: new THREE.Vector3(-2.5, 0, -0.1),
-        animationDelay: staggerDelay * 3
-      },
-      // X-Axis
-      {
-        type: 'axis',
-        geometry: new THREE.PlaneGeometry(4.5, 0.08),
-        material: new THREE.MeshBasicMaterial({ color: 0x6b7280 }),
-        finalPosition: new THREE.Vector3(-0.25, -2, -0.1),
-        animationDelay: staggerDelay * 4
-      },
-      // Grid lines (optional decorative elements)
-      {
-        type: 'grid',
-        geometry: new THREE.PlaneGeometry(4, 0.02),
-        material: new THREE.MeshBasicMaterial({ color: 0xe5e7eb, transparent: true, opacity: 0.5 }),
-        finalPosition: new THREE.Vector3(-0.25, 0.5, -0.2),
-        animationDelay: staggerDelay * 5
-      },
-      {
-        type: 'grid',
-        geometry: new THREE.PlaneGeometry(4, 0.02),
-        material: new THREE.MeshBasicMaterial({ color: 0xe5e7eb, transparent: true, opacity: 0.5 }),
-        finalPosition: new THREE.Vector3(-0.25, 1, -0.2),
-        animationDelay: staggerDelay * 6
-      }
-    ];
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(192, 192);
+    mount.appendChild(renderer.domElement);
 
-    // Create mesh objects and set initial scattered positions
-    const meshes: Array<{
-      mesh: THREE.Mesh;
-      finalPosition: THREE.Vector3;
-      scatteredPosition: THREE.Vector3;
-      animationDelay: number;
-      startTime?: number;
-    }> = [];
+    // --- Chart Elements ---
+    const elements: THREE.Object3D[] = [];
+    const finalState = {
+      positions: [
+        { x: -2, y: -1.5, z: 0 }, // Left bar
+        { x: 0, y: -1, z: 0 },   // Middle bar
+        { x: 2, y: -1.3, z: 0 },  // Right bar
+      ],
+      geometries: [
+        new THREE.BoxGeometry(0.8, 2, 0.8),
+        new THREE.BoxGeometry(0.8, 3, 0.8),
+        new THREE.BoxGeometry(0.8, 2.4, 0.8),
+      ],
+    };
 
-    chartElements.forEach((element) => {
-      const mesh = new THREE.Mesh(element.geometry, element.material);
-      
-      // Generate random scattered position
-      const scatteredPosition = new THREE.Vector3(
-        (Math.random() - 0.5) * scatterRadius * 2,
-        (Math.random() - 0.5) * scatterRadius * 2,
-        (Math.random() - 0.5) * 2
-      );
-      
-      // Set initial position to scattered
-      mesh.position.copy(scatteredPosition);
-      
-      // Add random rotation for more dramatic scatter effect
-      mesh.rotation.z = (Math.random() - 0.5) * Math.PI;
-      
-      scene.add(mesh);
-      
-      meshes.push({
-        mesh,
-        finalPosition: element.finalPosition,
-        scatteredPosition,
-        animationDelay: element.animationDelay
-      });
+    // Create Chart Bars
+    finalState.geometries.forEach((geom, i) => {
+      geom.translate(0, finalState.geometries[i].parameters.height / 2, 0); // Set pivot to base
+      const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
+      const bar = new THREE.Mesh(geom, material);
+      elements.push(bar);
     });
 
-    // Animation variables
-    let animationStartTime = 0;
-    const clock = new THREE.Clock();
-    let isAnimating = true;
-
-    // Easing function (ease-out cubic)
-    const easeOutCubic = (t: number): number => {
-      return 1 - Math.pow(1 - t, 3);
-    };
-
-    // Animation loop
-    const animate = () => {
-      requestAnimationFrame(animate);
-      
-      const elapsedTime = clock.getElapsedTime();
-      
-      if (animationStartTime === 0) {
-        animationStartTime = elapsedTime;
-      }
-      
-      const totalElapsed = elapsedTime - animationStartTime;
-      
-      // Animate each mesh with staggered timing
-      meshes.forEach((item) => {
-        const elementStartTime = item.animationDelay;
-        const elementElapsed = Math.max(0, totalElapsed - elementStartTime);
-        const progress = Math.min(elementElapsed / animationDuration, 1);
-        
-        if (progress > 0) {
-          // Apply easing
-          const easedProgress = easeOutCubic(progress);
-          
-          // Interpolate position
-          item.mesh.position.lerpVectors(
-            item.scatteredPosition,
-            item.finalPosition,
-            easedProgress
-          );
-          
-          // Interpolate rotation back to 0
-          const initialRotation = item.mesh.userData.initialRotation || item.mesh.rotation.z;
-          if (!item.mesh.userData.initialRotation) {
-            item.mesh.userData.initialRotation = item.mesh.rotation.z;
-          }
-          
-          item.mesh.rotation.z = THREE.MathUtils.lerp(
-            initialRotation,
-            0,
-            easedProgress
-          );
-          
-          // Fade in effect
-          if (item.mesh.material instanceof THREE.MeshBasicMaterial) {
-            const targetOpacity = item.mesh.material.userData.targetOpacity || 1;
-            if (!item.mesh.material.userData.targetOpacity) {
-              item.mesh.material.userData.targetOpacity = item.mesh.material.opacity;
-              item.mesh.material.transparent = true;
-              item.mesh.material.opacity = 0;
-            }
-            
-            item.mesh.material.opacity = THREE.MathUtils.lerp(
-              0,
-              targetOpacity,
-              easedProgress
-            );
-          }
-        }
-      });
-      
-      // Check if animation is complete
-      const totalAnimationTime = animationDuration + (meshes.length - 1) * staggerDelay;
-      if (totalElapsed > totalAnimationTime + 1.5 && isAnimating) {
-        // Reset animation after a pause
-        setTimeout(() => {
-          // Reset all elements to scattered positions
-          meshes.forEach((item) => {
-            // Generate new random scattered position
-            item.scatteredPosition.set(
-              (Math.random() - 0.5) * scatterRadius * 2,
-              (Math.random() - 0.5) * scatterRadius * 2,
-              (Math.random() - 0.5) * 2
-            );
-            
-            item.mesh.position.copy(item.scatteredPosition);
-            item.mesh.rotation.z = (Math.random() - 0.5) * Math.PI;
-            item.mesh.userData.initialRotation = item.mesh.rotation.z;
-            
-            if (item.mesh.material instanceof THREE.MeshBasicMaterial) {
-              item.mesh.material.opacity = 0;
-            }
-          });
-          
-          // Restart animation
-          animationStartTime = 0;
-          clock.start();
-        }, 500);
-      }
-      
-      renderer.render(scene, camera);
-    };
-
-    // Handle reduced motion preference
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Create Chart Axes
+    const axisMaterial = new THREE.LineBasicMaterial({ color: 0xadb5bd });
+    const xAxisGeom = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-3.5, -3, 0), new THREE.Vector3(3.5, -3, 0)]);
+    const yAxisGeom = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-3.5, -3, 0), new THREE.Vector3(-3.5, 2, 0)]);
+    const xAxis = new THREE.Line(xAxisGeom, axisMaterial);
+    const yAxis = new THREE.Line(yAxisGeom, axisMaterial);
+    elements.push(xAxis, yAxis);
     
-    if (prefersReducedMotion) {
-      // Skip animation and show final state
-      meshes.forEach((item) => {
-        item.mesh.position.copy(item.finalPosition);
-        item.mesh.rotation.z = 0;
-        if (item.mesh.material instanceof THREE.MeshBasicMaterial) {
-          item.mesh.material.opacity = item.mesh.material.userData.targetOpacity || 1;
-        }
+    // Define final positions for all elements
+    const allFinalPositions = [
+        ...finalState.positions,
+        { x: 0, y: 0, z: -0.1 }, // X-Axis final position
+        { x: 0, y: 0, z: -0.1 }  // Y-Axis final position
+    ];
+
+    // --- Initial State & Animation Data ---
+    elements.forEach((el, i) => {
+      // Store final state in userData
+      el.userData.finalPosition = new THREE.Vector3(allFinalPositions[i].x, allFinalPositions[i].y, allFinalPositions[i].z);
+      el.userData.finalRotation = new THREE.Euler(0, 0, 0);
+
+      if (prefersReducedMotion) {
+        // If reduced motion is preferred, start at the final state
+        el.position.copy(el.userData.finalPosition);
+        el.rotation.copy(el.userData.finalRotation);
+      } else {
+        // Otherwise, start scattered
+        const angle = Math.random() * Math.PI * 2;
+        const radius = Math.random() * scatterRadius;
+        el.position.set(Math.cos(angle) * radius, Math.sin(angle) * radius, (Math.random() - 0.5) * scatterRadius);
+        el.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+      }
+      
+      // Store start state for interpolation
+      el.userData.startPosition = el.position.clone();
+      el.userData.startRotation = el.rotation.clone();
+
+      scene.add(el);
+    });
+
+
+    // --- Animation Loop ---
+    let animationTime = 0;
+    const clock = new THREE.Clock();
+
+    const animate = () => {
+      animationFrameId.current = requestAnimationFrame(animate);
+      const deltaTime = clock.getDelta();
+      animationTime += deltaTime;
+      
+      // Staggered animation progress for each element
+      elements.forEach((el, i) => {
+        const staggerDelay = i * 0.05;
+        const progress = Math.min(Math.max(0, (animationTime - staggerDelay) / animationDuration), 1);
+        const easeProgress = 1 - Math.pow(1 - progress, 4); // Ease-out quint
+
+        // Interpolate position and rotation from start to final state
+        el.position.lerpVectors(el.userData.startPosition, el.userData.finalPosition, easeProgress);
+        el.quaternion.slerpQuaternions(new THREE.Quaternion().setFromEuler(el.userData.startRotation), new THREE.Quaternion().setFromEuler(el.userData.finalRotation), easeProgress);
       });
+      
+      // Reset animation loop after a pause
+      if (animationTime > animationDuration + 2.5) {
+        animationTime = 0;
+        if (!prefersReducedMotion) {
+            elements.forEach((el) => {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * scatterRadius;
+                el.position.set(Math.cos(angle) * radius, Math.sin(angle) * radius, (Math.random() - 0.5) * scatterRadius);
+                el.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                el.userData.startPosition = el.position.clone();
+                el.userData.startRotation = el.rotation.clone();
+            });
+        }
+      }
+      
       renderer.render(scene, camera);
-    } else {
+    };
+
+    if (!prefersReducedMotion) {
       animate();
+    } else {
+      // Render once in the final state if reduced motion is on
+      renderer.render(scene, camera);
     }
 
-    // Cleanup function
+    // --- Cleanup ---
     return () => {
-      if (currentMount && renderer.domElement) {
-        currentMount.removeChild(renderer.domElement);
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
       }
-      
-      // Dispose of geometries and materials
-      meshes.forEach((item) => {
-        item.mesh.geometry.dispose();
-        if (item.mesh.material instanceof THREE.Material) {
-          item.mesh.material.dispose();
+      if (mount && renderer.domElement) {
+        mount.removeChild(renderer.domElement);
+      }
+      // Dispose of Three.js objects to free up memory
+      scene.traverse(object => {
+        if (object instanceof THREE.Mesh || object instanceof THREE.Line) {
+          if (object.geometry) object.geometry.dispose();
+          if (object.material) {
+            if (Array.isArray(object.material)) {
+              object.material.forEach(material => material.dispose());
+            } else {
+              object.material.dispose();
+            }
+          }
         }
       });
-      
       renderer.dispose();
-    };
-  }, [scatterRadius, animationDuration, staggerDelay]);
+    }
+  }, [scatterRadius, animationDuration]); // Re-run effect if props change
 
-  return (
-    <div 
-      ref={mountRef} 
-      className={className}
-      style={{ width: '192px', height: '192px' }}
-      role="img"
-      aria-label="Animated chart formation"
-    />
-  );
+  return <div ref={mountRef} style={{ width: '192px', height: '192px' }} />;
 };
 
 export default AnimatedTargetIcon;
