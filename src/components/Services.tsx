@@ -113,7 +113,7 @@ const Services = () => {
                     className={`block p-8 rounded-2xl text-white h-80 flex flex-col justify-between ${service.cardColor}`}
                   >
                     <div>
-                      <h3 className="text-2xl font-bold mb-4">“{service.title}”</h3>
+                      <h3 className="text-2xl font-bold mb-4">"{service.title}"</h3>
                       <p className="text-base opacity-90">{service.description}</p>
                     </div>
                     <div className="w-20 h-20 self-end">
@@ -140,6 +140,7 @@ const Services = () => {
 
       </div>
     </section>
+    </>
   );
 };
 
