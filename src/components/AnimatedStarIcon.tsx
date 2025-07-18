@@ -1,176 +1,183 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 
-interface AnimatedStarIconProps {
-  className?: string;
-}
-
-const AnimatedStarIcon: React.FC<AnimatedStarIconProps> = ({ className }) => {
-  const [animationPhase, setAnimationPhase] = useState(0);
-  const [magnifierPosition, setMagnifierPosition] = useState({ x: 20, y: 20 });
+const AnimatedStarIcon = () => {
+  const mountRef = useRef(null);
 
   useEffect(() => {
-    const animationDuration = 4000; // 4 seconds total
-    const interval = setInterval(() => {
-      setAnimationPhase(prev => (prev + 1) % 4);
-    }, animationDuration / 4);
+    const mount = mountRef.current;
+    if (!mount) return;
 
-    return () => clearInterval(interval);
+    const width = 256;
+    const height = 192;
+
+    // --- Scene, Camera, Renderer ---
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    camera.position.set(0, 0, 20);
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(width, height);
+    mount.appendChild(renderer.domElement);
+
+    // --- Lights ---
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const pt = new THREE.PointLight(0xffffff, 0.8);
+    pt.position.set(10, 10, 10);
+    scene.add(pt);
+
+    // --- 1) Document Group (fade-in) ---
+    const docGroup = new THREE.Group();
+    docGroup.scale.set(0, 0, 0);
+    scene.add(docGroup);
+
+    // Document plane
+    const docMat = new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    const docGeom = new THREE.PlaneGeometry(10, 12);
+    const documentMesh = new THREE.Mesh(docGeom, docMat);
+    docGroup.add(documentMesh);
+
+    // Bars on document
+    const barGroup = new THREE.Group();
+    const barHeights = [3, 4.5, 2.5];
+    const barX = [-3, 0, 3];
+    const bars = [];
+    barHeights.forEach((h, i) => {
+      const geom = new THREE.BoxGeometry(1, h, 1);
+      geom.translate(0, h / 2, 0); // pivot at base
+      const mat = new THREE.MeshStandardMaterial({ color: 0x2563eb, emissive: 0x000000 });
+      const bar = new THREE.Mesh(geom, mat);
+      bar.position.set(barX[i], -4, 0.1);
+      barGroup.add(bar);
+      bars.push(bar);
+    });
+    docGroup.add(barGroup);
+
+    // --- 2) Magnifier Group (hidden initially) ---
+    const magnifier = new THREE.Group();
+    magnifier.visible = false;
+    scene.add(magnifier);
+
+    const lensRadius = 3;
+
+    // 2a) Lens
+    const lensGeom = new THREE.CircleGeometry(lensRadius, 64);
+    const lensMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.3,
+      depthWrite: false
+    });
+    const lens = new THREE.Mesh(lensGeom, lensMat);
+    magnifier.add(lens);
+
+    // 2b) Rim
+    const rimGeom = new THREE.TorusGeometry(lensRadius, 0.15, 16, 100);
+    const rimMat  = new THREE.MeshStandardMaterial({ color: 0x6b7280 }); // gray-500
+    const rim     = new THREE.Mesh(rimGeom, rimMat);
+    magnifier.add(rim);
+
+    // 2c) Handle - Corrected Formation
+    const handleGroup = new THREE.Group();
+    const handleLength = 4;
+    const handleGeom   = new THREE.CylinderGeometry(0.2, 0.2, handleLength, 12);
+    const handleMat = new THREE.MeshStandardMaterial({ color: 0x6b7280 });
+    const handle    = new THREE.Mesh(handleGeom, handleMat);
+    handle.position.y = -handleLength / 2; // Position cylinder relative to group
+    handleGroup.add(handle);
+    
+    // Position and rotate the handle group to attach to the rim
+    const angle = -Math.PI / 4;
+    handleGroup.position.set(
+      Math.cos(angle) * lensRadius,
+      Math.sin(angle) * lensRadius,
+      0
+    );
+    handleGroup.rotation.z = angle;
+    magnifier.add(handleGroup);
+
+
+    // --- Easing ---
+    const easeOutQuad = t => t * (2 - t);
+
+    // --- Animation Phases & Timing ---
+    let phase = 0; // 0=fadeIn, 1=sweep, 2=moveToCenter, 3=pulse, 4=hold
+    let t = 0;
+    const clock = new THREE.Clock();
+
+    function reset() {
+      docGroup.scale.set(0, 0, 0);
+      magnifier.visible = false;
+      magnifier.position.set(0, 0, 0);
+      magnifier.scale.set(1, 1, 1);
+      bars.forEach(bar => {
+        bar.material.emissiveIntensity = 0;
+        bar.scale.y = 1;
+      });
+    }
+    reset();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+      t += delta;
+
+      if (phase === 0) { // Phase 0: Document fade-in (0.5s)
+        const p = Math.min(t / 0.5, 1);
+        const e = easeOutQuad(p);
+        docGroup.scale.set(e, e, e);
+        if (p === 1) { phase = 1; t = 0; }
+      } 
+      else if (phase === 1) { // Phase 1: Sweep magnifier with zig-zag (3s)
+        if (!magnifier.visible) magnifier.visible = true;
+        const p = Math.min(t / 3, 1);
+        const e = easeOutQuad(p);
+        const x = -12 + (24 * e);
+        const y = Math.sin(p * Math.PI * 4) * 2; // Zig-zag motion
+        magnifier.position.set(x, y, 0.2);
+
+        bars.forEach(bar => {
+          const dist = magnifier.position.distanceTo(bar.position);
+          bar.material.emissiveIntensity = THREE.MathUtils.lerp(bar.material.emissiveIntensity, dist < lensRadius ? 0.5 : 0, delta * 5);
+          bar.scale.y = THREE.MathUtils.lerp(bar.scale.y, dist < lensRadius ? 1.2 : 1, delta * 5);
+        });
+
+        if (p === 1) { phase = 2; t = 0; }
+      } 
+      else if (phase === 2) { // Phase 2: Move to Center (0.5s)
+        const p = Math.min(t / 0.5, 1);
+        const e = easeOutQuad(p);
+        const startPos = magnifier.position.clone();
+        const endPos = new THREE.Vector3(bars[1].position.x, 0, 0.2);
+        magnifier.position.lerpVectors(startPos, endPos, e);
+        if (p === 1) { phase = 3; t = 0; }
+      }
+      else if (phase === 3) { // Phase 3: Pulse over key KPI (1.2s)
+        const pulse = Math.sin((t / 0.6) * Math.PI * 2) * 0.1 + 1;
+        magnifier.scale.set(pulse, pulse, 1);
+        bars[1].material.emissiveIntensity = 0.7;
+        bars[1].scale.y = 1.2;
+        if (t > 1.2) { phase = 4; t = 0; }
+      } 
+      else if (phase === 4) { // Phase 4: Hold (1.5s) then reset
+        magnifier.scale.set(1, 1, 1);
+        if (t > 1.5) { phase = 0; t = 0; reset(); }
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    return () => {
+        if (mount && renderer.domElement) {
+            mount.removeChild(renderer.domElement);
+        }
+    };
+
   }, []);
 
-  useEffect(() => {
-    // Animate magnifier position based on phase
-    const positions = [
-      { x: 20, y: 20 }, // Top left
-      { x: 80, y: 30 }, // Over first bar
-      { x: 120, y: 35 }, // Over second bar
-      { x: 160, y: 25 }, // Over third bar
-    ];
-    
-    setMagnifierPosition(positions[animationPhase]);
-  }, [animationPhase]);
-
-  return (
-    <div className="w-48 h-48 flex items-center justify-center">
-      <svg
-        width="192"
-        height="192"
-        viewBox="0 0 200 150"
-        className={className}
-        style={{ overflow: 'visible' }}
-      >
-        {/* Document Background */}
-        <rect
-          x="10"
-          y="10"
-          width="140"
-          height="100"
-          fill="#f8f9fa"
-          stroke="#e9ecef"
-          strokeWidth="2"
-          rx="4"
-          className="transition-all duration-500"
-        />
-        
-        {/* Document Header Lines */}
-        <rect x="20" y="20" width="80" height="3" fill="#dee2e6" rx="1" />
-        <rect x="20" y="28" width="60" height="2" fill="#dee2e6" rx="1" />
-        
-        {/* Chart Bars */}
-        <g className="chart-bars">
-          <rect
-            x="30"
-            y="70"
-            width="15"
-            height="25"
-            fill="#3b82f6"
-            rx="2"
-            className={`transition-all duration-500 ${
-              animationPhase === 1 ? 'fill-blue-500 transform scale-110' : ''
-            }`}
-          />
-          <rect
-            x="55"
-            y="55"
-            width="15"
-            height="40"
-            fill="#3b82f6"
-            rx="2"
-            className={`transition-all duration-500 ${
-              animationPhase === 2 ? 'fill-blue-500 transform scale-110' : ''
-            }`}
-          />
-          <rect
-            x="80"
-            y="65"
-            width="15"
-            height="30"
-            fill="#3b82f6"
-            rx="2"
-            className={`transition-all duration-500 ${
-              animationPhase === 3 ? 'fill-blue-500 transform scale-110' : ''
-            }`}
-          />
-        </g>
-        
-        {/* Magnifying Glass */}
-        <g
-          className="magnifying-glass transition-all duration-700 ease-in-out"
-          style={{
-            transform: `translate(${magnifierPosition.x}px, ${magnifierPosition.y}px)`,
-          }}
-        >
-          {/* Magnifier Circle */}
-          <circle
-            cx="0"
-            cy="0"
-            r="18"
-            fill="rgba(255, 255, 255, 0.9)"
-            stroke="#6b7280"
-            strokeWidth="3"
-            className="drop-shadow-md"
-          />
-          
-          {/* Magnifier Glass Effect */}
-          <circle
-            cx="0"
-            cy="0"
-            r="15"
-            fill="rgba(59, 130, 246, 0.1)"
-            className="animate-pulse"
-          />
-          
-          {/* Magnifier Handle */}
-          <line
-            x1="13"
-            y1="13"
-            x2="25"
-            y2="25"
-            stroke="#6b7280"
-            strokeWidth="4"
-            strokeLinecap="round"
-            className="drop-shadow-sm"
-          />
-          
-          {/* Handle End */}
-          <circle
-            cx="25"
-            cy="25"
-            r="2"
-            fill="#6b7280"
-          />
-        </g>
-        
-        {/* Insight Sparkles */}
-        {animationPhase > 0 && (
-          <g className="sparkles">
-            <circle
-              cx={magnifierPosition.x - 5}
-              cy={magnifierPosition.y - 5}
-              r="2"
-              fill="#fbbf24"
-              className="animate-ping"
-            />
-            <circle
-              cx={magnifierPosition.x + 8}
-              cy={magnifierPosition.y - 8}
-              r="1.5"
-              fill="#f59e0b"
-              className="animate-ping"
-              style={{ animationDelay: '0.2s' }}
-            />
-            <circle
-              cx={magnifierPosition.x + 5}
-              cy={magnifierPosition.y + 10}
-              r="1"
-              fill="#fbbf24"
-              className="animate-ping"
-              style={{ animationDelay: '0.4s' }}
-            />
-          </g>
-        )}
-      </svg>
-    </div>
-  );
+  return <div ref={mountRef} style={{ width: 256, height: 192 }} />;
 };
 
 export default AnimatedStarIcon;
