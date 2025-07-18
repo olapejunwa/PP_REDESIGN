@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 const AnimatedTargetIcon = () => {
   const mountRef = useRef(null);
@@ -17,9 +19,9 @@ const AnimatedTargetIcon = () => {
     camera.position.z = 10; // Pulled camera back to fit larger elements
 
     // "Waste" text
-    const loader = new THREE.FontLoader();
+    const loader = new FontLoader();
     loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-      const textGeometry = new THREE.TextGeometry('WASTE', {
+      const textGeometry = new TextGeometry('WASTE', {
         font: font,
         size: 2, // Increased font size
         height: 0.25,
