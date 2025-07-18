@@ -20,10 +20,10 @@ const AnimatedStarIcon: React.FC<AnimatedStarIconProps> = ({ className }) => {
   useEffect(() => {
     // Animate magnifier position based on phase
     const positions = [
-      { x: 20, y: 20 }, // Top left
-      { x: 80, y: 30 }, // Over first bar
-      { x: 120, y: 35 }, // Over second bar
-      { x: 160, y: 25 }, // Over third bar
+      { x: 100, y: 75 }, // Center of the document
+      { x: 70, y: 75 },  // Over first bar
+      { x: 100, y: 75 }, // Over second bar (center)
+      { x: 130, y: 75 }, // Over third bar
     ];
     
     setMagnifierPosition(positions[animationPhase]);
@@ -64,8 +64,8 @@ const AnimatedStarIcon: React.FC<AnimatedStarIconProps> = ({ className }) => {
             height="25"
             fill="#3b82f6"
             rx="2"
-            className={`transition-all duration-500 ${
-              animationPhase === 1 ? 'fill-blue-500 transform scale-110' : ''
+            className={`${
+              animationPhase === 1 ? 'fill-blue-500' : 'fill-blue-600'
             }`}
           />
           <rect
@@ -75,8 +75,8 @@ const AnimatedStarIcon: React.FC<AnimatedStarIconProps> = ({ className }) => {
             height="40"
             fill="#3b82f6"
             rx="2"
-            className={`transition-all duration-500 ${
-              animationPhase === 2 ? 'fill-blue-500 transform scale-110' : ''
+            className={`${
+              animationPhase === 2 ? 'fill-blue-500' : 'fill-blue-600'
             }`}
           />
           <rect
@@ -86,8 +86,8 @@ const AnimatedStarIcon: React.FC<AnimatedStarIconProps> = ({ className }) => {
             height="30"
             fill="#3b82f6"
             rx="2"
-            className={`transition-all duration-500 ${
-              animationPhase === 3 ? 'fill-blue-500 transform scale-110' : ''
+            className={`${
+              animationPhase === 3 ? 'fill-blue-500' : 'fill-blue-600'
             }`}
           />
         </g>
