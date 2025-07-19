@@ -37,7 +37,18 @@ const useInView = (options) => {
 const ValueItem = ({ value, index }) => {
   // Trigger the animation when 30% of the item is visible
   const [ref, isInView] = useInView({ threshold: 0.3 });
+  const [renderIcon, setRenderIcon] = useState(false);
   const isEven = index % 2 === 0;
+
+  useEffect(() => {
+    if (isInView && !renderIcon) {
+      // This timer creates a delay between the container animating in and the icon animation starting.
+      const timer = setTimeout(() => {
+        setRenderIcon(true);
+      }, 500); // Start rendering icon partway through the container's transition
+      return () => clearTimeout(timer);
+    }
+  }, [isInView, renderIcon]);
 
   return (
     <div
@@ -46,13 +57,14 @@ const ValueItem = ({ value, index }) => {
         isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       } ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`} // Alternates layout
     >
-      {/* Icon Container - Changed to a rounded rectangle with varied colors */}
-      <div className={`w-64 h-48 ${value.bgColor} rounded-2xl flex items-center justify-center flex-shrink-0 p-4`}>
-        <value.icon />
+      {/* Icon Container with its own transition. This is the "pre-transition" for the icon animation. */}
+      <div className={`w-64 h-48 ${value.bgColor} rounded-2xl flex items-center justify-center flex-shrink-0 p-4 transition-all duration-700 ease-out ${isInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
+        {/* The icon is only rendered after the pre-transition has started, triggering its animation. */}
+        {renderIcon && <value.icon />}
       </div>
 
-      {/* Text Content Container */}
-      <div className={`text-center ${isEven ? 'md:text-left' : 'md:text-right'}`}>
+      {/* Text Content Container with its own transition */}
+      <div className={`text-center ${isEven ? 'md:text-left' : 'md:text-right'} transition-opacity duration-700 ease-out delay-300 ${isInView ? 'opacity-100' : 'opacity-0'}`}>
         <h3 className="text-2xl font-bold text-white mb-4">{value.title}</h3>
         <p className="text-base text-gray-300 leading-relaxed">{value.description}</p>
       </div>
@@ -61,6 +73,7 @@ const ValueItem = ({ value, index }) => {
 };
 
 const About = () => {
+  const [headerRef, headerInView] = useInView({ threshold: 0.2 });
   const values = [
     {
       icon: AnimatedTargetIcon,
@@ -85,7 +98,10 @@ const About = () => {
   return (
     <section className="py-20 bg-matte-dark-blue text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div
+          ref={headerRef}
+          className={`text-center mb-16 transition-all duration-1000 ease-out ${headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        >
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
             We're empowering you for financial excellence
           </h2>
