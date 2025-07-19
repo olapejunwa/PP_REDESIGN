@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LavaLampBackground from './LavaLampBackground';
-import CurvedDivider from './CurvedDivider';
 
 const Hero = () => {
   return (
-    <>
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden section-seamless">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Animated Lava Lamp Background */}
         <LavaLampBackground />
         
@@ -39,15 +37,6 @@ const Hero = () => {
           </div>
         </div>
       </section>
-      
-      {/* Curved divider to eliminate black space */}
-      <CurvedDivider
-        topColor="linear-gradient(135deg, #bfdbfe 0%, #3b82f6 100%)"
-        bottomColor="#111827"
-        height={120}
-        curveIntensity={60}
-      />
-    </>
   );
 };
 

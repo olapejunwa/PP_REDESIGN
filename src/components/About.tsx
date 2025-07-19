@@ -3,7 +3,6 @@ import SectionDivider from './SectionDivider';
 import AnimatedTargetIcon from './AnimatedTargetIcon';
 import AnimatedEyeIcon from './AnimatedEyeIcon';
 import AnimatedStarIcon from './AnimatedStarIcon';
-import CurvedDivider from './CurvedDivider';
 
 // Custom hook to detect when an element enters the viewport
 const useInView = (options) => {
@@ -85,8 +84,7 @@ const About = () => {
   ];
 
   return (
-    <>
-      <section className="py-20 bg-matte-dark-blue text-white overflow-hidden section-seamless">
+    <section className="py-20 bg-matte-dark-blue text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
@@ -108,16 +106,6 @@ const About = () => {
         <SectionDivider color="#4b5563" width={50} margin="6rem 0 2rem 0" />
       </div>
     </section>
-    
-    {/* Curved divider to services section */}
-    <CurvedDivider
-      topColor="#111827"
-      bottomColor="#111827"
-      height={100}
-      curveIntensity={40}
-      flipCurve={true}
-    />
-    </>
   );
 };
 
