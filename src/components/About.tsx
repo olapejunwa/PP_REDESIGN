@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import SectionDivider from './SectionDivider';
-import AnimatedTargetIcon from './AnimatedTargetIcon';
-import AnimatedEyeIcon from './AnimatedEyeIcon';
-import AnimatedStarIcon from './AnimatedStarIcon';
+import AnimatedTargetIcon from './AnimatedTargetIcon.tsx';
+import AnimatedEyeIcon from './AnimatedEyeIcon.tsx';
+import AnimatedStarIcon from './AnimatedStarIcon.tsx';
 
 // Custom hook to detect when an element enters the viewport
 const useInView = (options) => {
@@ -102,8 +101,7 @@ const About = () => {
           ))}
         </div>
         
-        {/* Section divider */}
-        <SectionDivider color="#4b5563" width={50} margin="6rem 0 2rem 0" />
+        
       </div>
     </section>
   );
