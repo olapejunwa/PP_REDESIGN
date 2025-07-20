@@ -1,62 +1,43 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import Navigation from './components/Navigation';
-import Footer from './components/Footer';
-import HomePage from './pages/HomePage';
-import AboutUs from './pages/AboutUs';
-import Products from './pages/Products';
-import Blog from './pages/Blog';
-import Careers from './pages/Careers';
-import Contact from './pages/Contact';
-import BookkeepingServices from './pages/BookkeepingServices';
-import TaxServices from './pages/TaxServices';
-import InventoryManagement from './pages/InventoryManagement';
-import LavaLampBackground from './components/LavaLampBackground';
-import PageTransition from './components/PageTransition';
-import { AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
-function App() {
-  const location = useLocation();
+const PageTransition = ({ children }) => {
+  // These variants define the animation states for the page.
+  const pageVariants = {
+    initial: {
+      opacity: 0,
+      x: '-200px', // A more subtle slide from the left
+    },
+    in: {
+      opacity: 1,
+      x: 0, // Animate to the center
+    },
+    out: {
+      opacity: 0,
+      x: '200px', // A more subtle slide to the right
+    },
+  };
+
+  // This defines the properties of the transition animation.
+  const pageTransition = {
+    type: 'tween',
+    ease: 'anticipate', // A slightly different easing function for a nice effect
+    duration: 0.5,
+  };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen font-sans relative overflow-x-hidden">
-      <LavaLampBackground />
-      {/* Navigation is fixed and sits on top of everything, outside the main layout flow */}
-      <Navigation />
-
-      {/* This container uses flexbox to arrange main content and footer vertically and ensures it takes up the full screen height. */}
-      <div className="flex flex-col min-h-screen">
-        {/* 1. The main content area grows to fill available space, pushing the footer down. */}
-        {/* 2. pt-20 accounts for the height of the fixed navigation bar. */}
-        <main className="flex-grow pt-20">
-          {/* 3. This relative container is the positioning context for the absolutely positioned pages during transition. */}
-          <div className="relative h-full w-full">
-            <AnimatePresence mode="wait">
-              {/* The key on Routes triggers the animation when the page (location) changes. */}
-              <Routes location={location} key={location.pathname}>
-                <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
-                <Route path="/about" element={<PageTransition><AboutUs /></PageTransition>} />
-                <Route path="/products" element={<PageTransition><Products /></PageTransition>} />
-                <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
-                <Route path="/careers" element={<PageTransition><Careers /></PageTransition>} />
-                <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
-                <Route path="/services/bookkeeping" element={<PageTransition><BookkeepingServices /></PageTransition>} />
-                <Route path="/services/tax" element={<PageTransition><TaxServices /></PageTransition>} />
-                <Route path="/services/inventory" element={<PageTransition><InventoryManagement /></PageTransition>} />
-              </Routes>
-            </AnimatePresence>
-          </div>
-        </main>
-        {/* Footer is the last flex item, it will be at the bottom */}
-        <Footer />
-      </div>
-    </div>
+    <motion.div
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+      // Use `absolute` and `inset-0` to make the div fill its relative parent completely.
+      // This is a more robust way to handle the sizing of the animated container.
+      className="absolute inset-0"
+    >
+      {children}
+    </motion.div>
   );
-}
+};
 
-const Root = () => (
-  <Router>
-    <App />
-  </Router>
-);
-
-export default Root;
+export default PageTransition;
