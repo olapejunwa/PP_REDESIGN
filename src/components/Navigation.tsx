@@ -205,6 +205,10 @@ const Navigation = () => {
                     </div>
                   )}
                 </div>
+                
+                <Link to="/blog" className="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:bg-blue-50">
+                  <span>BLOG</span>
+                </Link>
               </div>
               
               {/* Mobile Menu Button */}
@@ -224,6 +228,7 @@ const Navigation = () => {
               <div className="container mx-auto px-4 py-8 space-y-4">
                   <Link to="/about-us" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>About Us</Link>
                   <Link to="/contact" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Contact</Link>
+                  <Link to="/blog" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Blog</Link>
                   <div className="pt-4 border-t">
                       <h3 className="text-sm font-bold uppercase text-gray-500 mb-2">Products</h3>
                       <Link to="/bookkeeping-services" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Bookkeeping Services</Link>
