@@ -8,6 +8,7 @@ import TaxServices from './pages/TaxServices';
 import InventoryManagement from './pages/InventoryManagement';
 import Contact from './pages/Contact';
 import Careers from './pages/Careers';
+import Blog from './pages/Blog'; // Import the new Blog component
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/inventory-management" element={<InventoryManagement />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/careers" element={<Careers />} />
+        <Route path="/blog" element={<Blog />} /> {/* Add the new Blog route */}
       </Routes>
     </Router>
   );
