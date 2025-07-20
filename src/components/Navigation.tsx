@@ -229,17 +229,17 @@ const Navigation = () => {
                   <Link to="/about-us" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>About Us</Link>
                   <Link to="/contact" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Contact</Link>
                   <Link to="/blog" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Blog</Link>
-                  <div className="pt-4 border-t">
-                      <h3 className="text-sm font-bold uppercase text-gray-500 mb-2">Other Services</h3>
-                      <Link to="/bookkeeping-services" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Bookkeeping Services</Link>
-                      <Link to="/tax-services" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Tax Services</Link>
-                      <Link to="/inventory-management" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Inventory Management</Link>
-                  </div>
                    <div className="pt-4 border-t">
                       <h3 className="text-sm font-bold uppercase text-gray-500 mb-2">Main Products</h3>
                       <a href="https://pepcodeinc.com/" target="_blank" rel="noopener noreferrer" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>PEPCODE</a>
                       <a href="https://auditme.com.ng/" target="_blank" rel="noopener noreferrer" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>AUDITME</a>
                       <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>OWA by PEPCODE</a>
+                  </div>
+                  <div className="pt-4 border-t">
+                      <h3 className="text-sm font-bold uppercase text-gray-500 mb-2">Other Services</h3>
+                      <Link to="/bookkeeping-services" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Bookkeeping Services</Link>
+                      <Link to="/tax-services" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Tax Services</Link>
+                      <Link to="/inventory-management" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Inventory Management</Link>
                   </div>
               </div>
           </div>
