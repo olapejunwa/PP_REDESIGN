@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import AnimatedSection from './AnimatedSection';
+import { useStaggeredAnimation } from '../hooks/useScrollAnimation';
 import AnimatedTargetIcon from './AnimatedTargetIcon.tsx';
 import AnimatedEyeIcon from './AnimatedEyeIcon.tsx';
 import AnimatedStarIcon from './AnimatedStarIcon.tsx';
@@ -73,7 +75,7 @@ const ValueItem = ({ value, index }) => {
 };
 
 const About = () => {
-  const [headerRef, headerInView] = useInView({ threshold: 0.2 });
+  const [containerRef, visibleItems] = useStaggeredAnimation(3, 300);
   const values = [
     {
       icon: AnimatedTargetIcon,
@@ -98,26 +100,34 @@ const About = () => {
   return (
     <section className="py-20 bg-matte-dark-blue text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          ref={headerRef}
-          className={`text-center mb-16 transition-all duration-1000 ease-out ${headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            We're empowering you for financial excellence
-          </h2>
-          <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-            At Ploutos, we are on a mission to empower businesses of all sizes to manage their finances with ease and confidence through innovative bookkeeping solutions and creative software experiences, tools they, and world-class education.
-          </p>
-        </div>
+        <AnimatedSection animationType="fadeUp" className="text-center mb-16">
+          <AnimatedSection animationType="fadeUp" delay={200}>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              We're empowering you for financial excellence
+            </h2>
+          </AnimatedSection>
+          <AnimatedSection animationType="fadeUp" delay={400}>
+            <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+              At Ploutos, we are on a mission to empower businesses of all sizes to manage their finances with ease and confidence through innovative bookkeeping solutions and creative software experiences, tools they, and world-class education.
+            </p>
+          </AnimatedSection>
+        </AnimatedSection>
         
         {/* Vertical layout with spacing */}
-        <div className="space-y-24 mt-24">
+        <div ref={containerRef} className="space-y-24 mt-24">
           {values.map((value, index) => (
-            <ValueItem key={index} value={value} index={index} />
+            <div
+              key={index}
+              className={`transition-all duration-800 ease-out ${
+                visibleItems[index] 
+                  ? 'opacity-100 translate-y-0' 
+                  : 'opacity-0 translate-y-12'
+              }`}
+            >
+              <ValueItem value={value} index={index} />
+            </div>
           ))}
         </div>
-        
-        
       </div>
     </section>
   );
