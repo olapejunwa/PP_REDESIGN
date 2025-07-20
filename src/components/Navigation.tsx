@@ -156,7 +156,7 @@ const Navigation = () => {
                           </div>
                           <Link to="/bookkeeping-services" className="flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
                             <BookOpen className="w-4 h-4 text-blue-600" />
-                            <span className="font-medium">Book-keeping</span>
+                            <span className="font-medium">Book-keeping Services</span>
                           </Link>
                           <Link to="/tax-services" className="flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
                             <Calculator className="w-4 h-4 text-blue-600" />
@@ -164,23 +164,41 @@ const Navigation = () => {
                           </Link>
                           <Link to="/inventory-management" className="flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
                             <Package className="w-4 h-4 text-blue-600" />
-                            <span className="font-medium">Inventory</span>
+                            <span className="font-medium">Inventory Management</span>
                           </Link>
                         </div>
 
                         {/* Main Products - Right side cards */}
-                        <div className="w-52 space-y-1">
-                          <div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                        <div className="w-56 space-y-2">
+                          <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                             Main Products
                           </div>
-                          <a href="https://pepcodeinc.com/" target="_blank" rel="noopener noreferrer" className="block p-2 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                            <img src="/images/pepcode logo.webp" alt="PEPCODE Logo" className="w-20 h-auto"/>
+
+                          {/* PEPCODE */}
+                          <a href="https://pepcodeinc.com/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 hover:bg-blue-50 rounded-xl transition-all duration-200">
+                            <img src="/images/pepcode logo.webp" alt="PEPCODE Logo" className="w-8 h-8 mr-3 object-contain"/>
+                            <div>
+                                <div className="font-semibold text-blue-900">PEPCODE</div>
+                                <div className="text-xs text-blue-700 mt-1">Bookkeeping Software</div>
+                            </div>
                           </a>
-                          <a href="https://auditme.com.ng/" target="_blank" rel="noopener noreferrer" className="block p-2 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                              <img src="/images/auditme.webp" alt="AUDITME Logo" className="w-20 h-auto"/>
+
+                          {/* AUDITME */}
+                          <a href="https://auditme.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 hover:bg-blue-50 rounded-xl transition-all duration-200">
+                              <img src="/images/auditme.webp" alt="AUDITME Logo" className="w-8 h-8 mr-3 object-contain"/>
+                              <div>
+                                  <div className="font-semibold text-blue-900">AUDITME</div>
+                                  <div className="text-xs text-blue-700 mt-1">Audit Platform</div>
+                              </div>
                           </a>
-                          <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="block p-2 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                              <img src="/images/7.png" alt="OWA by PEPCODE Logo" className="w-20 h-auto"/>
+
+                          {/* OWA by PEPCODE */}
+                          <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 hover:bg-blue-50 rounded-xl transition-all duration-200">
+                              <img src="/images/7.png" alt="OWA by PEPCODE Logo" className="w-8 h-8 mr-3 object-contain"/>
+                              <div>
+                                  <div className="font-semibold text-blue-900">OWA by PEPCODE</div>
+                                  <div className="text-xs text-blue-700 mt-1">Paperless Bookkeeping</div>
+                              </div>
                           </a>
                         </div>
                       </div>
