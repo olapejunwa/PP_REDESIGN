@@ -14,35 +14,45 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   className = '',
   animationType = 'fadeUp',
   delay = 0,
-  duration = 800,
+  duration = 600, // Faster default duration
 }) => {
   const [ref, isVisible] = useScrollAnimation();
 
+  // Adjust animation settings for mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const mobileDuration = isMobile ? Math.max(400, duration * 0.7) : duration;
+  const mobileDelay = isMobile ? delay * 0.7 : delay;
+
   const getAnimationClasses = () => {
-    const baseClasses = `transition-all ease-out`;
-    const durationClass = `duration-${duration}`;
+    const baseClasses = `transition-all ease-out will-change-transform`;
+    
+    // Use CSS custom property for duration to support mobile optimization
+    const durationMs = `${mobileDuration}ms`;
     
     if (!isVisible) {
       switch (animationType) {
         case 'fadeUp':
-          return `${baseClasses} ${durationClass} opacity-0 translate-y-8`;
+          return `${baseClasses} opacity-0 ${isMobile ? 'translate-y-4' : 'translate-y-8'}`;
         case 'fadeIn':
-          return `${baseClasses} ${durationClass} opacity-0`;
+          return `${baseClasses} opacity-0`;
         case 'slideLeft':
-          return `${baseClasses} ${durationClass} opacity-0 -translate-x-8`;
+          return `${baseClasses} opacity-0 ${isMobile ? '-translate-x-4' : '-translate-x-8'}`;
         case 'slideRight':
-          return `${baseClasses} ${durationClass} opacity-0 translate-x-8`;
+          return `${baseClasses} opacity-0 ${isMobile ? 'translate-x-4' : 'translate-x-8'}`;
         case 'scale':
-          return `${baseClasses} ${durationClass} opacity-0 scale-95`;
+          return `${baseClasses} opacity-0 ${isMobile ? 'scale-98' : 'scale-95'}`;
         default:
-          return `${baseClasses} ${durationClass} opacity-0 translate-y-8`;
+          return `${baseClasses} opacity-0 ${isMobile ? 'translate-y-4' : 'translate-y-8'}`;
       }
     } else {
-      return `${baseClasses} ${durationClass} opacity-100 translate-y-0 translate-x-0 scale-100`;
+      return `${baseClasses} opacity-100 translate-y-0 translate-x-0 scale-100`;
     }
   };
 
-  const style = delay > 0 ? { transitionDelay: `${delay}ms` } : {};
+  const style: React.CSSProperties = {
+    transitionDuration: `${mobileDuration}ms`,
+    ...(mobileDelay > 0 && { transitionDelay: `${mobileDelay}ms` })
+  };
 
   return (
     <div
