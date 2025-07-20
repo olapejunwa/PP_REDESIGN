@@ -10,6 +10,7 @@ const LavaLampBackground = () => {
     if (!ctx) return;
 
     let blobs: Blob[] = [];
+    let animationFrameId: number;
 
     // This class defines the properties and behavior of each lava blob.
     class Blob {
@@ -27,7 +28,7 @@ const LavaLampBackground = () => {
         this.r = r;
         this.color1 = color1;
         this.color2 = color2;
-        const speedMultiplier = window.innerWidth < 768 ? 0.4 : 0.8;
+        const speedMultiplier = window.innerWidth < 768 ? 0.3 : 0.6;
         this.vx = (Math.random() - 0.5) * speedMultiplier;
         this.vy = (Math.random() - 0.5) * speedMultiplier;
       }
@@ -58,7 +59,7 @@ const LavaLampBackground = () => {
     
     // This function creates the blobs based on the current screen size.
     const createBlobs = (width: number, height: number) => {
-        const radiusMultiplier = width < 768 ? 0.3 : 0.2;
+        const radiusMultiplier = width < 768 ? 0.25 : 0.18;
         blobs = [
             new Blob(width * 0.2, height * 0.3, width * radiusMultiplier, 'rgba(59, 130, 246, 0.6)', 'rgba(37, 99, 235, 0)'),
             new Blob(width * 0.8, height * 0.7, width * (radiusMultiplier + 0.05), 'rgba(96, 165, 250, 0.6)', 'rgba(59, 130, 246, 0)'),
@@ -66,11 +67,8 @@ const LavaLampBackground = () => {
         ];
     }
 
-    let animationFrameId: number;
-    
     // The main animation loop.
     const animate = () => {
-      const { width, height } = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
@@ -80,7 +78,7 @@ const LavaLampBackground = () => {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       blobs.forEach(blob => {
-        blob.update(canvas.width, canvas.height);
+        blob.update(canvas.width / (window.devicePixelRatio || 1), canvas.height / (window.devicePixelRatio || 1));
         blob.draw();
       });
 
@@ -89,26 +87,49 @@ const LavaLampBackground = () => {
 
     // This function handles resizing of the canvas to prevent graininess and re-initializes blobs.
     const handleResize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap DPR at 2 for performance
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
       ctx.scale(dpr, dpr);
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
       createBlobs(canvas.width / dpr, canvas.height / dpr);
     };
 
-    window.addEventListener('resize', handleResize);
+    // Throttled resize handler to improve performance
+    let resizeTimeout: NodeJS.Timeout;
+    const throttledResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(handleResize, 100);
+    };
+
+    window.addEventListener('resize', throttledResize);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(handleResize, 100); // Delay to ensure orientation change is complete
+    });
     handleResize(); // Initial setup
     animate();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', throttledResize);
+      window.removeEventListener('orientationchange', handleResize);
       cancelAnimationFrame(animationFrameId);
+      clearTimeout(resizeTimeout);
     };
   }, []);
 
   // Using position: fixed and z-[-1] to ensure the background stays put and behind all content.
-  return <canvas ref={canvasRef} className="fixed inset-0 w-full h-full z-[-1]" />;
+  return (
+    <canvas 
+      ref={canvasRef} 
+      className="fixed inset-0 w-full h-full z-[-1]" 
+      style={{ 
+        imageRendering: 'auto',
+        willChange: 'transform'
+      }}
+    />
+  );
 };
 
 export default LavaLampBackground;
