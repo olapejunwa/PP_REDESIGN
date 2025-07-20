@@ -7,20 +7,29 @@ const AnimatedCalculatorIcon: React.FC<{ className?: string }> = ({ className })
   useEffect(() => {
     setDisplayValue(''); // Reset on re-render if needed
     let currentIndex = 0;
-    const interval = setInterval(() => {
-      if (currentIndex < targetNumber.length) {
-        setDisplayValue((prev) => prev + targetNumber[currentIndex]);
-        currentIndex++;
-      } else {
-        // Pause at the end, then reset
-        setTimeout(() => {
-          setDisplayValue('');
-          currentIndex = 0;
-        }, 2000);
-      }
-    }, 150); // Typing speed
+    
+    const typeNumber = () => {
+      const interval = setInterval(() => {
+        if (currentIndex < targetNumber.length) {
+          setDisplayValue((prev) => prev + targetNumber[currentIndex]);
+          currentIndex++;
+        } else {
+          clearInterval(interval);
+          // Pause at the end, then reset
+          setTimeout(() => {
+            setDisplayValue('');
+            currentIndex = 0;
+            typeNumber(); // Restart the animation
+          }, 2000);
+        }
+      }, 150); // Typing speed
+    };
+    
+    typeNumber();
 
-    return () => clearInterval(interval);
+    return () => {
+      // Cleanup function to prevent memory leaks
+    };
   }, []);
 
   return (
@@ -35,12 +44,13 @@ const AnimatedCalculatorIcon: React.FC<{ className?: string }> = ({ className })
       {/* Display Screen */}
       <rect x="12" y="12" width="56" height="20" rx="4" fill="#e5e7eb" />
       <text
-        x="64"
+        x="62"
         y="27"
         fontFamily="monospace"
-        fontSize="10"
+        fontSize="8"
         fill="#1f2937"
         textAnchor="end"
+        style={{ maxWidth: '52px', overflow: 'hidden' }}
       >
         {displayValue}
       </text>

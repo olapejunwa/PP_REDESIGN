@@ -13,7 +13,7 @@ const Services = () => {
       title: "PEPCODE",
       description: "Advanced bookkeeping software designed to simplify your financial management processes.",
       link: "https://pepcodeinc.com/",
-      cardColor: "bg-white text-gray-800",
+      cardColor: "bg-blue-200 text-gray-800",
       logoBg: "bg-gray-50",
     },
     {
@@ -29,7 +29,7 @@ const Services = () => {
       title: "AUDITME",
       description: "Fast-tracked audited accounts platform for streamlined compliance and reporting.",
       link: "https://auditme.com.ng/",
-      cardColor: "bg-brand-cream text-gray-800",
+      cardColor: "bg-yellow-100 text-gray-800",
       logoBg: "bg-white",
     },
   ];
@@ -41,18 +41,21 @@ const Services = () => {
       title: "Tax Services",
       description: "Expert tax preparation and planning.",
       link: "/tax-services",
+      iconColor: "text-purple-500",
     },
     {
       icon: AnimatedFileText,
       title: "Book-keeping Services",
       description: "Maintain accurate financial records.",
       link: "/bookkeeping-services",
+      iconColor: "text-blue-400",
     },
     {
       icon: AnimatedTrendingUp,
       title: "Inventory Management",
       description: "Efficient inventory tracking solutions.",
       link: "/inventory-management",
+      iconColor: "text-red-500",
     }
   ];
 
@@ -148,7 +151,7 @@ const Services = () => {
             {otherServices.map((service, index) => (
                 <Link to={service.link} key={index} className="bg-gray-800 p-6 rounded-2xl flex flex-col items-center text-center hover:bg-gray-700 transition-colors duration-300">
                     <div className="w-32 h-32 mb-4">
-                        <service.icon className="w-full h-full text-white/80"/>
+                        <service.icon className={`w-full h-full ${service.iconColor}`}/>
                     </div>
                     <h3 className="text-xl font-bold mb-2">{service.title}</h3>
                     <p className="text-gray-400 text-sm">{service.description}</p>
