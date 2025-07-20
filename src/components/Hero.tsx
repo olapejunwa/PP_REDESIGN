@@ -5,12 +5,12 @@ import AnimatedSection from './AnimatedSection';
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center">
         {/* Animated Lava Lamp Background */}
         <LavaLampBackground />
         
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20">
           <AnimatedSection animationType="fadeUp" delay={200}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
               YOUR PARTNER IN

@@ -18,7 +18,7 @@ function App() {
   const location = useLocation();
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen font-sans relative overflow-x-hidden">
+    <div className="bg-gray-900 text-white min-h-screen font-sans relative">
       <LavaLampBackground />
       {/* Navigation is fixed and sits on top of everything, outside the main layout flow */}
       <Navigation />
@@ -26,8 +26,8 @@ function App() {
       {/* This container uses flexbox to arrange main content and footer vertically and ensures it takes up the full screen height. */}
       <div className="flex flex-col min-h-screen">
         {/* 1. The main content area grows to fill available space, pushing the footer down. */}
-        {/* 2. pt-20 accounts for the height of the fixed navigation bar. */}
-        <main className="flex-grow pt-20">
+        {/* 2. No pt-20 here since each page handles its own top spacing. */}
+        <main className="flex-grow">
           {/* 3. This relative container is the positioning context for the absolutely positioned pages during transition. */}
           <div className="relative h-full w-full">
             <AnimatePresence mode="wait">

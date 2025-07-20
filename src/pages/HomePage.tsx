@@ -7,12 +7,10 @@ import Footer from '../components/Footer';
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen bg-matte-black">
-      <Navigation />
+    <div className="min-h-screen">
       <Hero />
       <About />
       <Services />
-      <Footer />
     </div>
   );
 };
