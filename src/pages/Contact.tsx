@@ -1,93 +1,124 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Mail, Phone, MapPin, Plus, Minus } from 'lucide-react';
+
+const AccordionItem = ({ title, children }: { title: string, children: React.ReactNode }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="border-b border-gray-700">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex justify-between items-center text-left py-5 px-6 text-white hover:bg-gray-800 transition-colors"
+      >
+        <span className="text-lg font-medium">{title}</span>
+        {isOpen ? <Minus className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
+      </button>
+      {isOpen && (
+        <div className="px-6 pb-5 text-gray-300">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
 
 const Contact = () => {
+    const faqs = [
+    {
+      question: "What can I do with Ploutos?",
+      answer: "Ploutos offers a comprehensive suite of tools for financial management, including bookkeeping, tax services, and inventory management, to help streamline your business operations."
+    },
+    {
+      question: "Is Ploutos a good fit for my business?",
+      answer: "Ploutos is designed for businesses of all sizes, from startups to established enterprises. Our scalable solutions can be tailored to meet your specific needs."
+    },
+    {
+      question: "How easy is Ploutos to use?",
+      answer: "Our platform is built with a user-friendly interface to ensure that you can manage your finances with ease, regardless of your technical expertise."
+    },
+    {
+      question: "How much does Ploutos cost?",
+      answer: "We offer a range of pricing plans to suit different business needs and budgets. Please visit our services pages for more details."
+    },
+    {
+      question: "How do I get started with Ploutos?",
+      answer: "Getting started is easy! Simply contact us through the form on this page, and one of our team members will be in touch to guide you through the process."
+    }
+  ];
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <Navigation />
       
-      {/* Hero Section */}
+      {/* Main Contact Section */}
       <section className="pt-32 pb-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Get in Touch with Us
-            </h1>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Ready to transform your financial management? Contact our team of experts today and discover how Ploutos Page can help your business thrive.
-            </p>
-          </div>
-        </div>
-      </section>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            {/* Left Column: Contact Info */}
+            <div className="lg:mt-8">
+              <p className="text-sm font-bold text-blue-600 uppercase">Contact</p>
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-6">
+                Approachable & Conversational
+              </h1>
+              <p className="text-lg text-gray-600 mb-10">
+                No question is too big or too small. We're happy to chat!
+              </p>
+              <div className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <Mail className="w-6 h-6 text-gray-700" />
+                  <span className="text-lg text-gray-800 font-medium">admin@ploutospage.com</span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Phone className="w-6 h-6 text-gray-700" />
+                  <span className="text-lg text-gray-800 font-medium">(234) 802-424-7865</span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <MapPin className="w-6 h-6 text-gray-700" />
+                  <span className="text-lg text-gray-800 font-medium">8 Rock drive Lekki Phase One</span>
+                </div>
+              </div>
+            </div>
 
-      {/* Contact Information */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div className="bg-gray-50 rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+            {/* Right Column: Contact Form */}
+            <div className="bg-white rounded-2xl p-8 shadow-2xl">
               <form className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                      First Name
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                      Name
                     </label>
                     <input
                       type="text"
-                      id="firstName"
+                      id="name"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter your first name"
+                      placeholder="Your Name"
                     />
                   </div>
                   <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                      Last Name
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      Email
                     </label>
                     <input
-                      type="text"
-                      id="lastName"
+                      type="email"
+                      id="email"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter your last name"
+                      placeholder="Work Email"
                     />
                   </div>
                 </div>
                 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter your email address"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                    Subject
+                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                    Company
                   </label>
                   <input
                     type="text"
-                    id="subject"
+                    id="company"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="What is this regarding?"
+                    placeholder="Company Name"
                   />
                 </div>
                 
@@ -97,81 +128,41 @@ const Contact = () => {
                   </label>
                   <textarea
                     id="message"
-                    rows={6}
+                    rows={5}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Tell us more about your needs..."
+                    placeholder="Your Message"
                   ></textarea>
                 </div>
                 
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+                  className="w-full bg-blue-600 text-white px-6 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 text-lg"
                 >
-                  Send Message
+                  Contact us
                 </button>
               </form>
             </div>
-
-            {/* Contact Details */}
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
-                <p className="text-gray-600 mb-8">
-                  We're here to help you succeed. Reach out to us through any of the following channels.
-                </p>
-              </div>
-
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Email Us</h3>
-                    <p className="text-gray-600">info@ploutospage.com</p>
-                    <p className="text-gray-600">support@ploutospage.com</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Call Us</h3>
-                    <p className="text-gray-600">+234 (0) 123 456 7890</p>
-                    <p className="text-gray-600">+234 (0) 987 654 3210</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Visit Us</h3>
-                    <p className="text-gray-600">
-                      123 Business District<br />
-                      Lagos, Nigeria<br />
-                      100001
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Business Hours</h3>
-                    <p className="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                    <p className="text-gray-600">Saturday: 10:00 AM - 4:00 PM</p>
-                    <p className="text-gray-600">Sunday: Closed</p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 bg-gray-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+                <p className="text-sm font-bold text-blue-400 uppercase">FAQ</p>
+                <h2 className="text-4xl font-bold text-white mt-2 mb-4">Frequently Asked Questions</h2>
+                <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+                    We'd love to hear from you and discuss how Ploutos can simplify your financial management.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl overflow-hidden">
+                {faqs.map((faq, index) => (
+                    <AccordionItem key={index} title={faq.question}>
+                        <p>{faq.answer}</p>
+                    </AccordionItem>
+                ))}
+            </div>
         </div>
       </section>
 
