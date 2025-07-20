@@ -2,82 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Smooth scrolling for the entire page */
+/* Base styles and smooth scrolling */
 html {
   scroll-behavior: smooth;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
 }
 
-/* Custom duration classes for animations */
-.duration-400 {
-  transition-duration: 400ms;
+body {
+  /* Prevent horizontal scroll and improve mobile performance */
+  overflow-x: hidden;
+  /* Enable hardware acceleration on mobile */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
-.duration-500 {
-  transition-duration: 500ms;
-}
-
-.duration-600 {
-  transition-duration: 600ms;
-}
-
-.duration-700 {
-  transition-duration: 700ms;
-}
-
-.duration-800 {
-  transition-duration: 800ms;
-}
-
-.duration-1000 {
-  transition-duration: 1000ms;
-}
-
-.duration-1200 {
-  transition-duration: 1200ms;
-}
-
-/* Mobile-optimized animations */
+/* Mobile performance optimizations */
 @media (max-width: 767px) {
-  .animate-slide-up {
-    animation-duration: 0.6s;
-  }
-  
-  .animate-slide-left {
-    animation-duration: 0.6s;
-  }
-  
-  .animate-slide-right {
-    animation-duration: 0.6s;
-  }
-  
-  .animate-scale-in {
-    animation-duration: 0.6s;
-  }
-  
-  /* Reduce transform distances on mobile */
-  .translate-y-8 {
-    transform: translateY(1rem);
-  }
-  
-  .translate-x-8 {
-    transform: translateX(1rem);
-  }
-  
-  .-translate-x-8 {
-    transform: translateX(-1rem);
-  }
-}
-
-/* Performance optimizations */
-.will-change-transform {
-  will-change: transform, opacity;
-}
-
-/* Ensure smooth animations on mobile */
-@media (max-width: 767px) {
+  /* Enable hardware acceleration for all elements on mobile */
   * {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+  }
+  
+  /* Optimize transitions for mobile */
+  .transition-all {
+    transition-property: opacity, transform;
+    transition-timing-function: ease-out;
   }
 }
 
@@ -96,11 +51,11 @@ html {
   animation: slide-in-from-top 0.2s ease-out;
 }
 
-/* Scroll-triggered animations */
+/* Optimized keyframe animations */
 @keyframes slideInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -111,7 +66,7 @@ html {
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(-20px);
   }
   to {
     opacity: 1;
@@ -122,7 +77,7 @@ html {
 @keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(20px);
   }
   to {
     opacity: 1;
@@ -133,7 +88,7 @@ html {
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
@@ -142,22 +97,22 @@ html {
 }
 
 .animate-slide-up {
-  animation: slideInUp 0.8s ease-out forwards;
+  animation: slideInUp 0.6s ease-out forwards;
 }
 
 .animate-slide-left {
-  animation: slideInLeft 0.8s ease-out forwards;
+  animation: slideInLeft 0.6s ease-out forwards;
 }
 
 .animate-slide-right {
-  animation: slideInRight 0.8s ease-out forwards;
+  animation: slideInRight 0.6s ease-out forwards;
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.8s ease-out forwards;
+  animation: scaleIn 0.6s ease-out forwards;
 }
 
-/* Reduced motion preferences */
+/* Accessibility: Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -169,16 +124,17 @@ html {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-/* Icon animations */
+/* Optimized icon animations */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-4px);
   }
 }
 
@@ -187,7 +143,7 @@ html {
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 6px rgba(59, 130, 246, 0);
   }
 }
 
@@ -205,7 +161,7 @@ html {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 }
 
@@ -214,12 +170,12 @@ html {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(1.03);
   }
 }
 
 .icon-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float 2.5s ease-in-out infinite;
 }
 
 .icon-pulse-glow {
@@ -227,15 +183,15 @@ html {
 }
 
 .icon-rotate {
-  animation: rotate-slow 8s linear infinite;
+  animation: rotate-slow 6s linear infinite;
 }
 
 .icon-bounce {
-  animation: bounce-subtle 2s ease-in-out infinite;
+  animation: bounce-subtle 1.8s ease-in-out infinite;
 }
 
 .icon-scale-pulse {
-  animation: scale-pulse 2s ease-in-out infinite;
+  animation: scale-pulse 1.8s ease-in-out infinite;
 }
 
 .icon-hover-lift {
@@ -251,12 +207,11 @@ html {
   animation-play-state: running; 
 }
 
-/* Matte Black Background Utility */
+/* Custom utilities */
 .bg-matte-black {
   background-color: #1a1a1a;
 }
 
-/* Section Divider */
 .section-divider {
   position: relative;
   height: 2px;
@@ -276,18 +231,17 @@ html {
   border-radius: 50%;
 }
 
-/* Calculator Icon: Bouncing Animation */
+/* Specific icon animations */
 @keyframes bounce-custom {
   0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-20%); }
-  60% { transform: translateY(-10%); }
+  40% { transform: translateY(-15%); }
+  60% { transform: translateY(-8%); }
 }
 
 .animate-bounce-custom {
-  animation: bounce-custom 1.5s infinite ease-in-out;
+  animation: bounce-custom 1.3s infinite ease-in-out;
 }
 
-/* FileText Icon: Line Drawing Animation */
 @keyframes draw-line {
   from { stroke-dashoffset: 100; }
   to { stroke-dashoffset: 0; }
@@ -296,12 +250,11 @@ html {
 .animate-draw-line {
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
-  animation: draw-line 2s infinite alternate ease-in-out;
+  animation: draw-line 1.8s infinite alternate ease-in-out;
 }
 
-/* TrendingUp Icon: Arrow Drawing Animation */
 .animate-draw-arrow {
   stroke-dasharray: 200;
   stroke-dashoffset: 200;
-  animation: draw-line 2s infinite alternate ease-in-out;
+  animation: draw-line 1.8s infinite alternate ease-in-out;
 }
