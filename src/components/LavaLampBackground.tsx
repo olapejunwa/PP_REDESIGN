@@ -131,7 +131,7 @@ const LavaLampBackground = () => {
 
   // Use absolute positioning to keep the background within its parent (the Hero section).
   // The z-index is removed to ensure it's visible. The Hero component will handle layering.
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full -z-10" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
 };
 
 export default LavaLampBackground;

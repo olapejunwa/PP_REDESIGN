@@ -5,11 +5,6 @@
 /* Smooth scrolling for the entire page */
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-
-body {
-  overflow-x: hidden;
 }
 
 /* Custom duration classes for animations */

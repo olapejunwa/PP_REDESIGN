@@ -5,7 +5,7 @@ const PageTransition = ({ children }) => {
   const pageVariants = {
     initial: {
       opacity: 0,
-      x: '-200px', // A more subtle slide from the left
+      x: '-100vw', // Start off-screen to the left
     },
     in: {
       opacity: 1,
@@ -13,15 +13,15 @@ const PageTransition = ({ children }) => {
     },
     out: {
       opacity: 0,
-      x: '200px', // A more subtle slide to the right
+      x: '100vw', // Animate off-screen to the right
     },
   };
 
   // This defines the properties of the transition animation.
   const pageTransition = {
     type: 'tween',
-    ease: 'anticipate', // A slightly different easing function for a nice effect
-    duration: 0.5,
+    ease: 'easeInOut', // A smoother easing function
+    duration: 0.5,     // A slightly faster duration
   };
 
   return (
@@ -31,9 +31,9 @@ const PageTransition = ({ children }) => {
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
-      // Use `absolute` and `inset-0` to make the div fill its relative parent completely.
-      // This is a more robust way to handle the sizing of the animated container.
-      className="absolute inset-0"
+      // Absolute positioning is required for the in/out animations to not affect layout.
+      // The parent container in App.tsx now handles layout preservation.
+      className="absolute w-full"
     >
       {children}
     </motion.div>
