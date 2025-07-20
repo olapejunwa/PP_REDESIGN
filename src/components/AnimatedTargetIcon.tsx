@@ -2,23 +2,24 @@ import React, { useState, useEffect } from 'react';
 
 // Define TypeScript types for the component's props
 interface AnimatedTargetIconProps {
-  /** The total duration of the formation animation in seconds. Default: 2 */
+  /** The total duration of the formation animation in seconds. Default: 1.5 */
   animationDuration?: number;
   /** The radius from the center where elements will scatter. Default: 70 */
   scatterRadius?: number;
 }
 
 const AnimatedTargetIcon: React.FC<AnimatedTargetIconProps> = ({
-  animationDuration = 2,
+  animationDuration = 1.5,
   scatterRadius = 70,
 }) => {
   const [isAssembled, setIsAssembled] = useState(false);
 
   // This effect triggers the animation once when the component mounts.
   useEffect(() => {
+    // Reduced the timeout to 0 to remove the initial delay.
     const timer = setTimeout(() => {
       setIsAssembled(true);
-    }, 100); // A small delay ensures initial styles are applied before transitioning.
+    }, 0); 
 
     return () => clearTimeout(timer);
   }, []);
