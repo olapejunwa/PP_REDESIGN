@@ -27,7 +27,7 @@ const LavaLampBackground = () => {
         this.r = r;
         this.color1 = color1;
         this.color2 = color2;
-        const speedMultiplier = window.innerWidth < 768 ? 0.4 : 0.8;
+        const speedMultiplier = window.innerWidth < 768 ? 1.2 : 1.5;
         this.vx = (Math.random() - 0.5) * speedMultiplier;
         this.vy = (Math.random() - 0.5) * speedMultiplier;
       }
@@ -58,12 +58,35 @@ const LavaLampBackground = () => {
     
     // This function creates the blobs based on the current screen size.
     const createBlobs = (width: number, height: number) => {
-        const radiusMultiplier = width < 768 ? 0.3 : 0.2;
-        blobs = [
+        const isMobile = width < 768;
+        const isPortrait = height > width;
+        
+        // Adjust blob sizes and positions for mobile orientation
+        const radiusMultiplier = isMobile ? (isPortrait ? 0.25 : 0.35) : 0.2;
+        
+        if (isMobile && isPortrait) {
+          // Portrait mobile: vertical layout with smaller, more spread out blobs
+          blobs = [
+            new Blob(width * 0.2, height * 0.2, width * radiusMultiplier, 'rgba(59, 130, 246, 0.6)', 'rgba(37, 99, 235, 0)'),
+            new Blob(width * 0.8, height * 0.5, width * (radiusMultiplier + 0.05), 'rgba(96, 165, 250, 0.6)', 'rgba(59, 130, 246, 0)'),
+            new Blob(width * 0.3, height * 0.8, width * (radiusMultiplier - 0.03), 'rgba(147, 197, 253, 0.6)', 'rgba(96, 165, 250, 0)'),
+            new Blob(width * 0.7, height * 0.3, width * (radiusMultiplier - 0.02), 'rgba(191, 219, 254, 0.5)', 'rgba(147, 197, 253, 0)'),
+          ];
+        } else if (isMobile && !isPortrait) {
+          // Landscape mobile: horizontal layout
+          blobs = [
+            new Blob(width * 0.15, height * 0.3, width * radiusMultiplier, 'rgba(59, 130, 246, 0.6)', 'rgba(37, 99, 235, 0)'),
+            new Blob(width * 0.5, height * 0.7, width * (radiusMultiplier + 0.05), 'rgba(96, 165, 250, 0.6)', 'rgba(59, 130, 246, 0)'),
+            new Blob(width * 0.85, height * 0.4, width * (radiusMultiplier - 0.03), 'rgba(147, 197, 253, 0.6)', 'rgba(96, 165, 250, 0)'),
+          ];
+        } else {
+          // Desktop: original layout
+          blobs = [
             new Blob(width * 0.2, height * 0.3, width * radiusMultiplier, 'rgba(59, 130, 246, 0.6)', 'rgba(37, 99, 235, 0)'),
             new Blob(width * 0.8, height * 0.7, width * (radiusMultiplier + 0.05), 'rgba(96, 165, 250, 0.6)', 'rgba(59, 130, 246, 0)'),
             new Blob(width * 0.5, height * 0.5, width * (radiusMultiplier - 0.05), 'rgba(147, 197, 253, 0.6)', 'rgba(96, 165, 250, 0)'),
-        ];
+          ];
+        }
     }
 
     let animationFrameId: number;
