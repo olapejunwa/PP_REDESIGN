@@ -1,42 +1,64 @@
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
 
-const PageTransition = ({ children }) => {
-  // These variants define the animation states for the page.
-  const pageVariants = {
-    initial: {
-      opacity: 0,
-      x: '-100vw', // Start off-screen to the left
-    },
-    in: {
-      opacity: 1,
-      x: 0, // Animate to the center
-    },
-    out: {
-      opacity: 0,
-      x: '100vw', // Animate off-screen to the right
-    },
-  };
+interface PageTransitionProps {
+  children: React.ReactNode;
+  /** Unique key to trigger transition when page changes */
+  pageKey: string;
+  /** Duration of the transition in milliseconds */
+  duration?: number;
+  /** Custom className for styling */
+  className?: string;
+}
 
-  // This defines the properties of the transition animation.
-  const pageTransition = {
-    type: 'tween',
-    ease: 'easeInOut', // A smoother easing function
-    duration: 0.5,     // A slightly faster duration
+/**
+ * PageTransition component provides smooth fade transitions between pages
+ * Uses CSS transitions for optimal performance
+ */
+const PageTransition: React.FC<PageTransitionProps> = ({
+  children,
+  pageKey,
+  duration = 400,
+  className = ''
+}) => {
+  const [isVisible, setIsVisible] = useState(true);
+  const [currentPageKey, setCurrentPageKey] = useState(pageKey);
+
+  useEffect(() => {
+    // Check if user prefers reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (prefersReducedMotion) {
+      setCurrentPageKey(pageKey);
+      return;
+    }
+
+    if (pageKey !== currentPageKey) {
+      // Start fade out
+      setIsVisible(false);
+      
+      // After fade out completes, update content and fade in
+      const timer = setTimeout(() => {
+        setCurrentPageKey(pageKey);
+        setIsVisible(true);
+      }, duration * 0.6); // Fade out takes 60% of total duration
+
+      return () => clearTimeout(timer);
+    }
+  }, [pageKey, currentPageKey, duration]);
+
+  const transitionStyle: React.CSSProperties = {
+    opacity: isVisible ? 1 : 0,
+    transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+    transition: `opacity ${duration}ms ease-out, transform ${duration}ms ease-out`,
   };
 
   return (
-    <motion.div
-      initial="initial"
-      animate="in"
-      exit="out"
-      variants={pageVariants}
-      transition={pageTransition}
-      // Absolute positioning is required for the in/out animations to not affect layout.
-      // The parent container in App.tsx now handles layout preservation.
-      className="absolute w-full"
+    <div 
+      className={`transition-container ${className}`}
+      style={transitionStyle}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };
 
