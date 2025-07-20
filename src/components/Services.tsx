@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import AnimatedSection from './AnimatedSection';
+import { useStaggeredAnimation } from '../hooks/useScrollAnimation';
 import AnimatedFileText from './AnimatedFileText';
 import AnimatedTrendingUp from './AnimatedTrendingUp';
 import AnimatedCalculatorIcon from './AnimatedCalculatorIcon'; // Import the new component
@@ -61,6 +63,7 @@ const Services = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [servicesRef, visibleServices] = useStaggeredAnimation(3, 200);
 
   const resetTimeout = () => {
     if (timeoutRef.current) {
@@ -98,64 +101,80 @@ const Services = () => {
   return (
     <section className="py-20 bg-matte-dark-blue text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            What Do We Offer?
-          </h2>
-          <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-            From cutting-edge software solutions to expert professional services, we provide everything you need for financial success.
-          </p>
-        </div>
+        <AnimatedSection animationType="fadeUp" className="text-center mb-16">
+          <AnimatedSection animationType="fadeUp" delay={200}>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              What Do We Offer?
+            </h2>
+          </AnimatedSection>
+          <AnimatedSection animationType="fadeUp" delay={400}>
+            <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+              From cutting-edge software solutions to expert professional services, we provide everything you need for financial success.
+            </p>
+          </AnimatedSection>
+        </AnimatedSection>
         
         {/* Carousel Section */}
-        <div className="relative mb-24">
-          <div className="overflow-hidden rounded-2xl">
-            <div 
-              className="flex transition-transform ease-in-out duration-700"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-            >
-              {carouselProducts.map((service, index) => (
-                <div key={index} className="flex-shrink-0 w-full p-1">
-                  <a
-                    href={service.link}
-                    target={service.link.startsWith('http') ? '_blank' : '_self'}
-                    rel="noopener noreferrer"
-                    className={`block rounded-2xl h-96 flex flex-col ${service.cardColor}`}
-                  >
-                    {/* Logo Header */}
-                    <div className={`w-full h-48 flex items-center justify-center rounded-t-2xl ${service.logoBg}`}>
-                       <img src={service.icon} alt={`${service.title} logo`} className="h-24 w-auto object-contain"/>
-                    </div>
-                    {/* Content */}
-                    <div className="p-8 flex flex-col flex-grow">
-                      <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
-                      <p className="text-base opacity-90">{service.description}</p>
-                    </div>
-                  </a>
-                </div>
-              ))}
+        <AnimatedSection animationType="fadeUp" delay={600}>
+          <div className="relative mb-24">
+            <div className="overflow-hidden rounded-2xl">
+              <div 
+                className="flex transition-transform ease-in-out duration-700"
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              >
+                {carouselProducts.map((service, index) => (
+                  <div key={index} className="flex-shrink-0 w-full p-1">
+                    <a
+                      href={service.link}
+                      target={service.link.startsWith('http') ? '_blank' : '_self'}
+                      rel="noopener noreferrer"
+                      className={`block rounded-2xl h-96 flex flex-col ${service.cardColor}`}
+                    >
+                      {/* Logo Header */}
+                      <div className={`w-full h-48 flex items-center justify-center rounded-t-2xl ${service.logoBg}`}>
+                         <img src={service.icon} alt={`${service.title} logo`} className="h-24 w-auto object-contain"/>
+                      </div>
+                      {/* Content */}
+                      <div className="p-8 flex flex-col flex-grow">
+                        <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
+                        <p className="text-base opacity-90">{service.description}</p>
+                      </div>
+                    </a>
+                  </div>
+                ))}
+              </div>
             </div>
+            
+            {/* Carousel Controls */}
+            <button onClick={goToPrevious} className="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-gray-800/80 rounded-full p-2 shadow-md hover:bg-gray-700 z-10">
+              <ChevronLeft className="w-6 h-6 text-white" />
+            </button>
+            <button onClick={goToNext} className="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-gray-800/80 rounded-full p-2 shadow-md hover:bg-gray-700 z-10">
+              <ChevronRight className="w-6 h-6 text-white" />
+            </button>
           </div>
-          
-          {/* Carousel Controls */}
-          <button onClick={goToPrevious} className="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-gray-800/80 rounded-full p-2 shadow-md hover:bg-gray-700 z-10">
-            <ChevronLeft className="w-6 h-6 text-white" />
-          </button>
-          <button onClick={goToNext} className="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-gray-800/80 rounded-full p-2 shadow-md hover:bg-gray-700 z-10">
-            <ChevronRight className="w-6 h-6 text-white" />
-          </button>
-        </div>
+        </AnimatedSection>
 
         {/* Other Services Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div ref={servicesRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {otherServices.map((service, index) => (
-                <Link to={service.link} key={index} className="bg-gray-800 p-6 rounded-2xl flex flex-col items-center text-center hover:bg-gray-700 transition-colors duration-300">
-                    <div className="w-32 h-32 mb-4">
-                        <service.icon className={`w-full h-full ${service.iconColor}`}/>
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">{service.title}</h3>
-                    <p className="text-gray-400 text-sm">{service.description}</p>
-                </Link>
+                <div
+                  key={index}
+                  className={`transition-all duration-700 ease-out ${
+                    visibleServices[index] 
+                      ? 'opacity-100 translate-y-0' 
+                      : 'opacity-0 translate-y-8'
+                  }`}
+                  style={{ transitionDelay: `${index * 200}ms` }}
+                >
+                  <Link to={service.link} className="bg-gray-800 p-6 rounded-2xl flex flex-col items-center text-center hover:bg-gray-700 transition-colors duration-300">
+                      <div className="w-32 h-32 mb-4">
+                          <service.icon className={`w-full h-full ${service.iconColor}`}/>
+                      </div>
+                      <h3 className="text-xl font-bold mb-2">{service.title}</h3>
+                      <p className="text-gray-400 text-sm">{service.description}</p>
+                  </Link>
+                </div>
             ))}
         </div>
 
