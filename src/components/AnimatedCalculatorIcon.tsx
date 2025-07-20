@@ -7,36 +7,38 @@ const AnimatedCalculatorIcon: React.FC<{ className?: string }> = ({ className })
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Cleanup function to clear timers when the component unmounts or re-renders
+    // This cleanup function is crucial. It runs when the component unmounts
+    // or before the effect runs again, preventing memory leaks from old timers.
     const cleanup = () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
 
     const startAnimation = () => {
-      cleanup(); // Clear any existing timers before starting
+      cleanup(); // Always clear previous timers before starting a new animation cycle
       let currentIndex = 0;
-      setDisplayValue(''); // Start with a clean slate
+      setDisplayValue(''); // Reset display for the new cycle
 
       intervalRef.current = setInterval(() => {
-        // Correctly check if we are still within the bounds of the string
-        if (currentIndex < targetNumber.length) {
-          // Use a function for setState to get the most recent state
-          setDisplayValue(prev => prev + targetNumber[currentIndex]);
-          currentIndex++;
-        } else {
-          // Once the full number is displayed, clear the interval
-          if (intervalRef.current) clearInterval(intervalRef.current);
-          // Set a timeout to reset the animation after a delay
+        // This condition is key to preventing the "undefined" error.
+        // It stops the interval from trying to access a character that doesn't exist.
+        if (currentIndex >= targetNumber.length) {
+          if (intervalRef.current) clearInterval(intervalRef.current); // Stop typing
+          // Set a timeout to reset and restart the animation after a pause
           timeoutRef.current = setTimeout(startAnimation, 2000);
+          return; // Exit the interval callback
         }
+        
+        // Append the next character
+        setDisplayValue(prev => prev + targetNumber[currentIndex]);
+        currentIndex++;
       }, 150); // Typing speed
     };
 
     startAnimation(); // Initial start of the animation
 
-    return cleanup; // Ensure timers are cleared on unmount
-  }, []); // Empty dependency array ensures this runs only once on mount
+    return cleanup; // This will be called when the component is unmounted
+  }, []); // The empty dependency array ensures this effect runs only once on mount
 
   return (
     <svg
@@ -45,25 +47,25 @@ const AnimatedCalculatorIcon: React.FC<{ className?: string }> = ({ className })
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        {/* Define a clipping path that matches the calculator screen */}
+        {/* This clipping path acts as a mask, ensuring the text cannot render outside the screen's boundaries. */}
         <clipPath id="calculator-screen-clip">
           <rect x="12" y="12" width="56" height="20" rx="4" />
         </clipPath>
       </defs>
 
-      {/* Calculator Body */}
-      <rect x="5" y="5" width="70" height="90" rx="8" fill="#e9d5ff" stroke="#c4b5fd" strokeWidth="1" />
+      {/* Calculator Body - Light Purple Theme */}
+      <rect x="5" y="5" width="70" height="90" rx="8" fill="#ede9fe" stroke="#dcd7fe" strokeWidth="1" />
 
       {/* Display Screen */}
       <rect x="12" y="12" width="56" height="20" rx="4" fill="#f5f3ff" />
       
-      {/* Apply the clipping path to the text element */}
+      {/* The text element is clipped by the path defined above */}
       <text
         x="64"
         y="27"
         fontFamily="monospace"
         fontSize="10"
-        fill="#4c1d95"
+        fill="#5b21b6"
         textAnchor="end"
         clipPath="url(#calculator-screen-clip)"
       >
