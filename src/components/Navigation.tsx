@@ -6,7 +6,7 @@ const Navigation = () => {
   const [isCompanyDropdownOpen, setIsCompanyDropdownOpen] = useState(false);
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  
   // State for scroll behavior
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -70,7 +70,7 @@ const Navigation = () => {
     }, 250);
     setProductCloseTimer(timer);
   };
-
+  
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   }
@@ -95,7 +95,7 @@ const Navigation = () => {
                     alt="Ploutos Page"
                     className="h-8 w-auto"
                   />
-        </Link>
+                </Link>
               </div>
 
               {/* Desktop Navigation Items */}
@@ -105,8 +105,7 @@ const Navigation = () => {
                   className="relative"
                   onMouseEnter={handleCompanyMouseEnter}
                   onMouseLeave={handleCompanyMouseLeave}
-
-            >
+                >
                   <button
                     className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:bg-blue-50"
                   >
@@ -126,10 +125,9 @@ const Navigation = () => {
                         <Link to="/contact" className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
                           <Mail className="w-4 h-4 text-blue-600" />
                           <span className="font-medium">Contact Us</span>
-                          </Link>
+                        </Link>
                       </div>
                     </div>
-
                   )}
                 </div>
 
@@ -141,7 +139,7 @@ const Navigation = () => {
                 >
                   <button
                     className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:bg-blue-50"
-                >
+                  >
                     <span>PRODUCT</span>
                     <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
                       isProductDropdownOpen ? 'rotate-180' : ''
@@ -167,7 +165,7 @@ const Navigation = () => {
                           <Link to="/inventory-management" className="flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
                             <Package className="w-4 h-4 text-blue-600" />
                             <span className="font-medium">Inventory Management</span>
-                </Link>
+                          </Link>
                         </div>
 
                         {/* Main Products - Right side cards */}
@@ -205,27 +203,25 @@ const Navigation = () => {
                         </div>
                       </div>
                     </div>
-              )}
+                  )}
                 </div>
-
-
-
+                
                 <Link to="/blog" className="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:bg-blue-50">
                   <span>BLOG</span>
-        </Link>
+                </Link>
               </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
+              
+              {/* Mobile Menu Button */}
+              <div className="md:hidden">
                   <button onClick={toggleMobileMenu} className="p-2 rounded-full hover:bg-gray-100">
                       {isMobileMenuOpen ? <X className="w-6 h-6"/> : <Menu className="w-6 h-6"/>}
-          </button>
-        </div>
+                  </button>
+              </div>
             </div>
           </div>
         </div>
       </nav>
-
+      
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
           <div className="fixed inset-0 bg-white z-40 pt-20 md:hidden">
@@ -245,43 +241,11 @@ const Navigation = () => {
                       <Link to="/tax-services" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Tax Services</Link>
                       <Link to="/inventory-management" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Inventory Management</Link>
                   </div>
-
-
-
-
-
-
-
-
-
-
-
-                  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </div>
+              </div>
+          </div>
       )}
     </>
   );
 };
+
+export default Navigation;
