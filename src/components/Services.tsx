@@ -99,16 +99,16 @@ const Services = () => {
   };
 
   return (
-    <section className="py-20 bg-matte-dark-blue text-white">
+    <section className="py-20 bg-soft-blue text-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection animationType="fadeUp" className="text-center mb-16">
           <AnimatedSection animationType="fadeUp" delay={200}>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-unified-3xl md:text-unified-4xl font-primary font-unified-bold text-gray-900 mb-4">
               What Do We Offer?
             </h2>
           </AnimatedSection>
           <AnimatedSection animationType="fadeUp" delay={400}>
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+            <p className="text-unified-lg font-primary font-unified-normal text-gray-700 max-w-3xl mx-auto leading-unified-relaxed">
               From cutting-edge software solutions to expert professional services, we provide everything you need for financial success.
             </p>
           </AnimatedSection>
@@ -117,27 +117,27 @@ const Services = () => {
         {/* Carousel Section */}
         <AnimatedSection animationType="fadeUp" delay={600}>
           <div className="relative mb-24">
-            <div className="overflow-hidden rounded-2xl">
+            <div className="overflow-hidden rounded-2xl aspect-square">
               <div 
-                className="flex transition-transform ease-in-out duration-700"
+                className="flex h-full transition-transform ease-in-out duration-700"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
               >
                 {carouselProducts.map((service, index) => (
-                  <div key={index} className="flex-shrink-0 w-full p-1">
+                  <div key={index} className="flex-shrink-0 w-full h-full p-1">
                     <a
                       href={service.link}
                       target={service.link.startsWith('http') ? '_blank' : '_self'}
                       rel="noopener noreferrer"
-                      className={`block rounded-2xl h-96 flex flex-col ${service.cardColor}`}
+                      className={`block rounded-2xl h-full flex flex-col ${service.cardColor}`}
                     >
                       {/* Logo Header */}
-                      <div className={`w-full h-48 flex items-center justify-center rounded-t-2xl ${service.logoBg}`}>
-                         <img src={service.icon} alt={`${service.title} logo`} className="h-24 w-auto object-contain"/>
+                      <div className={`w-full flex-1 flex items-center justify-center rounded-t-2xl ${service.logoBg}`}>
+                         <img src={service.icon} alt={`${service.title} logo`} className="max-h-32 w-auto object-contain"/>
                       </div>
                       {/* Content */}
-                      <div className="p-8 flex flex-col flex-grow">
-                        <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
-                        <p className="text-base opacity-90">{service.description}</p>
+                      <div className="p-6 flex flex-col">
+                        <h3 className="text-unified-2xl font-primary font-unified-bold mb-2">{service.title}</h3>
+                        <p className="text-unified-base font-primary font-unified-normal opacity-90 leading-unified-normal">{service.description}</p>
                       </div>
                     </a>
                   </div>
@@ -146,11 +146,11 @@ const Services = () => {
             </div>
             
             {/* Carousel Controls */}
-            <button onClick={goToPrevious} className="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-gray-800/80 rounded-full p-2 shadow-md hover:bg-gray-700 z-10">
-              <ChevronLeft className="w-6 h-6 text-white" />
+            <button onClick={goToPrevious} className="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-white/90 rounded-full p-2 shadow-md hover:bg-white z-10">
+              <ChevronLeft className="w-6 h-6 text-gray-700" />
             </button>
-            <button onClick={goToNext} className="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-gray-800/80 rounded-full p-2 shadow-md hover:bg-gray-700 z-10">
-              <ChevronRight className="w-6 h-6 text-white" />
+            <button onClick={goToNext} className="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-white/90 rounded-full p-2 shadow-md hover:bg-white z-10">
+              <ChevronRight className="w-6 h-6 text-gray-700" />
             </button>
           </div>
         </AnimatedSection>
@@ -171,8 +171,8 @@ const Services = () => {
                       <div className="w-32 h-32 mb-4">
                           <service.icon className={`w-full h-full ${service.iconColor}`}/>
                       </div>
-                      <h3 className="text-xl font-bold mb-2">{service.title}</h3>
-                      <p className="text-gray-400 text-sm">{service.description}</p>
+                      <h3 className="text-unified-xl font-primary font-unified-bold text-white mb-2">{service.title}</h3>
+                      <p className="text-gray-400 text-unified-sm font-primary font-unified-normal">{service.description}</p>
                   </Link>
                 </div>
             ))}

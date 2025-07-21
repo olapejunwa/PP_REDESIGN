@@ -76,8 +76,8 @@ const ValueItem = ({ value, index }: { value: any; index: number }) => {
 
       {/* Text Content Container with its own transition */}
       <div className={`text-center ${isEven ? 'md:text-left' : 'md:text-right'} transition-opacity ${isMobile ? 'duration-500 delay-200' : 'duration-700 delay-300'} ease-out ${isInView ? 'opacity-100' : 'opacity-0'}`}>
-        <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-white mb-4`}>{value.title}</h3>
-        <p className={`${isMobile ? 'text-sm' : 'text-base'} text-gray-300 leading-relaxed`}>{value.description}</p>
+        <h3 className={`${isMobile ? 'text-unified-xl' : 'text-unified-2xl'} font-primary font-unified-bold text-gray-900 mb-4`}>{value.title}</h3>
+        <p className={`${isMobile ? 'text-unified-sm' : 'text-unified-base'} font-primary font-unified-normal text-gray-700 leading-unified-relaxed`}>{value.description}</p>
       </div>
     </div>
   );
@@ -107,16 +107,16 @@ const About = () => {
   ];
 
   return (
-    <section className="py-20 bg-matte-dark-blue text-white overflow-hidden">
+    <section className="py-20 bg-soft-slate text-gray-900 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection animationType="fadeUp" className="text-center mb-16">
           <AnimatedSection animationType="fadeUp" delay={200}>
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+            <h2 className="text-unified-2xl md:text-unified-3xl font-primary font-unified-bold text-gray-900 mb-4">
               We're empowering you for financial excellence
             </h2>
           </AnimatedSection>
           <AnimatedSection animationType="fadeUp" delay={400}>
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+            <p className="text-unified-lg font-primary font-unified-normal text-gray-700 max-w-3xl mx-auto leading-unified-relaxed">
               At Ploutos, we are on a mission to empower businesses of all sizes to manage their finances with ease and confidence through innovative bookkeeping solutions and creative software experiences, tools they, and world-class education.
             </p>
           </AnimatedSection>

@@ -100,6 +100,11 @@ const Navigation = () => {
 
               {/* Desktop Navigation Items */}
               <div className="hidden md:flex items-center space-x-1">
+                {/* Home Button */}
+                <Link to="/" className="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:bg-blue-50">
+                  <span>HOME</span>
+                </Link>
+                
                 {/* Company Dropdown */}
                 <div
                   className="relative"
@@ -226,6 +231,7 @@ const Navigation = () => {
       {isMobileMenuOpen && (
           <div className="fixed inset-0 bg-white z-40 pt-20 md:hidden">
               <div className="container mx-auto px-4 py-8 space-y-4">
+                  <Link to="/" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Home</Link>
                   <Link to="/about-us" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>About Us</Link>
                   <Link to="/contact" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Contact</Link>
                   <Link to="/blog" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Blog</Link>
