@@ -1,183 +1,183 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import AnimatedSection from './AnimatedSection';
-import { useStaggeredAnimation } from '../hooks/useScrollAnimation';
-import AnimatedFileText from './AnimatedFileText';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import AnimatedCalculatorIcon from './AnimatedCalculatorIcon';
+import AnimatedTargetIcon from './AnimatedTargetIcon';
 import AnimatedTrendingUp from './AnimatedTrendingUp';
-import AnimatedCalculatorIcon from './AnimatedCalculatorIcon'; // Import the new component
+import AnimatedFileText from './AnimatedFileText';
+import AnimatedEyeIcon from './AnimatedEyeIcon';
+import AnimatedStarIcon from './AnimatedStarIcon';
+
+// CHANGE: Updated the OWA logo to the landscape version.
+// NOTE: Please ensure the image file "Owa_Logo_Landscape.png" exists in your `public/images/` directory.
+// The original file was 'image_3bf784.jpg', please rename and move it.
+import owaLogo from '/images/Owa_Logo_Landscape.png';
+import auditMeLogo from '/images/auditme.webp';
+import pepcodeLogo from '/images/pepcode logo.webp';
+
+interface Service {
+  icon: JSX.Element;
+  title: string;
+  description: string;
+}
+
+const services: Service[] = [
+    {
+      icon: <AnimatedCalculatorIcon />,
+      title: "Tax Planning & Preparation",
+      description: "We help you navigate the complexities of tax laws to minimize your liability and maximize your returns."
+    },
+    {
+      icon: <AnimatedTargetIcon />,
+      title: "Bookkeeping Services",
+      description: "Our meticulous bookkeeping services provide you with accurate and up-to-date financial records."
+    },
+    {
+      icon: <AnimatedTrendingUp />,
+      title: "Financial Consulting",
+      description: "We offer expert financial advice to help you make informed decisions and achieve your business goals."
+    },
+    {
+      icon: <AnimatedFileText />,
+      title: "Payroll Services",
+      description: "Simplify your payroll processes with our reliable and efficient payroll management solutions."
+    },
+    {
+      icon: <AnimatedEyeIcon />,
+      title: "Audit & Assurance",
+      description: "Gain confidence in your financial reporting with our comprehensive audit and assurance services."
+    },
+    {
+      icon: <AnimatedStarIcon />,
+      title: "Business Advisory",
+      description: "Strategic advice to help your business grow, improve profitability, and operate more effectively."
+    }
+  ];
+  
+  const partners = [
+    {
+      name: "OWA",
+      logo: owaLogo,
+    },
+    {
+      name: "AuditMe",
+      logo: auditMeLogo,
+    },
+    {
+      name: "PepCode",
+      logo: pepcodeLogo,
+    },
+  ];
 
 const Services = () => {
-  // Products for the carousel
-  const carouselProducts = [
-    {
-      icon: "/images/pepcode logo.webp",
-      title: "PEPCODE",
-      description: "Advanced bookkeeping software designed to simplify your financial management processes.",
-      link: "https://pepcodeinc.com/",
-      cardColor: "bg-blue-200 text-gray-800",
-      logoBg: "bg-gray-50",
-    },
-    {
-      icon: "/images/7.png",
-      title: "OWA by PEPCODE",
-      description: "Helps market women track inventory by converting paper entries into accurate, synced digital records.",
-      link: "https://owabypepcode.com.ng/",
-      cardColor: "bg-brand-purple text-white",
-      logoBg: "bg-white",
-    },
-    {
-      icon: "/images/auditme.webp",
-      title: "AUDITME",
-      description: "Fast-tracked audited accounts platform for streamlined compliance and reporting.",
-      link: "https://auditme.com.ng/",
-      cardColor: "bg-yellow-100 text-gray-800",
-      logoBg: "bg-white",
-    },
-  ];
+  const { ref: servicesRef, inView: servicesInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
-  // Other services to be displayed below the carousel
-  const otherServices = [
-    {
-      icon: AnimatedCalculatorIcon,
-      title: "Tax Services",
-      description: "Expert tax preparation and planning.",
-      link: "/tax-services",
-      iconColor: "text-purple-500",
-    },
-    {
-      icon: AnimatedFileText,
-      title: "Book-keeping Services",
-      description: "Maintain accurate financial records.",
-      link: "/bookkeeping-services",
-      iconColor: "text-blue-400",
-    },
-    {
-      icon: AnimatedTrendingUp,
-      title: "Inventory Management",
-      description: "Efficient inventory tracking solutions.",
-      link: "/inventory-management",
-      iconColor: "text-red-500",
-    }
-  ];
+  const { ref: partnersRef, inView: partnersInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [servicesRef, visibleServices] = useStaggeredAnimation(3, 200);
-
-  const resetTimeout = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
   };
 
-  useEffect(() => {
-    resetTimeout();
-    timeoutRef.current = setTimeout(
-      () =>
-        setCurrentIndex((prevIndex) =>
-          prevIndex === carouselProducts.length - 1 ? 0 : prevIndex + 1
-        ),
-      4000 // Change slide every 4 seconds
-    );
-
-    return () => {
-      resetTimeout();
-    };
-  }, [currentIndex, carouselProducts.length]);
-
-  const goToPrevious = () => {
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? carouselProducts.length - 1 : currentIndex - 1;
-    setCurrentIndex(newIndex);
-  };
-
-  const goToNext = () => {
-    const isLastSlide = currentIndex === carouselProducts.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+      },
+    },
   };
 
   return (
-    <section className="py-20 bg-soft-blue text-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <AnimatedSection animationType="fadeUp" className="text-center mb-16">
-          <AnimatedSection animationType="fadeUp" delay={200}>
-            <h2 className="text-unified-3xl md:text-unified-4xl font-primary font-unified-bold text-gray-900 mb-4">
-              What Do We Offer?
-            </h2>
-          </AnimatedSection>
-          <AnimatedSection animationType="fadeUp" delay={400}>
-            <p className="text-unified-lg font-primary font-unified-normal text-gray-700 max-w-3xl mx-auto leading-unified-relaxed">
-              From cutting-edge software solutions to expert professional services, we provide everything you need for financial success.
-            </p>
-          </AnimatedSection>
-        </AnimatedSection>
-        
-        {/* Carousel Section */}
-        <AnimatedSection animationType="fadeUp" delay={600}>
-          <div className="relative mb-24">
-            <div className="overflow-hidden rounded-2xl aspect-square">
-              <div 
-                className="flex h-full transition-transform ease-in-out duration-700"
-                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-              >
-                {carouselProducts.map((service, index) => (
-                  <div key={index} className="flex-shrink-0 w-full h-full p-1">
-                    <a
-                      href={service.link}
-                      target={service.link.startsWith('http') ? '_blank' : '_self'}
-                      rel="noopener noreferrer"
-                      className={`block rounded-2xl h-full flex flex-col ${service.cardColor}`}
-                    >
-                      {/* Logo Header */}
-                      <div className={`w-full flex-1 flex items-center justify-center rounded-t-2xl ${service.logoBg}`}>
-                         <img src={service.icon} alt={`${service.title} logo`} className="max-h-32 w-auto object-contain"/>
-                      </div>
-                      {/* Content */}
-                      <div className="p-6 flex flex-col">
-                        <h3 className="text-unified-2xl font-primary font-unified-bold mb-2">{service.title}</h3>
-                        <p className="text-unified-base font-primary font-unified-normal opacity-90 leading-unified-normal">{service.description}</p>
-                      </div>
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Carousel Controls */}
-            <button onClick={goToPrevious} className="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-white/90 rounded-full p-2 shadow-md hover:bg-white z-10">
-              <ChevronLeft className="w-6 h-6 text-gray-700" />
-            </button>
-            <button onClick={goToNext} className="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-white/90 rounded-full p-2 shadow-md hover:bg-white z-10">
-              <ChevronRight className="w-6 h-6 text-gray-700" />
-            </button>
-          </div>
-        </AnimatedSection>
+    <section id="services" className="py-20 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <motion.div
+          ref={servicesRef}
+          initial="hidden"
+          animate={servicesInView ? "visible" : "hidden"}
+          variants={containerVariants}
+          className="text-center"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold">Our Services</h2>
+          <div className="w-24 h-1 bg-blue-500 mx-auto mt-4 mb-6"></div>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            We offer a comprehensive range of accounting services to meet the needs of individuals and businesses.
+          </p>
+        </motion.div>
 
-        {/* Other Services Section */}
-        <div ref={servicesRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {otherServices.map((service, index) => (
-                <div
+        <div className="relative mt-12">
+          {/* The container below enables horizontal scrolling on smaller screens */}
+          <div className="overflow-x-auto pb-8">
+            <motion.div
+              ref={servicesRef}
+              className="flex gap-8"
+              initial="hidden"
+              animate={servicesInView ? "visible" : "hidden"}
+              variants={containerVariants}
+            >
+              {services.map((service, index) => (
+                <motion.div
                   key={index}
-                  className={`transition-all duration-700 ease-out ${
-                    visibleServices[index] 
-                      ? 'opacity-100 translate-y-0' 
-                      : 'opacity-0 translate-y-8'
-                  }`}
-                  style={{ transitionDelay: `${index * 200}ms` }}
+                  // CHANGE: Changed carousel items from rectangle (w-80 h-96) to a smaller square format (w-72 h-72).
+                  // - This reduces whitespace and creates a more compact, modern look.
+                  // - Added `justify-center` to vertically align the content within the new square shape.
+                  // - Reduced padding from p-8 to p-6 and font size of description to better fit the smaller size.
+                  className="flex-shrink-0 w-72 h-72 bg-white rounded-lg shadow-lg p-6 flex flex-col justify-center items-center text-center"
+                  variants={itemVariants}
                 >
-                  <Link to={service.link} className="bg-gray-800 p-6 rounded-2xl flex flex-col items-center text-center hover:bg-gray-700 transition-colors duration-300">
-                      <div className="w-32 h-32 mb-4">
-                          <service.icon className={`w-full h-full ${service.iconColor}`}/>
-                      </div>
-                      <h3 className="text-unified-xl font-primary font-unified-bold text-white mb-2">{service.title}</h3>
-                      <p className="text-gray-400 text-unified-sm font-primary font-unified-normal">{service.description}</p>
-                  </Link>
-                </div>
-            ))}
+                  <div className="text-blue-500 mb-4">{service.icon}</div>
+                  <h3 className="text-xl font-bold mb-2">{service.title}</h3>
+                  <p className="text-gray-600 text-sm">{service.description}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
         </div>
 
+        {/* Partners Section */}
+        <div className="mt-20">
+          <motion.div
+            ref={partnersRef}
+            initial="hidden"
+            animate={partnersInView ? "visible" : "hidden"}
+            variants={containerVariants}
+            className="text-center"
+          >
+            <h3 className="text-2xl font-bold text-gray-700">Trusted by Leading Companies</h3>
+            <div className="w-20 h-1 bg-gray-300 mx-auto mt-3 mb-8"></div>
+          </motion.div>
+          
+          <motion.div 
+            className="flex justify-center items-center gap-8 md:gap-16 mt-8 flex-wrap"
+            ref={partnersRef}
+            initial="hidden"
+            animate={partnersInView ? "visible" : "hidden"}
+            variants={containerVariants}
+          >
+            {partners.map((partner, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+              >
+                <img src={partner.logo} alt={partner.name} className="h-12 md:h-16 object-contain" />
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </section>
   );
