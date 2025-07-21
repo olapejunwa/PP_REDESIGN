@@ -14,44 +14,35 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   className = '',
   animationType = 'fadeUp',
   delay = 0,
-  duration = 800,
+  duration = 600, // Faster default duration
 }) => {
   const [ref, isVisible] = useScrollAnimation();
 
-  // Mobile and accessibility optimizations
+  // Adjust animation settings for mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const isReducedMotion = typeof window !== 'undefined' && 
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  
-  // Skip animations entirely if reduced motion is preferred
-  if (isReducedMotion) {
-    return (
-      <div className={className}>
-        {children}
-      </div>
-    );
-  }
-  
-  const adjustedDuration = isMobile ? Math.max(400, duration * 0.8) : duration;
-  const adjustedDelay = isMobile ? Math.max(0, delay * 0.8) : delay;
+  const mobileDuration = isMobile ? Math.max(400, duration * 0.7) : duration;
+  const mobileDelay = isMobile ? delay * 0.7 : delay;
 
   const getAnimationClasses = () => {
-    const baseClasses = `transition-all ease-out`;
+    const baseClasses = `transition-all ease-out will-change-transform`;
+    
+    // Use CSS custom property for duration to support mobile optimization
+    const durationMs = `${mobileDuration}ms`;
     
     if (!isVisible) {
       switch (animationType) {
         case 'fadeUp':
-          return `${baseClasses} opacity-0 ${isMobile ? 'translate-y-3' : 'translate-y-6'}`;
+          return `${baseClasses} opacity-0 ${isMobile ? 'translate-y-4' : 'translate-y-8'}`;
         case 'fadeIn':
           return `${baseClasses} opacity-0`;
         case 'slideLeft':
-          return `${baseClasses} opacity-0 ${isMobile ? '-translate-x-3' : '-translate-x-6'}`;
+          return `${baseClasses} opacity-0 ${isMobile ? '-translate-x-4' : '-translate-x-8'}`;
         case 'slideRight':
-          return `${baseClasses} opacity-0 ${isMobile ? 'translate-x-3' : 'translate-x-6'}`;
+          return `${baseClasses} opacity-0 ${isMobile ? 'translate-x-4' : 'translate-x-8'}`;
         case 'scale':
-          return `${baseClasses} opacity-0 ${isMobile ? 'scale-[0.98]' : 'scale-95'}`;
+          return `${baseClasses} opacity-0 ${isMobile ? 'scale-98' : 'scale-95'}`;
         default:
-          return `${baseClasses} opacity-0 ${isMobile ? 'translate-y-3' : 'translate-y-6'}`;
+          return `${baseClasses} opacity-0 ${isMobile ? 'translate-y-4' : 'translate-y-8'}`;
       }
     } else {
       return `${baseClasses} opacity-100 translate-y-0 translate-x-0 scale-100`;
@@ -59,14 +50,8 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   };
 
   const style: React.CSSProperties = {
-    transitionDuration: `${adjustedDuration}ms`,
-    ...(adjustedDelay > 0 && { transitionDelay: `${adjustedDelay}ms` }),
-    // Add hardware acceleration for mobile
-    ...(isMobile && {
-      transform: 'translateZ(0)',
-      backfaceVisibility: 'hidden',
-      perspective: '1000px'
-    })
+    transitionDuration: `${mobileDuration}ms`,
+    ...(mobileDelay > 0 && { transitionDelay: `${mobileDelay}ms` })
   };
 
   return (

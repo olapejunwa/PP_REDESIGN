@@ -8,8 +8,8 @@ interface UseScrollAnimationOptions {
 
 export const useScrollAnimation = (options: UseScrollAnimationOptions = {}) => {
   const {
-    threshold = 0.1,
-    rootMargin = '0px 0px -50px 0px',
+    threshold = 0.05, // Lower threshold for mobile
+    rootMargin = '0px 0px -20px 0px', // Reduced margin for mobile
     triggerOnce = true
   } = options;
 
@@ -17,19 +17,12 @@ export const useScrollAnimation = (options: UseScrollAnimationOptions = {}) => {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    // Detect mobile device
+    // Check if device is mobile
     const isMobile = window.innerWidth < 768;
-    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     
-    // Skip animations if user prefers reduced motion
-    if (isReducedMotion) {
-      setIsVisible(true);
-      return;
-    }
-    
-    // Adjust intersection observer options for mobile
-    const adjustedThreshold = isMobile ? Math.max(0.05, threshold * 0.5) : threshold;
-    const adjustedRootMargin = isMobile ? '0px 0px -20px 0px' : rootMargin;
+    // Adjust options for mobile
+    const mobileThreshold = isMobile ? 0.02 : threshold;
+    const mobileRootMargin = isMobile ? '0px 0px -10px 0px' : rootMargin;
     
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -43,8 +36,8 @@ export const useScrollAnimation = (options: UseScrollAnimationOptions = {}) => {
         }
       },
       {
-        threshold: adjustedThreshold,
-        rootMargin: adjustedRootMargin,
+        threshold: mobileThreshold,
+        rootMargin: mobileRootMargin,
       }
     );
 
@@ -69,17 +62,9 @@ export const useStaggeredAnimation = (itemCount: number, delay: number = 100) =>
 
   useEffect(() => {
     if (isContainerVisible) {
-      // Optimize timing for mobile devices
+      // Reduce delay on mobile for faster animations
       const isMobile = window.innerWidth < 768;
-      const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      
-      if (isReducedMotion) {
-        // Show all items immediately if reduced motion is preferred
-        setVisibleItems(new Array(itemCount).fill(true));
-        return;
-      }
-      
-      const adjustedDelay = isMobile ? Math.max(50, delay * 0.7) : delay;
+      const mobileDelay = isMobile ? delay * 0.6 : delay;
       
       const timers: NodeJS.Timeout[] = [];
       
@@ -90,7 +75,7 @@ export const useStaggeredAnimation = (itemCount: number, delay: number = 100) =>
             newState[i] = true;
             return newState;
           });
-        }, i * adjustedDelay);
+        }, i * mobileDelay);
         
         timers.push(timer);
       }

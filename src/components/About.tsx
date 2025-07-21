@@ -11,27 +11,22 @@ const useInView = (options: IntersectionObserverInit) => {
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
-    // Mobile and accessibility optimizations
+    // Adjust threshold for mobile
     const isMobile = window.innerWidth < 768;
-    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
-    if (isReducedMotion) {
-      setIsInView(true);
-      return;
-    }
-    
-    const adjustedOptions = {
+    const mobileOptions = {
       ...options,
-      threshold: isMobile ? 0.15 : (options.threshold || 0.25),
-      rootMargin: isMobile ? '0px 0px -30px 0px' : (options.rootMargin || '0px 0px -50px 0px')
+      threshold: isMobile ? 0.1 : (options.threshold || 0.3),
+      rootMargin: isMobile ? '0px 0px -20px 0px' : (options.rootMargin || '0px')
     };
     
     const observer = new IntersectionObserver(([entry]) => {
+      // Trigger when the element is intersecting
       if (entry.isIntersecting) {
         setIsInView(true);
+        // Stop observing the element once it has been seen
         observer.unobserve(entry.target);
       }
-    }, adjustedOptions);
+    }, mobileOptions);
 
     const currentRef = ref.current;
     if (currentRef) {
@@ -48,53 +43,39 @@ const useInView = (options: IntersectionObserverInit) => {
   return [ref, isInView];
 };
 
+// A component for each individual value item to handle its own animation state
 const ValueItem = ({ value, index }: { value: any; index: number }) => {
-  const [ref, isInView] = useInView({ threshold: 0.15 });
+  // Trigger the animation when 30% of the item is visible
+  const [ref, isInView] = useInView({ threshold: 0.2 }); // Lower threshold for mobile
   const [renderIcon, setRenderIcon] = useState(false);
   const isEven = index % 2 === 0;
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const isReducedMotion = typeof window !== 'undefined' && 
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
-    if (isReducedMotion) {
-      setRenderIcon(true);
-      return;
-    }
-    
     if (isInView && !renderIcon) {
+      // This timer creates a delay between the container animating in and the icon animation starting.
       const timer = setTimeout(() => {
         setRenderIcon(true);
-      }, isMobile ? 200 : 400);
+      }, isMobile ? 300 : 500); // Faster on mobile
       return () => clearTimeout(timer);
     }
-  }, [isInView, renderIcon, isMobile, isReducedMotion]);
+  }, [isInView, renderIcon]);
 
   return (
     <div
       ref={ref}
-      className={`flex flex-col md:flex-row items-center gap-6 md:gap-12 transition-all ease-out ${
-        isReducedMotion ? 'duration-0' : isMobile ? 'duration-500' : 'duration-800'
-      } ${
+      className={`flex flex-col md:flex-row items-center gap-8 md:gap-12 transition-all ease-in-out ${isMobile ? 'duration-700' : 'duration-1000'} ${
         isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-      } ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-      style={{
-        // Hardware acceleration for mobile
-        ...(isMobile && !isReducedMotion && {
-          transform: 'translateZ(0)',
-          backfaceVisibility: 'hidden'
-        })
-      }}
+      } ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`} // Alternates layout
     >
-      <div className={`${isMobile ? 'w-40 h-32' : 'w-64 h-48'} ${value.bgColor} rounded-2xl flex items-center justify-center flex-shrink-0 p-4 transition-all ${
-        isReducedMotion ? 'duration-0' : isMobile ? 'duration-400' : 'duration-600'
-      } ease-out ${isInView ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
+      {/* Icon Container with its own transition. This is the "pre-transition" for the icon animation. */}
+      <div className={`${isMobile ? 'w-48 h-36' : 'w-64 h-48'} ${value.bgColor} rounded-2xl flex items-center justify-center flex-shrink-0 p-4 transition-all ${isMobile ? 'duration-500' : 'duration-700'} ease-out ${isInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
+        {/* The icon is only rendered after the pre-transition has started, triggering its animation. */}
         {renderIcon && <value.icon />}
       </div>
 
-      <div className={`text-center ${isEven ? 'md:text-left' : 'md:text-right'} transition-opacity ${
-        isReducedMotion ? 'duration-0' : isMobile ? 'duration-400 delay-100' : 'duration-600 delay-200'
-      } ease-out ${isInView ? 'opacity-100' : 'opacity-0'}`}>
+      {/* Text Content Container with its own transition */}
+      <div className={`text-center ${isEven ? 'md:text-left' : 'md:text-right'} transition-opacity ${isMobile ? 'duration-500 delay-200' : 'duration-700 delay-300'} ease-out ${isInView ? 'opacity-100' : 'opacity-0'}`}>
         <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-white mb-4`}>{value.title}</h3>
         <p className={`${isMobile ? 'text-sm' : 'text-base'} text-gray-300 leading-relaxed`}>{value.description}</p>
       </div>
@@ -141,14 +122,15 @@ const About = () => {
           </AnimatedSection>
         </AnimatedSection>
         
-        <div ref={containerRef} className="space-y-16 md:space-y-24 mt-16 md:mt-24">
+        {/* Vertical layout with spacing */}
+        <div ref={containerRef} className="space-y-24 mt-24">
           {values.map((value, index) => (
             <div
               key={index}
-              className={`transition-all duration-600 ease-out ${
+              className={`transition-all duration-800 ease-out ${
                 visibleItems[index] 
                   ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-8'
+                  : 'opacity-0 translate-y-12'
               }`}
             >
               <ValueItem value={value} index={index} />
