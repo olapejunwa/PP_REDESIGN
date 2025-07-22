@@ -91,7 +91,7 @@ const About = () => {
       icon: AnimatedTargetIcon,
       title: "Simplified Financial Management",
       description: "We aim to demystify the complexities of bookkeeping and financial management, making it accessible and understandable for everyone, regardless of their level of financial expertise.",
-      bgColor: 'bg-green-600'
+      bgColor: 'bg-green-200'
     },
     {
       icon: AnimatedEyeIcon,
