@@ -121,14 +121,14 @@ const Navigation = () => {
                   </button>
 
                   {isCompanyDropdownOpen && (
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-in">
-                      <div className="px-2">
-                        <Link to="/about-us" className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
-                          <Users className="w-4 h-4 text-blue-600" />
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 py-3 z-50 animate-in">
+                      <div className="px-3">
+                        <Link to="/about-us" className="flex items-center space-x-4 px-5 py-3 text-base text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
+                          <Users className="w-5 h-5 text-blue-600" />
                           <span className="font-medium">About us</span>
                         </Link>
-                        <Link to="/contact" className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
-                          <Mail className="w-4 h-4 text-blue-600" />
+                        <Link to="/contact" className="flex items-center space-x-4 px-5 py-3 text-base text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
+                          <Mail className="w-5 h-5 text-blue-600" />
                           <span className="font-medium">Contact Us</span>
                         </Link>
                       </div>
@@ -152,57 +152,57 @@ const Navigation = () => {
                   </button>
 
                   {isProductDropdownOpen && (
-                    <div className="absolute top-full right-0 mt-2 w-96 bg-white rounded-2xl shadow-xl border border-gray-100 p-4 z-50 animate-in">
-                      <div className="flex gap-4">
+                    <div className="absolute top-full right-0 mt-2 w-[480px] bg-white rounded-2xl shadow-xl border border-gray-100 p-5 z-50 animate-in">
+                      <div className="flex gap-5">
                         {/* Other Services - Left side */}
                         <div className="flex-1 space-y-1">
-                          <div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                          <div className="px-4 py-2 text-sm font-semibold text-gray-500 uppercase tracking-wide">
                             Other Services
                           </div>
-                          <Link to="/bookkeeping-services" className="flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
-                            <BookOpen className="w-4 h-4 text-blue-600" />
+                          <Link to="/bookkeeping-services" className="flex items-center space-x-4 px-4 py-3 text-base text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
+                            <BookOpen className="w-5 h-5 text-blue-600" />
                             <span className="font-medium">Book-keeping Services</span>
                           </Link>
-                          <Link to="/tax-services" className="flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
-                            <Calculator className="w-4 h-4 text-blue-600" />
+                          <Link to="/tax-services" className="flex items-center space-x-4 px-4 py-3 text-base text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
+                            <Calculator className="w-5 h-5 text-blue-600" />
                             <span className="font-medium">Tax Services</span>
                           </Link>
-                          <Link to="/inventory-management" className="flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
-                            <Package className="w-4 h-4 text-blue-600" />
+                          <Link to="/inventory-management" className="flex items-center space-x-4 px-4 py-3 text-base text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
+                            <Package className="w-5 h-5 text-blue-600" />
                             <span className="font-medium">Inventory Management</span>
                           </Link>
                         </div>
 
                         {/* Main Products - Right side cards */}
-                        <div className="w-56 space-y-2">
-                          <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                        <div className="w-64 space-y-3">
+                          <div className="px-4 py-2 text-sm font-semibold text-gray-500 uppercase tracking-wide">
                             Main Products
                           </div>
 
                           {/* PEPCODE */}
-                          <a href="https://pepcodeinc.com/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                            <img src="/images/pepcode logo.webp" alt="PEPCODE Logo" className="w-8 h-8 mr-3 object-contain"/>
+                          <a href="https://pepcodeinc.com/" target="_blank" rel="noopener noreferrer" className="flex items-center p-4 hover:bg-blue-50 rounded-xl transition-all duration-200">
+                            <img src="/images/pepcode logo.webp" alt="PEPCODE Logo" className="w-10 h-10 mr-4 object-contain"/>
                             <div>
-                                <div className="font-semibold text-blue-900">PEPCODE</div>
-                                <div className="text-xs text-blue-700 mt-1">Bookkeeping Software</div>
+                                <div className="font-semibold text-blue-900 text-base">PEPCODE</div>
+                                <div className="text-sm text-blue-700 mt-1">Bookkeeping Software</div>
                             </div>
                           </a>
 
                           {/* AUDITME */}
-                          <a href="https://auditme.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                              <img src="/images/auditme.webp" alt="AUDITME Logo" className="w-8 h-8 mr-3 object-contain"/>
+                          <a href="https://auditme.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-4 hover:bg-blue-50 rounded-xl transition-all duration-200">
+                              <img src="/images/auditme.webp" alt="AUDITME Logo" className="w-10 h-10 mr-4 object-contain"/>
                               <div>
-                                  <div className="font-semibold text-blue-900">AUDITME</div>
-                                  <div className="text-xs text-blue-700 mt-1">Audit Platform</div>
+                                  <div className="font-semibold text-blue-900 text-base">AUDITME</div>
+                                  <div className="text-sm text-blue-700 mt-1">Audit Platform</div>
                               </div>
                           </a>
 
                           {/* OWA by PEPCODE */}
-                          <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                              <img src="/images/7.png" alt="OWA by PEPCODE Logo" className="w-8 h-8 mr-3 object-contain"/>
+                          <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-4 hover:bg-blue-50 rounded-xl transition-all duration-200">
+                              <img src="/images/7.png" alt="OWA by PEPCODE Logo" className="w-10 h-10 mr-4 object-contain"/>
                               <div>
-                                  <div className="font-semibold text-blue-900">OWA by PEPCODE</div>
-                                  <div className="text-xs text-blue-700 mt-1">Paperless Bookkeeping</div>
+                                  <div className="font-semibold text-blue-900 text-base">OWA by PEPCODE</div>
+                                  <div className="text-sm text-blue-700 mt-1">Paperless Bookkeeping</div>
                               </div>
                           </a>
                         </div>
