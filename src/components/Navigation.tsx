@@ -199,7 +199,7 @@ const Navigation = () => {
 
                           {/* OWA by PEPCODE */}
                           <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-4 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                              <img src="/images/7.png" alt="OWA by PEPCODE Logo" className="w-10 h-10 mr-4 object-contain"/>
+                              <img src="/images/Owa Logo 3_062657.ai (A2 (Landscape)) (1).png" alt="OWA by PEPCODE Logo" className="w-10 h-10 mr-4 object-contain"/>
                               <div>
                                   <div className="font-semibold text-blue-900 text-base">OWA by PEPCODE</div>
                                   <div className="text-sm text-blue-700 mt-1">Paperless Bookkeeping</div>
