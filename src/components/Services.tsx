@@ -27,7 +27,7 @@ interface OtherService {
 // --- `carouselProducts` array with corrected direct file paths for icons ---
 const carouselProducts: CarouselProduct[] = [
   {
-    icon: '/images/pepcode logo.webp',
+    icon: "images/pepcode logo.webp",
     title: 'PEPCODE',
     description: 'Advanced bookkeeping software designed to simplify your financial management processes.',
     link: '/products/pepcode',
