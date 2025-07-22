@@ -1,74 +1,14 @@
 import React from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { Check } from 'lucide-react';
+import { Send } from 'lucide-react';
 
 const InventoryManagement = () => {
-  const plans = [
-    {
-      name: "Essential plan",
-      price: "₦70,000/Month",
-      description: "This tier includes weekly inventory counts suitable for businesses with moderate inventory turnover rates and frequent monitoring of their inventory levels.",
-      features: [
-        "Up to 50 items",
-        "Essential inventory tracking",
-        "Monthly inventory reports",
-        "Email support",
-        "Basic analytics dashboard"
-      ],
-      buttonColor: "bg-blue-600 hover:bg-blue-700"
-    },
-    {
-      name: "Basic Plan:",
-      price: "₦100,000/month",
-      description: "This tier provides monthly inventory counts suitable for businesses with moderate inventory turnover rates.",
-      features: [
-        "Up to 100 items",
-        "Basic inventory tracking",
-        "Monthly inventory reports",
-        "Email support",
-        "Basic analytics dashboard"
-      ],
-      buttonColor: "bg-blue-600 hover:bg-blue-700",
-      bgColor: "bg-pink-500",
-      textColor: "text-white"
-    },
-    {
-      name: "Standard Plan:",
-      price: "₦250,000/month",
-      description: "This tier provides yearly or quarterly inventory counts for businesses with lower inventory turnover rates or less frequent monitoring needs.",
-      features: [
-        "Up to 500 items",
-        "Advanced inventory tracking",
-        "Weekly inventory reports",
-        "Advanced analytics dashboard",
-        "Integration with accounting software",
-        "Automated reordering"
-      ],
-      buttonColor: "bg-pink-500 hover:bg-pink-600",
-      bgColor: "bg-gray-900",
-      textColor: "text-white"
-    },
-    {
-      name: "Premium Plan:",
-      price: "₦500,000/month",
-      description: "This tier provides yearly or quarterly inventory counts for businesses with lower inventory turnover rates or less frequent monitoring needs.",
-      features: [
-        "Unlimited items",
-        "Real-time inventory tracking",
-        "Daily inventory reports",
-        "Priority support",
-        "Comprehensive analytics dashboard",
-        "Integration with multiple systems (accounting, CRM, etc.)",
-        "Automated reordering and forecasting",
-        "Customizable reporting",
-        "Dedicated account manager"
-      ],
-      buttonColor: "bg-pink-500 hover:bg-pink-600",
-      bgColor: "bg-gray-900",
-      textColor: "text-white"
-    }
-  ];
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log('Form submitted');
+  };
 
   return (
     <div className="min-h-screen">
@@ -87,39 +27,123 @@ const InventoryManagement = () => {
         </div>
       </section>
 
-      {/* Pricing Plans Section */}
+      {/* Assessment Form Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {plans.map((plan, index) => (
-              <div
-                key={index}
-                className={`rounded-2xl p-8 ${
-                  plan.bgColor || 'bg-gray-50'
-                } transition-transform duration-300 hover:scale-105`}
-              >
-                <div className={`mb-6 ${plan.textColor || 'text-gray-900'}`}>
-                  <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                  <div className="text-2xl font-bold mb-4">{plan.price}</div>
-                  <p className={`text-xs leading-relaxed ${plan.textColor ? 'opacity-90' : 'text-gray-600'}`}>
-                    {plan.description}
-                  </p>
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-gray-50 rounded-2xl p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                Get Your Custom Inventory Management Quote
+              </h2>
+              <p className="text-gray-600 mb-8 text-center">
+                Help us understand your inventory needs to provide you with the most suitable management solution and pricing.
+              </p>
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 mb-2">
+                    Business Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="businessName"
+                    name="businessName"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter your business name"
+                  />
                 </div>
-                
-                <ul className={`space-y-2 mb-8 ${plan.textColor || 'text-gray-600'}`}>
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start space-x-3">
-                      <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-xs">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <button className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 ${plan.buttonColor} text-white`}>
-                  Get Started
+
+                <div>
+                  <label htmlFor="inventorySize" className="block text-sm font-medium text-gray-700 mb-2">
+                    Inventory Size *
+                  </label>
+                  <select
+                    id="inventorySize"
+                    name="inventorySize"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select inventory size</option>
+                    <option value="under-50">Under 50 items</option>
+                    <option value="50-200">50-200 items</option>
+                    <option value="200-500">200-500 items</option>
+                    <option value="500-1000">500-1000 items</option>
+                    <option value="over-1000">Over 1000 items</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="turnoverRate" className="block text-sm font-medium text-gray-700 mb-2">
+                    Inventory Turnover Rate *
+                  </label>
+                  <select
+                    id="turnoverRate"
+                    name="turnoverRate"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select turnover rate</option>
+                    <option value="low">Low (Quarterly/Yearly)</option>
+                    <option value="moderate">Moderate (Monthly)</option>
+                    <option value="high">High (Weekly)</option>
+                    <option value="very-high">Very High (Daily)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 mb-2">
+                    Business Type *
+                  </label>
+                  <select
+                    id="businessType"
+                    name="businessType"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select business type</option>
+                    <option value="retail">Retail</option>
+                    <option value="wholesale">Wholesale</option>
+                    <option value="manufacturing">Manufacturing</option>
+                    <option value="restaurant">Restaurant/Food Service</option>
+                    <option value="e-commerce">E-commerce</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="trackingNeeds" className="block text-sm font-medium text-gray-700 mb-2">
+                    Tracking Requirements
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input type="checkbox" name="tracking" value="real-time" className="mr-2" />
+                      <span className="text-sm">Real-time tracking</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" name="tracking" value="automated-reordering" className="mr-2" />
+                      <span className="text-sm">Automated reordering</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" name="tracking" value="integration" className="mr-2" />
+                      <span className="text-sm">Integration with accounting software</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" name="tracking" value="analytics" className="mr-2" />
+                      <span className="text-sm">Advanced analytics & forecasting</span>
+                    </label>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white px-6 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center space-x-2"
+                >
+                  <Send className="w-5 h-5" />
+                  <span>Get Custom Quote</span>
                 </button>
-              </div>
-            ))}
+              </form>
+            </div>
           </div>
         </div>
       </section>
