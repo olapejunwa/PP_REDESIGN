@@ -52,7 +52,6 @@ const carouselProducts: CarouselProduct[] = [
   },
 ];
 
-// --- CHANGE: `otherServices` array with a syntax fix (added a comma) ---
 const otherServices: OtherService[] = [
   {
       icon: AnimatedCalculatorIcon,
@@ -176,7 +175,7 @@ const Services: React.FC = () => {
               {otherServices.map((service, index) => (
                 <div key={index} className="bg-white p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
                   <div className="flex justify-center items-center mb-4">
-                    <service.icon className={`w-12 h-12 ${service.iconColor}`} />
+                    <service.icon className={`w-24 h-24 ${service.iconColor}`} />
                   </div>
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">{service.title}</h4>
                   <p className="text-gray-600 mb-4">{service.description}</p>
