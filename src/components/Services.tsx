@@ -10,7 +10,7 @@ import AnimatedStarIcon from './AnimatedStarIcon';
 // CHANGE: Updated the OWA logo to the landscape version.
 // NOTE: Please ensure the image file "Owa_Logo_Landscape.png" exists in your `public/images/` directory.
 // The original file was 'image_3bf784.jpg', please rename and move it.
-import owaLogo from '/images/Owa_Logo_Landscape.png';
+import owaLogo from '/public/Owa Logo 3_062657.ai (A2 (Landscape)).png';
 import auditMeLogo from '/images/auditme.webp';
 import pepcodeLogo from '/images/pepcode logo.webp';
 
