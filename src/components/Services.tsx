@@ -121,7 +121,7 @@ const Services: React.FC = () => {
         id="services"
         className="py-20 overflow-hidden relative"
         style={{
-          background: `radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3), rgba(39, 171, 237, 0.3)), #f0f9ff`
+          background: `linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(39, 171, 237, 0.3)), #f0f9ff`
         }}
       >
         <div className="container mx-auto px-4">
