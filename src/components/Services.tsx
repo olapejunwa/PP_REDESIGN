@@ -6,7 +6,7 @@ import AnimatedCalculatorIcon from './AnimatedCalculatorIcon';
 import AnimatedFileText from './AnimatedFileText';
 import AnimatedTrendingUp from './AnimatedTrendingUp';
 
-// --- CHANGE: Interfaces defined for the two types of services ---
+// --- Interfaces defined for the two types of services ---
 interface CarouselProduct {
   icon: string; // Direct file path for the logo
   title: string;
@@ -24,7 +24,7 @@ interface OtherService {
   iconColor: string;
 }
 
-// --- CHANGE: `carouselProducts` array with corrected direct file paths for icons (removed 'public/') ---
+// --- `carouselProducts` array with corrected direct file paths for icons ---
 const carouselProducts: CarouselProduct[] = [
   {
     icon: '/images/pepcode logo.webp',
@@ -52,7 +52,7 @@ const carouselProducts: CarouselProduct[] = [
   },
 ];
 
-// --- CHANGE: `otherServices` array with a syntax fix (added a comma) ---
+// --- `otherServices` array ---
 const otherServices: OtherService[] = [
   {
       icon: AnimatedCalculatorIcon,
@@ -117,9 +117,8 @@ const Services: React.FC = () => {
 
   return (
     <AnimatedSection>
-      {/* --- CHANGE: Updated background color to dark gray with 50% opacity and adjusted text colors --- */}
-      <section 
-        id="services" 
+      <section
+        id="services"
         className="py-20 overflow-hidden relative"
         style={{
           background: `radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3), rgba(39, 171, 237, 0.3)), #f0f9ff`
@@ -133,7 +132,6 @@ const Services: React.FC = () => {
 
           {/* Product Carousel Section */}
           <div className="relative mb-24">
-            {/* --- CHANGE: Added justify-center to center the carousel items --- */}
             <div
               ref={carouselRef}
               className="flex items-center justify-center overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4"
@@ -178,16 +176,23 @@ const Services: React.FC = () => {
             <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">And Other Professional Services</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {otherServices.map((service, index) => (
-                <div key={index} className="bg-white p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                // --- CHANGE: Wrapped in motion.div and added hover animation ---
+                <motion.div
+                  key={index}
+                  className="bg-white p-8 rounded-lg shadow-md text-center"
+                  whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0,0,0,0.1)" }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                >
                   <div className="flex justify-center items-center mb-4">
-                    <service.icon className={`w-12 h-12 ${service.iconColor}`} />
+                    {/* --- CHANGE: Increased icon size --- */}
+                    <service.icon className={`w-16 h-16 ${service.iconColor}`} />
                   </div>
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">{service.title}</h4>
                   <p className="text-gray-600 mb-4">{service.description}</p>
                   <Link to={service.link} className="font-semibold text-blue-600 hover:text-blue-800 transition-colors">
                     Learn More &rarr;
                   </Link>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
