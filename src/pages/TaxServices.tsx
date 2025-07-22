@@ -6,8 +6,21 @@ import { Send } from 'lucide-react';
 const TaxServices = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted');
+    const formData = new FormData(e.target as HTMLFormElement);
+    const data = {
+      service_type: 'tax_services',
+      business_name: formData.get('businessName'),
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+      business_type: formData.get('businessType'),
+      annual_revenue: formData.get('annualRevenue'),
+      years_in_operation: formData.get('yearsInOperation'),
+      tax_complexity: formData.get('taxComplexity'),
+      submitted_at: new Date().toISOString()
+    };
+    
+    // TODO: Submit to Supabase
+    console.log('Tax Services Form Data:', data);
   };
 
   return (
@@ -52,6 +65,35 @@ const TaxServices = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter your business name"
                   />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="your.email@company.com"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="+234 XXX XXX XXXX"
+                    />
+                  </div>
                 </div>
 
                 <div>
