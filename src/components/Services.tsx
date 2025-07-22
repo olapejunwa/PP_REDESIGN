@@ -56,7 +56,7 @@ const carouselProducts: CarouselProduct[] = [
 const otherServices: OtherService[] = [
   {
       icon: AnimatedCalculatorIcon,
-      title: 'Tax Services'
+      title: 'Tax Services',
       description: 'Expert tax preparation and planning.',
       link: '/tax-services',
       iconColor: 'text-purple-500',
