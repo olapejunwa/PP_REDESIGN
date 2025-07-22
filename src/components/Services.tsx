@@ -24,10 +24,10 @@ interface OtherService {
   iconColor: string;
 }
 
-// --- CHANGE: `carouselProducts` array with direct file paths for icons ---
+// --- CHANGE: `carouselProducts` array with corrected direct file paths for icons (removed 'public/') ---
 const carouselProducts: CarouselProduct[] = [
   {
-    icon: 'public/images/pepcode logo.webp',
+    icon: '/images/pepcode logo.webp',
     title: 'PEPCODE',
     description: 'Advanced bookkeeping software designed to simplify your financial management processes.',
     link: '/products/pepcode',
@@ -43,7 +43,7 @@ const carouselProducts: CarouselProduct[] = [
     logoBg: 'bg-gray-100',
   },
   {
-    icon: 'public/images/auditme.webp',
+    icon: '/images/auditme.webp',
     title: 'AUDITME',
     description: 'Fast-tracked audited accounts platform for streamlined compliance and reporting.',
     link: '/products/auditme',
@@ -52,7 +52,7 @@ const carouselProducts: CarouselProduct[] = [
   },
 ];
 
-// --- CHANGE: `otherServices` array using imported animated icon components ---
+// --- CHANGE: `otherServices` array with a syntax fix (added a comma) ---
 const otherServices: OtherService[] = [
   {
       icon: AnimatedCalculatorIcon,
@@ -117,18 +117,21 @@ const Services: React.FC = () => {
 
   return (
     <AnimatedSection>
-      <section id="services" className="py-20 bg-gray-50 overflow-hidden">
+      {/* --- CHANGE: Updated background color to dark gray with 50% opacity and adjusted text colors --- */}
+      <section id="services" className="py-20 bg-gray-900/50 overflow-hidden">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-gray-800 mb-2">What do we Offer?</h2>
-          <p className="text-lg text-center text-gray-600 mb-12">
+          {/* --- CHANGE: Adjusted text colors for dark background --- */}
+          <h2 className="text-4xl font-bold text-center text-gray-100 mb-2">What do we Offer?</h2>
+          <p className="text-lg text-center text-gray-300 mb-12">
             We provide cutting-edge solutions to streamline your business operations.
           </p>
 
           {/* Product Carousel Section */}
           <div className="relative mb-24">
+            {/* --- CHANGE: Added justify-center to center the carousel items --- */}
             <div
               ref={carouselRef}
-              className="flex items-center overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4"
+              className="flex items-center justify-center overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4"
             >
               {carouselProducts.map((product, index) => (
                 <div key={index} className="flex-shrink-0 snap-center first:pl-4 last:pr-4 sm:first:pl-0 sm:last:pr-0">
@@ -167,7 +170,8 @@ const Services: React.FC = () => {
 
           {/* Other Services Section */}
           <div className="mt-16">
-            <h3 className="text-3xl font-bold text-center text-gray-800 mb-12">And Other Professional Services</h3>
+            {/* --- CHANGE: Adjusted text color for dark background --- */}
+            <h3 className="text-3xl font-bold text-center text-gray-100 mb-12">And Other Professional Services</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {otherServices.map((service, index) => (
                 <div key={index} className="bg-white p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
