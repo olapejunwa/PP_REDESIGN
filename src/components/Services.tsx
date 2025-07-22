@@ -118,73 +118,82 @@ const Services: React.FC = () => {
   return (
     <AnimatedSection>
       {/* --- CHANGE: Updated background color to dark gray with 50% opacity and adjusted text colors --- */}
-      <section id="services" className="py-20 bg-gray-900/50 overflow-hidden">
+      <section id="services" className="py-20 bg-soft-blue overflow-hidden relative">
+        {/* Circular Gradient Background */}
+        <div 
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: 'radial-gradient(circle at 50% 50%, #ffffff, #27abed)'
+          }}
+        />
         <div className="container mx-auto px-4">
-          {/* --- CHANGE: Adjusted text colors for dark background --- */}
-          <h2 className="text-4xl font-bold text-center text-gray-100 mb-2">What do we Offer?</h2>
-          <p className="text-lg text-center text-gray-300 mb-12">
-            We provide cutting-edge solutions to streamline your business operations.
-          </p>
+          <div className="relative z-10">
+            {/* --- CHANGE: Adjusted text colors for light background --- */}
+            <h2 className="text-4xl font-bold text-center text-gray-900 mb-2">What do we Offer?</h2>
+            <p className="text-lg text-center text-gray-700 mb-12">
+              We provide cutting-edge solutions to streamline your business operations.
+            </p>
 
-          {/* Product Carousel Section */}
-          <div className="relative mb-24">
-            {/* --- CHANGE: Added justify-center to center the carousel items --- */}
-            <div
-              ref={carouselRef}
-              className="flex items-center justify-center overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4"
-            >
-              {carouselProducts.map((product, index) => (
-                <div key={index} className="flex-shrink-0 snap-center first:pl-4 last:pr-4 sm:first:pl-0 sm:last:pr-0">
-                  <motion.div
-                    className={`rounded-lg shadow-lg p-6 mx-2 w-80 h-80 flex flex-col justify-center items-center transform transition-transform duration-500 ${product.cardColor}`}
-                    animate={{ scale: currentIndex === index ? 1 : 0.95, opacity: currentIndex === index ? 1 : 0.7 }}
-                    transition={{ duration: 0.4 }}
-                  >
-                    <div className={`p-3 rounded-full mb-4 ${product.logoBg}`}>
-                      <img src={product.icon} alt={`${product.title} logo`} className="h-16 w-auto object-contain" />
-                    </div>
-                    <h3 className="text-2xl font-semibold text-center text-gray-800 mb-3">{product.title}</h3>
-                    <p className="text-gray-600 text-center mb-5 text-base">{product.description}</p>
-                    <div className="text-center mt-auto">
-                      <Link to={product.link} className="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
-                        Learn More &rarr;
-                      </Link>
-                    </div>
-                  </motion.div>
-                </div>
-              ))}
-            </div>
-            <div className="absolute bottom-[-2.5rem] left-1/2 -translate-x-1/2 flex space-x-2">
-              {carouselProducts.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleDotClick(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    currentIndex === index ? 'bg-blue-600 scale-125' : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Other Services Section */}
-          <div className="mt-16">
-            {/* --- CHANGE: Adjusted text color for dark background --- */}
-            <h3 className="text-3xl font-bold text-center text-gray-100 mb-12">And Other Professional Services</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {otherServices.map((service, index) => (
-                <div key={index} className="bg-white p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
-                  <div className="flex justify-center items-center mb-4">
-                    <service.icon className={`w-12 h-12 ${service.iconColor}`} />
+            {/* Product Carousel Section */}
+            <div className="relative mb-24">
+              {/* --- CHANGE: Added justify-center to center the carousel items --- */}
+              <div
+                ref={carouselRef}
+                className="flex items-center justify-center overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4"
+              >
+                {carouselProducts.map((product, index) => (
+                  <div key={index} className="flex-shrink-0 snap-center first:pl-4 last:pr-4 sm:first:pl-0 sm:last:pr-0">
+                    <motion.div
+                      className={`rounded-lg shadow-lg p-6 mx-2 aspect-square w-80 flex flex-col justify-center items-center transform transition-transform duration-500 ${product.cardColor}`}
+                      animate={{ scale: currentIndex === index ? 1 : 0.95, opacity: currentIndex === index ? 1 : 0.7 }}
+                      transition={{ duration: 0.4 }}
+                    >
+                      <div className={`p-3 rounded-full mb-4 ${product.logoBg}`}>
+                        <img src={product.icon} alt={`${product.title} logo`} className="max-h-32 w-auto object-contain" />
+                      </div>
+                      <h3 className="text-2xl font-semibold text-center text-gray-800 mb-3">{product.title}</h3>
+                      <p className="text-gray-600 text-center mb-5 text-base">{product.description}</p>
+                      <div className="text-center mt-auto">
+                        <Link to={product.link} className="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                          Learn More &rarr;
+                        </Link>
+                      </div>
+                    </motion.div>
                   </div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-2">{service.title}</h4>
-                  <p className="text-gray-600 mb-4">{service.description}</p>
-                  <Link to={service.link} className="font-semibold text-blue-600 hover:text-blue-800 transition-colors">
-                    Learn More &rarr;
-                  </Link>
-                </div>
-              ))}
+                ))}
+              </div>
+              <div className="absolute bottom-[-2.5rem] left-1/2 -translate-x-1/2 flex space-x-2">
+                {carouselProducts.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleDotClick(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      currentIndex === index ? 'bg-blue-600 scale-125' : 'bg-gray-300 hover:bg-gray-400'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Other Services Section */}
+            <div className="mt-16">
+              {/* --- CHANGE: Adjusted text color for light background --- */}
+              <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">And Other Professional Services</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {otherServices.map((service, index) => (
+                  <div key={index} className="bg-white p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                    <div className="flex justify-center items-center mb-4">
+                      <service.icon className={`w-12 h-12 ${service.iconColor}`} />
+                    </div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-2">{service.title}</h4>
+                    <p className="text-gray-600 mb-4">{service.description}</p>
+                    <Link to={service.link} className="font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+                      Learn More &rarr;
+                    </Link>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

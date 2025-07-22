@@ -114,9 +114,17 @@ const About = () => {
   ];
 
   return (
-    <section className="py-20 bg-soft-slate text-gray-900 overflow-hidden">
+    <section className="py-20 bg-soft-slate text-gray-900 overflow-hidden relative">
+      {/* Circular Gradient Background */}
+      <div 
+        className="absolute inset-0 opacity-30"
+        style={{
+          background: 'radial-gradient(circle at 50% 50%, #ffffff, #27abed)'
+        }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <AnimatedSection animationType="fadeUp" className="text-center mb-16">
+        <div className="relative z-10">
+          <AnimatedSection animationType="fadeUp" className="text-center mb-16">
           <AnimatedSection animationType="fadeUp" delay={200}>
             <h2 className="text-unified-2xl md:text-unified-3xl font-primary font-unified-bold text-gray-900 mb-4">
               We're empowering you for financial excellence
@@ -127,23 +135,24 @@ const About = () => {
               At Ploutos, we are on a mission to empower businesses of all sizes to manage their finances with ease and confidence through innovative bookkeeping solutions and creative software experiences, tools they, and world-class education.
             </p>
           </AnimatedSection>
-        </AnimatedSection>
+          </AnimatedSection>
         
-        {/* Vertical layout with spacing */}
-        <div ref={containerRef} className="space-y-24 mt-24">
-          {values.map((value, index) => (
-            <div
-              key={index}
-              className={`transition-all duration-800 ease-out ${
-                visibleItems[index] 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-12'
-              }`}
-            >
-              <ValueItem value={value} index={index} />
-            </div>
-          ))}
+          {/* Vertical layout with spacing */}
+          <div ref={containerRef} className="space-y-24 mt-24">
+            {values.map((value, index) => (
+              <div
+                key={index}
+                className={`transition-all duration-800 ease-out ${
+                  visibleItems[index] 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-12'
+                }`}
+              >
+                <ValueItem value={value} index={index} />
+              </div>
+            ))}
 
+          </div>
         </div>
       </div>
     </section>
