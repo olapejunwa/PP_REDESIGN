@@ -114,7 +114,12 @@ const About = () => {
   ];
 
   return (
-    <section className="py-20 bg-soft-slate text-gray-900 overflow-hidden">
+    <section 
+      className="py-20 text-gray-900 overflow-hidden relative"
+      style={{
+        background: `radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3), rgba(39, 171, 237, 0.3)), #f8fafc`
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection animationType="fadeUp" className="text-center mb-16">
           <AnimatedSection animationType="fadeUp" delay={200}>

@@ -118,11 +118,16 @@ const Services: React.FC = () => {
   return (
     <AnimatedSection>
       {/* --- CHANGE: Updated background color to dark gray with 50% opacity and adjusted text colors --- */}
-      <section id="services" className="py-20 bg-gray-900/50 overflow-hidden">
+      <section 
+        id="services" 
+        className="py-20 overflow-hidden relative"
+        style={{
+          background: `radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3), rgba(39, 171, 237, 0.3)), #f0f9ff`
+        }}
+      >
         <div className="container mx-auto px-4">
-          {/* --- CHANGE: Adjusted text colors for dark background --- */}
-          <h2 className="text-4xl font-bold text-center text-gray-100 mb-2">What do we Offer?</h2>
-          <p className="text-lg text-center text-gray-300 mb-12">
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-2">What do we Offer?</h2>
+          <p className="text-lg text-center text-gray-700 mb-12">
             We provide cutting-edge solutions to streamline your business operations.
           </p>
 
@@ -170,8 +175,7 @@ const Services: React.FC = () => {
 
           {/* Other Services Section */}
           <div className="mt-16">
-            {/* --- CHANGE: Adjusted text color for dark background --- */}
-            <h3 className="text-3xl font-bold text-center text-gray-100 mb-12">And Other Professional Services</h3>
+            <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">And Other Professional Services</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {otherServices.map((service, index) => (
                 <div key={index} className="bg-white p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
