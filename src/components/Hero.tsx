@@ -1,52 +1,53 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import LavaLampBackground from './LavaLampBackground';
-import AnimatedSection from './AnimatedSection';
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Lava Lamp Background */}
-        <LavaLampBackground />
-        
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-32 md:pt-40">
-          <AnimatedSection animationType="fadeUp" delay={200}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-primary font-unified-bold text-gray-900 leading-unified-tight">
-              YOUR PARTNER IN
-            </h1>
-          </AnimatedSection>
-          
-          <AnimatedSection animationType="fadeUp" delay={400}>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-primary font-unified-bold text-gray-900 mt-2 leading-unified-tight">
-              BOOKKEEPING SUCCESS
-            </h2>
-          </AnimatedSection>
-          
-          <AnimatedSection animationType="fadeUp" delay={600}>
-            <p className="mt-8 text-unified-lg md:text-unified-xl font-primary font-unified-normal text-gray-800 max-w-3xl mx-auto leading-unified-relaxed">
-              Empowering businesses with simplified financial management solutions and expert guidance for sustainable growth.
-            </p>
-          </AnimatedSection>
-          
-          <AnimatedSection animationType="fadeUp" delay={800}>
-            <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link 
-                to="/contact" 
-                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-primary font-unified-semibold text-unified-base hover:bg-gray-200 transition-colors duration-200 shadow-lg"
-              >
-                Get Started
-              </Link>
-              <Link 
-                to="/about-us" 
-                className="border-2 border-gray-800 text-gray-900 px-8 py-3 rounded-lg font-primary font-unified-semibold text-unified-base hover:bg-gray-900 hover:text-white transition-colors duration-200"
-              >
-                Learn More
-              </Link>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
+    // CHANGE: Restructured the Hero section for better layout stability.
+    // The main section is now a simple relative container.
+    <section id="home" className="relative h-screen text-center text-white overflow-hidden">
+      
+      {/* Background elements are absolutely positioned to avoid interfering with content flow. */}
+      <LavaLampBackground />
+      
+      <div className="absolute bottom-0 left-0 w-full h-auto z-0">
+        <img src="/BendingWaters-8.png" alt="Decorative Wave" className="w-full h-auto" />
+      </div>
+
+      {/* CHANGE: Added a dedicated container for the main content.
+          - It's set to full height (`h-full`) and uses flexbox (`flex flex-col items-center justify-center`)
+            to robustly center the text and button, both vertically and horizontally.
+          - `z-10` ensures it sits on top of the background elements.
+          - This fixes layout issues where elements might not have been centered correctly
+            or could have overlapped on different screen sizes. */}
+      <div className="relative z-10 h-full flex flex-col items-center justify-center p-4">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-4xl md:text-6xl font-bold"
+        >
+          EMPOWERING YOUR FINANCIAL FUTURE
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-4 text-lg md:text-xl max-w-2xl"
+        >
+          Expert Accounting and Tax Services Tailored for You
+        </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <button className="mt-8 px-8 py-3 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-700 transition duration-300">
+            Get Started
+          </button>
+        </motion.div>
+      </div>
+    </section>
   );
 };
 
