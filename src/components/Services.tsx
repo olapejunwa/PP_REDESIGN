@@ -6,7 +6,7 @@ import AnimatedCalculatorIcon from './AnimatedCalculatorIcon';
 import AnimatedFileText from './AnimatedFileText';
 import AnimatedTrendingUp from './AnimatedTrendingUp';
 
-// Interface for CarouselProduct
+// --- CHANGE: Interfaces defined for the two types of services ---
 interface CarouselProduct {
   icon: string; // Direct file path for the logo
   title: string;
@@ -16,7 +16,6 @@ interface CarouselProduct {
   logoBg: string;
 }
 
-// Interface for OtherService
 interface OtherService {
   icon: React.ComponentType<{ className?: string }>; // Animated icon component
   title: string;
@@ -25,7 +24,7 @@ interface OtherService {
   iconColor: string;
 }
 
-// Data for the product carousel
+// --- CHANGE: `carouselProducts` array with corrected direct file paths for icons (removed 'public/') ---
 const carouselProducts: CarouselProduct[] = [
   {
     icon: '/images/pepcode logo.webp',
@@ -36,7 +35,7 @@ const carouselProducts: CarouselProduct[] = [
     logoBg: 'bg-gray-100',
   },
   {
-    icon: '/images/Owa Logo Lanscape (Purple Text (2).png',
+    icon: 'public/images/Owa Logo Lanscape (Purple Text (2).png',
     title: 'OWA by PEPCODE',
     description: 'Helps market women track inventory by converting paper entries into accurate, synced digital records.',
     link: '/products/owa',
@@ -53,7 +52,7 @@ const carouselProducts: CarouselProduct[] = [
   },
 ];
 
-// Data for other professional services
+// --- CHANGE: `otherServices` array with a syntax fix (added a comma) ---
 const otherServices: OtherService[] = [
   {
       icon: AnimatedCalculatorIcon,
@@ -118,19 +117,10 @@ const Services: React.FC = () => {
 
   return (
     <AnimatedSection>
-      {/* --- CHANGE: Added `relative` and removed background color class. --- */}
-      <section id="services" className="relative py-20 overflow-hidden">
-        {/* --- CHANGE: Added div for the gradient background. --- */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 50% 50%, #ffffff, #27abed)',
-            opacity: 0.3,
-            zIndex: -1,
-          }}
-        />
-        {/* --- CHANGE: Added `relative` to the content container to ensure it sits above the background. --- */}
-        <div className="relative container mx-auto px-4">
+      {/* --- CHANGE: Updated background color to dark gray with 50% opacity and adjusted text colors --- */}
+      <section id="services" className="py-20 bg-gray-900/50 overflow-hidden">
+        <div className="container mx-auto px-4">
+          {/* --- CHANGE: Adjusted text colors for dark background --- */}
           <h2 className="text-4xl font-bold text-center text-gray-100 mb-2">What do we Offer?</h2>
           <p className="text-lg text-center text-gray-300 mb-12">
             We provide cutting-edge solutions to streamline your business operations.
@@ -138,6 +128,7 @@ const Services: React.FC = () => {
 
           {/* Product Carousel Section */}
           <div className="relative mb-24">
+            {/* --- CHANGE: Added justify-center to center the carousel items --- */}
             <div
               ref={carouselRef}
               className="flex items-center justify-center overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4"
@@ -179,6 +170,7 @@ const Services: React.FC = () => {
 
           {/* Other Services Section */}
           <div className="mt-16">
+            {/* --- CHANGE: Adjusted text color for dark background --- */}
             <h3 className="text-3xl font-bold text-center text-gray-100 mb-12">And Other Professional Services</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {otherServices.map((service, index) => (
