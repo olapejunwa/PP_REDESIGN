@@ -1,86 +1,14 @@
 import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { Check } from 'lucide-react';
+import { Send } from 'lucide-react';
 
 const BookkeepingServices = () => {
-  const [billingCycle, setBillingCycle] = useState('monthly');
-
-  const packages = [
-    {
-      name: "Basic Package for Micro Businesses",
-      price: billingCycle === 'monthly' ? '₦10,000' : '₦100,000',
-      features: [
-        "Financial Summary",
-        "Cash flow statement",
-        "Profit +Loss Statement",
-        "Balance sheet",
-        "Bookkeeping including ledger",
-        "Virtual Accountant support",
-        "Bank Reconciliation for 1 bank Only"
-      ],
-      buttonColor: "bg-blue-600 hover:bg-blue-700",
-      popular: false
-    },
-    {
-      name: "Basic Package for Medium Businesses",
-      price: billingCycle === 'monthly' ? '₦50,000' : '₦500,000',
-      features: [
-        "Financial Summary",
-        "Cash flow statement",
-        "Profit +Loss Statement",
-        "Balance sheet",
-        "Bookkeeping including ledger",
-        "Virtual Accountant support",
-        "Bank Reconciliation up to 3 banks Only",
-        "5 Hours of Financial Advisory per month",
-        "Monthly VAT & WHT Filings"
-      ],
-      buttonColor: "bg-pink-500 hover:bg-pink-600",
-      popular: false,
-      bgColor: "bg-gray-900",
-      textColor: "text-white"
-    },
-    {
-      name: "Standard Package",
-      price: billingCycle === 'monthly' ? '₦75,000' : '₦750,000',
-      features: [
-        "Financial Summary",
-        "Cash flow statement",
-        "Profit +Loss Statement",
-        "Balance sheet",
-        "Bookkeeping including ledger",
-        "Virtual Accountant support",
-        "Bank Reconciliation up to 10 banks Only",
-        "10 Hours of Financial Advisory per month",
-        "Monthly VAT & WHT Filings"
-      ],
-      buttonColor: "bg-blue-600 hover:bg-blue-700",
-      popular: true,
-      bgColor: "bg-pink-500",
-      textColor: "text-white"
-    },
-    {
-      name: "Premium Package",
-      price: billingCycle === 'monthly' ? '₦95,000' : '₦950,000',
-      features: [
-        "Financial Summary",
-        "Cash flow statement",
-        "Profit +Loss Statement",
-        "Balance sheet",
-        "Bookkeeping including ledger",
-        "Virtual Accountant support",
-        "Bank Reconciliation up to 10 banks Only",
-        "Yearly Annual Filings plus State Revenue Service Plus Dedicated",
-        "30 Hours of Financial Advisory per month",
-        "Virtual Senior Accountant support"
-      ],
-      buttonColor: "bg-pink-500 hover:bg-pink-600",
-      popular: false,
-      bgColor: "bg-gray-900",
-      textColor: "text-white"
-    }
-  ];
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log('Form submitted');
+  };
 
   return (
     <div className="min-h-screen">
@@ -99,79 +27,121 @@ const BookkeepingServices = () => {
         </div>
       </section>
 
-      {/* Custom Package Section */}
+      {/* Assessment Form Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gray-50 rounded-2xl p-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Ultimate Package -Tailored Pricing
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              For unique or complex projects and large customer accounts/profiles, we offer custom packages based on your specific requirements, business size, and goals. Includes a comprehensive consultation to understand your vision, objectives, challenges, requirements and goals.
-            </p>
-            <p className="text-sm text-gray-600 mb-8">
-              Our team will create a bespoke proposal with a detailed breakdown of services, tools, timelines, and pricing.
-            </p>
-            
-            {/* Billing Toggle */}
-            <div className="flex items-center justify-center mb-12">
-              <span className={`mr-3 ${billingCycle === 'monthly' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
-                Monthly
-              </span>
-              <button
-                onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-                className="relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-              <span className={`ml-3 ${billingCycle === 'yearly' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>
-                Yearly
-              </span>
-            </div>
-
-            {/* Pricing Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {packages.map((pkg, index) => (
-                <div
-                  key={index}
-                  className={`rounded-2xl p-8 relative ${
-                    pkg.bgColor || 'bg-white border-2 border-gray-200'
-                  } ${pkg.popular ? 'ring-2 ring-blue-500' : ''}`}
-                >
-                  {pkg.popular && (
-                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                      <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                        Most Popular
-                      </span>
-                    </div>
-                  )}
-                  
-                  <div className={`mb-8 ${pkg.textColor || 'text-gray-900'}`}>
-                    <h3 className="text-xl font-bold mb-4">{pkg.name}</h3>
-                    <div className="text-3xl font-bold">{pkg.price}</div>
-                    {billingCycle === 'yearly' && (
-                      <div className="text-sm opacity-75 mt-1">per year</div>
-                    )}
-                  </div>
-                  
-                  <ul className={`space-y-4 mb-8 ${pkg.textColor || 'text-gray-600'}`}>
-                    {pkg.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <button className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 ${pkg.buttonColor} text-white`}>
-                    Get Started
-                  </button>
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-gray-50 rounded-2xl p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                Get Your Custom Bookkeeping Services Quote
+              </h2>
+              <p className="text-gray-600 mb-8 text-center">
+                Tell us about your business to receive a tailored bookkeeping package that fits your specific needs and budget.
+              </p>
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 mb-2">
+                    Business Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="businessName"
+                    name="businessName"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter your business name"
+                  />
                 </div>
-              ))}
+
+                <div>
+                  <label htmlFor="businessSize" className="block text-sm font-medium text-gray-700 mb-2">
+                    Business Size *
+                  </label>
+                  <select
+                    id="businessSize"
+                    name="businessSize"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select your business size</option>
+                    <option value="micro">Micro Business (1-5 employees)</option>
+                    <option value="small">Small Business (6-20 employees)</option>
+                    <option value="medium">Medium Business (21-100 employees)</option>
+                    <option value="large">Large Business (100+ employees)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="monthlyTransactions" className="block text-sm font-medium text-gray-700 mb-2">
+                    Monthly Transaction Volume *
+                  </label>
+                  <select
+                    id="monthlyTransactions"
+                    name="monthlyTransactions"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select transaction volume</option>
+                    <option value="under-50">Under 50 transactions</option>
+                    <option value="50-200">50-200 transactions</option>
+                    <option value="200-500">200-500 transactions</option>
+                    <option value="500-1000">500-1000 transactions</option>
+                    <option value="over-1000">Over 1000 transactions</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="bankAccounts" className="block text-sm font-medium text-gray-700 mb-2">
+                    Number of Bank Accounts *
+                  </label>
+                  <select
+                    id="bankAccounts"
+                    name="bankAccounts"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select number of accounts</option>
+                    <option value="1">1 account</option>
+                    <option value="2-3">2-3 accounts</option>
+                    <option value="4-5">4-5 accounts</option>
+                    <option value="6-10">6-10 accounts</option>
+                    <option value="over-10">Over 10 accounts</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="servicesNeeded" className="block text-sm font-medium text-gray-700 mb-2">
+                    Additional Services Needed
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input type="checkbox" name="services" value="vat-filing" className="mr-2" />
+                      <span className="text-sm">VAT & WHT Filings</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" name="services" value="financial-advisory" className="mr-2" />
+                      <span className="text-sm">Financial Advisory</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" name="services" value="annual-filings" className="mr-2" />
+                      <span className="text-sm">Annual Filings</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" name="services" value="dedicated-accountant" className="mr-2" />
+                      <span className="text-sm">Dedicated Accountant</span>
+                    </label>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white px-6 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center space-x-2"
+                >
+                  <Send className="w-5 h-5" />
+                  <span>Get Custom Quote</span>
+                </button>
+              </form>
             </div>
           </div>
         </div>
