@@ -35,7 +35,7 @@ const carouselProducts: CarouselProduct[] = [
     logoBg: 'bg-gray-100',
   },
   {
-    icon: '/images/OWA Logo Landscape (Purple Text).png',
+    icon: '/images/Owa Logo 3_062657.ai (A2 (Landscape)) (1).png',
     title: 'OWA by PEPCODE',
     description: 'Helps market women track inventory by converting paper entries into accurate, synced digital records.',
     link: 'https://owabypepcode.com.ng/',
