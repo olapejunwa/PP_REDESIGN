@@ -1,204 +1,90 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { FC, cloneElement } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import AnimatedSection from './AnimatedSection';
 import AnimatedCalculatorIcon from './AnimatedCalculatorIcon';
-import AnimatedFileText from './AnimatedFileText';
 import AnimatedTrendingUp from './AnimatedTrendingUp';
+import AnimatedStarIcon from './AnimatedStarIcon';
+import AnimatedTargetIcon from './AnimatedTargetIcon';
+import AnimatedEyeIcon from './AnimatedEyeIcon';
+import AnimatedFileText from './AnimatedFileText';
+import { Link } from 'react-router-dom';
 
-// --- CHANGE: Interfaces defined for the two types of services ---
-interface CarouselProduct {
-  icon: string; // Direct file path for the logo
-  title: string;
-  description: string;
-  link: string;
-  cardColor: string;
-  logoBg: string;
-}
-
-interface OtherService {
-  icon: React.ComponentType<{ className?: string }>; // Animated icon component
-  title: string;
-  description: string;
-  link: string;
-  iconColor: string;
-}
-
-// --- CHANGE: `carouselProducts` array with corrected direct file paths for icons (removed 'public/') ---
-const carouselProducts: CarouselProduct[] = [
+const services = [
   {
-    icon: '/images/pepcode logo.webp',
-    title: 'PEPCODE',
-    description: 'Advanced bookkeeping software designed to simplify your financial management processes.',
-    link: '/products/pepcode',
-    cardColor: 'bg-white',
-    logoBg: 'bg-gray-100',
+    icon: <AnimatedCalculatorIcon />,
+    title: 'Bookkeeping Services',
+    description: 'We handle your day-to-day financial recording and reporting, so you can focus on growing your business.',
+    link: '/bookkeeping-services',
   },
   {
-    icon: 'public/images/Owa Logo Lanscape (Purple Text (2).png',
-    title: 'OWA by PEPCODE',
-    description: 'Helps market women track inventory by converting paper entries into accurate, synced digital records.',
-    link: '/products/owa',
-    cardColor: 'bg-white',
-    logoBg: 'bg-gray-100',
+    icon: <AnimatedTrendingUp />,
+    title: 'Financial Planning & Analysis',
+    description: 'Gain valuable insights into your financial performance and make data-driven decisions for the future.',
+    link: '#',
   },
   {
-    icon: '/images/auditme.webp',
-    title: 'AUDITME',
-    description: 'Fast-tracked audited accounts platform for streamlined compliance and reporting.',
-    link: '/products/auditme',
-    cardColor: 'bg-white',
-    logoBg: 'bg-gray-100',
+    icon: <AnimatedStarIcon />,
+    title: 'Payroll Processing',
+    description: 'Ensure your employees are paid accurately and on time, while staying compliant with all regulations.',
+    link: '#',
+  },
+  {
+    icon: <AnimatedTargetIcon />,
+    title: 'Tax Preparation & Planning',
+    description: 'Minimize your tax liability and stay ahead of deadlines with our expert tax services.',
+    link: '/tax-services',
+  },
+  {
+    icon: <AnimatedEyeIcon />,
+    title: 'Inventory Management',
+    description: 'Optimize your stock levels, reduce carrying costs, and improve cash flow with our inventory solutions.',
+    link: '/inventory-management',
+  },
+  {
+    icon: <AnimatedFileText />,
+    title: 'Business Registration',
+    description: 'Navigate the complexities of business registration with ease and get your venture started on the right foot.',
+    link: '#',
   },
 ];
 
-// --- CHANGE: `otherServices` array with a syntax fix (added a comma) ---
-const otherServices: OtherService[] = [
-  {
-      icon: AnimatedCalculatorIcon,
-      title: 'Tax Services',
-      description: 'Expert tax preparation and planning.',
-      link: '/tax-services',
-      iconColor: 'text-purple-500',
-  },
-  {
-      icon: AnimatedFileText,
-      title: 'Book-keeping Services',
-      description: 'Maintain accurate financial records.',
-      link: '/bookkeeping-services',
-      iconColor: 'text-blue-400',
-  },
-  {
-      icon: AnimatedTrendingUp,
-      title: 'Inventory Management',
-      description: 'Efficient inventory tracking solutions.',
-      link: '/inventory-management',
-      iconColor: 'text-red-500',
-  },
-];
-
-const Services: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const autoScrollRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Effect for centering the active carousel item
-  useEffect(() => {
-    if (carouselRef.current && carouselRef.current.children[currentIndex]) {
-      const item = carouselRef.current.children[currentIndex] as HTMLElement;
-      const carousel = carouselRef.current;
-      const scrollAmount = item.offsetLeft - (carousel.offsetWidth - item.offsetWidth) / 2;
-      carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
-    }
-  }, [currentIndex]);
-
-  // Effect for auto-scrolling the carousel
-  useEffect(() => {
-    const startAutoScroll = () => {
-      if (autoScrollRef.current) clearInterval(autoScrollRef.current);
-      autoScrollRef.current = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselProducts.length);
-      }, 5000);
-    };
-    startAutoScroll();
-    return () => {
-      if (autoScrollRef.current) clearInterval(autoScrollRef.current);
-    };
-  }, []);
-
-  // Handler for dot navigation clicks
-  const handleDotClick = (index: number) => {
-    setCurrentIndex(index);
-    if (autoScrollRef.current) clearInterval(autoScrollRef.current);
-    autoScrollRef.current = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselProducts.length);
-    }, 5000);
-  };
-
+const Services: FC = () => {
   return (
-    <AnimatedSection>
-      {/* --- CHANGE: Updated background color to dark gray with 50% opacity and adjusted text colors --- */}
-      <section id="services" className="py-20 bg-soft-blue overflow-hidden relative">
-        {/* Circular Gradient Background */}
-        <div 
-          className="absolute inset-0 opacity-30"
-          style={{
-            background: 'radial-gradient(circle at 50% 50%, #ffffff, #27abed)'
-          }}
-        />
-        <div className="container mx-auto px-4">
-          <div className="relative z-10">
-            {/* --- CHANGE: Adjusted text colors for light background --- */}
-            <h2 className="text-4xl font-bold text-center text-gray-900 mb-2">What do we Offer?</h2>
-            <p className="text-lg text-center text-gray-700 mb-12">
-              We provide cutting-edge solutions to streamline your business operations.
-            </p>
-
-            {/* Product Carousel Section */}
-            <div className="relative mb-24">
-              {/* --- CHANGE: Added justify-center to center the carousel items --- */}
-              <div
-                ref={carouselRef}
-                className="flex items-center justify-center overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4"
-              >
-                {carouselProducts.map((product, index) => (
-                  <div key={index} className="flex-shrink-0 snap-center first:pl-4 last:pr-4 sm:first:pl-0 sm:last:pr-0">
-                    <motion.div
-                      className={`rounded-lg shadow-lg p-6 mx-2 aspect-square w-80 flex flex-col justify-center items-center transform transition-transform duration-500 ${product.cardColor}`}
-                      animate={{ scale: currentIndex === index ? 1 : 0.95, opacity: currentIndex === index ? 1 : 0.7 }}
-                      transition={{ duration: 0.4 }}
-                    >
-                      <div className={`p-3 rounded-full mb-4 ${product.logoBg}`}>
-                        <img src={product.icon} alt={`${product.title} logo`} className="max-h-32 w-auto object-contain" />
-                      </div>
-                      <h3 className="text-2xl font-semibold text-center text-gray-800 mb-3">{product.title}</h3>
-                      <p className="text-gray-600 text-center mb-5 text-base">{product.description}</p>
-                      <div className="text-center mt-auto">
-                        <Link to={product.link} className="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
-                          Learn More &rarr;
-                        </Link>
-                      </div>
-                    </motion.div>
-                  </div>
-                ))}
+    <section className="py-20 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl font-bold text-gray-800">Our Services</h2>
+          <p className="text-lg text-gray-600 mt-4">
+            We offer a comprehensive range of accounting services to meet the needs of your business.
+          </p>
+        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center text-center"
+            >
+              <div className="text-purple-600 mb-6">
+                {/* Clone the icon element to override its size props */}
+                {cloneElement(service.icon, { width: 72, height: 72 })}
               </div>
-              <div className="absolute bottom-[-2.5rem] left-1/2 -translate-x-1/2 flex space-x-2">
-                {carouselProducts.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleDotClick(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      currentIndex === index ? 'bg-blue-600 scale-125' : 'bg-gray-300 hover:bg-gray-400'
-                    }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Other Services Section */}
-            <div className="mt-16">
-              {/* --- CHANGE: Adjusted text color for light background --- */}
-              <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">And Other Professional Services</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {otherServices.map((service, index) => (
-                  <div key={index} className="bg-white p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
-                    <div className="flex justify-center items-center mb-4">
-                      <service.icon className={`w-12 h-12 ${service.iconColor}`} />
-                    </div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-2">{service.title}</h4>
-                    <p className="text-gray-600 mb-4">{service.description}</p>
-                    <Link to={service.link} className="font-semibold text-blue-600 hover:text-blue-800 transition-colors">
-                      Learn More &rarr;
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">{service.title}</h3>
+              <p className="text-gray-600 mb-4 flex-grow">{service.description}</p>
+              <Link to={service.link} className="text-purple-600 hover:text-purple-800 font-semibold transition-colors duration-300 mt-auto">
+                Learn More &rarr;
+              </Link>
+            </motion.div>
+          ))}
         </div>
-      </section>
-    </AnimatedSection>
+      </div>
+    </section>
   );
 };
 
