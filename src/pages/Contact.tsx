@@ -59,7 +59,7 @@ const Contact = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Left Column: Contact Info */}
             <div className="lg:mt-8">
-              <p className="text-sm font-bold text-blue-600 uppercase">Contact</p>
+              <p className="text-sm font-bold text-blue-600 uppercase"></p>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-6">
                 Approachable & Conversational
               </h1>
