@@ -24,7 +24,7 @@ interface OtherService {
   iconColor: string;
 }
 
-// --- `carouselProducts` array with corrected direct file paths for icons ---
+// --- `carouselProducts` array with external links ---
 const carouselProducts: CarouselProduct[] = [
   {
     icon: '/images/pepcode logo.webp',
@@ -35,7 +35,7 @@ const carouselProducts: CarouselProduct[] = [
     logoBg: 'bg-gray-100',
   },
   {
-    icon: '/images/Owa Logo 3_062657.ai (A2 (Landscape)) (1).png',
+    icon: '/images/OWA Logo Landscape (Purple Text).png',
     title: 'OWA by PEPCODE',
     description: 'Helps market women track inventory by converting paper entries into accurate, synced digital records.',
     link: 'https://owabypepcode.com.ng/',
@@ -137,9 +137,16 @@ const Services: React.FC = () => {
               className="flex items-center justify-center overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4"
             >
               {carouselProducts.map((product, index) => (
-                <div key={index} className="flex-shrink-0 snap-center first:pl-4 last:pr-4 sm:first:pl-0 sm:last:pr-0">
+                // --- CHANGE: Wrapped the card in an anchor tag to make it clickable ---
+                <a
+                  key={index}
+                  href={product.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-shrink-0 snap-center first:pl-4 last:pr-4 sm:first:pl-0 sm:last:pr-0 no-underline"
+                >
                   <motion.div
-                    className={`rounded-lg shadow-lg p-6 mx-2 w-80 h-80 flex flex-col justify-center items-center transform transition-transform duration-500 ${product.cardColor}`}
+                    className={`rounded-lg shadow-lg p-6 mx-2 w-80 h-80 flex flex-col justify-center items-center transform transition-transform duration-500 ${product.cardColor} cursor-pointer`}
                     animate={{ scale: currentIndex === index ? 1 : 0.95, opacity: currentIndex === index ? 1 : 0.7 }}
                     transition={{ duration: 0.4 }}
                   >
@@ -149,12 +156,13 @@ const Services: React.FC = () => {
                     <h3 className="text-2xl font-semibold text-center text-gray-800 mb-3">{product.title}</h3>
                     <p className="text-gray-600 text-center mb-5 text-base">{product.description}</p>
                     <div className="text-center mt-auto">
-                      <Link to={product.link} className="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                      {/* --- CHANGE: Replaced Link with a span for styling purposes --- */}
+                      <span className="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
                         Learn More &rarr;
-                      </Link>
+                      </span>
                     </div>
                   </motion.div>
-                </div>
+                </a>
               ))}
             </div>
             <div className="absolute bottom-[-2.5rem] left-1/2 -translate-x-1/2 flex space-x-2">
@@ -176,7 +184,6 @@ const Services: React.FC = () => {
             <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">And Other Professional Services</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {otherServices.map((service, index) => (
-                // --- CHANGE: Wrapped in motion.div and added hover animation ---
                 <motion.div
                   key={index}
                   className="bg-white p-8 rounded-lg shadow-md text-center"
@@ -184,7 +191,6 @@ const Services: React.FC = () => {
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
                   <div className="flex justify-center items-center mb-4">
-                    {/* --- CHANGE: Increased icon size --- */}
                     <service.icon className={`w-16 h-16 ${service.iconColor}`} />
                   </div>
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">{service.title}</h4>
