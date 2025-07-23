@@ -13,6 +13,7 @@ export default {
         'soft-slate': '#f8fafc',
         'soft-blue': '#f0f9ff',
         'soft-gray': '#f9fafb',
+        'custom-blue': '#014BAD',
       },
     },
   },
