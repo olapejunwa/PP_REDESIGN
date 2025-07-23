@@ -161,7 +161,7 @@ const Navigation = () => {
                           </div>
                           <Link to="/bookkeeping-services" className="flex items-center space-x-4 px-4 py-3 text-base text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
                             <BookOpen className="w-5 h-5 text-blue-600" />
-                            <span className="font-medium">Book-keeping Services</span>
+                            <span className="font-medium">Bookkeeping Services</span>
                           </Link>
                           <Link to="/tax-services" className="flex items-center space-x-4 px-4 py-3 text-base text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
                             <Calculator className="w-5 h-5 text-blue-600" />
