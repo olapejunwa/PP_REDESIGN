@@ -202,7 +202,7 @@ const Navigation = () => {
                               <img src="/images/Owa Logo 3_062657.ai (A2 (Landscape)) (1).png" alt="OWA by PEPCODE Logo" className="w-10 h-10 mr-4 object-contain"/>
                               <div>
                                   <div className="font-semibold text-blue-900 text-base">OWA by PEPCODE</div>
-                                  <div className="text-sm text-blue-700 mt-1">Paperless Bookkeeping</div>
+                                  <div className="text-sm text-blue-700 mt-1">Recordkeeping simplicity</div>
                               </div>
                           </a>
                         </div>
