@@ -105,7 +105,7 @@ const About = () => {
       icon: AnimatedEyeIcon,
       title: "Efficiency and Accuracy",
       description: "Our team is dedicated to the utilization of automated, repetitive tasks, reduce manual errors, and improve the accuracy of financial data. By automating routine bookkeeping processes, we help our customers save time and focus on growing their businesses.",
-      bgColor: 'bg-[#F5A038]'
+      bgColor: 'bg-[#B58B57]'
     },
     {
       icon: AnimatedStarIcon,
