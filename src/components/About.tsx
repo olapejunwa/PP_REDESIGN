@@ -111,7 +111,7 @@ const About = () => {
       icon: AnimatedStarIcon,
       title: "Insightful Reporting",
       description: "Our bookkeeping software provides real-time insights and business finances through customizable reports and dashboards. By offering valuable financial insights, we empower our customers to make informed business decisions.",
-      bgColor: 'bg-[#5D6467]'
+      bgColor: 'bg-[#3C00FF]'
     }
   ];
 
