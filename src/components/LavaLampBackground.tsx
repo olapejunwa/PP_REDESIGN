@@ -34,7 +34,7 @@ const LavaLampBackground = () => {
         
         // Enhanced speed for better visual appeal
         const isMobile = window.innerWidth < 768;
-        const speedMultiplier = isMobile ? 2.0 : 2.5; // Increased speed
+        const speedMultiplier = isMobile ? 1.5 : 2.0; // Reduced speed for mobile
         this.vx = (Math.random() - 0.5) * speedMultiplier;
         this.vy = (Math.random() - 0.5) * speedMultiplier;
         
@@ -55,16 +55,21 @@ const LavaLampBackground = () => {
         gradient.addColorStop(1, this.color2);
         ctx.fillStyle = gradient;
         
-        // Enhanced blob shape with subtle morphing
-        const morphFactor = Math.sin(this.phase) * 0.1;
-        const radiusX = this.r * (1 + morphFactor);
-        const radiusY = this.r * (1 - morphFactor * 0.5);
-        
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.scale(radiusX / this.r, radiusY / this.r);
-        ctx.arc(0, 0, this.r, 0, Math.PI * 2);
-        ctx.restore();
+        // Simplified blob shape for mobile
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        } else {
+            const morphFactor = Math.sin(this.phase) * 0.1;
+            const radiusX = this.r * (1 + morphFactor);
+            const radiusY = this.r * (1 - morphFactor * 0.5);
+            
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.scale(radiusX / this.r, radiusY / this.r);
+            ctx.arc(0, 0, this.r, 0, Math.PI * 2);
+            ctx.restore();
+        }
         ctx.fill();
       }
 
@@ -109,31 +114,22 @@ const LavaLampBackground = () => {
       const isPortrait = height > width;
       
       // Optimized blob sizes for better performance and visual appeal
-      const baseRadius = Math.min(width, height) * 0.15;
+      const baseRadius = Math.min(width, height) * (isMobile ? 0.2 : 0.15); // Larger blobs on mobile
       const radiusVariation = baseRadius * 0.3;
       
       // Enhanced color palette with better gradients
       const colors = [
-        { primary: 'rgba(59, 130, 246, 0.7)', secondary: 'rgba(37, 99, 235, 0)' },
-        { primary: 'rgba(96, 165, 250, 0.6)', secondary: 'rgba(59, 130, 246, 0)' },
-        { primary: 'rgba(147, 197, 253, 0.5)', secondary: 'rgba(96, 165, 250, 0)' },
-        { primary: 'rgba(191, 219, 254, 0.4)', secondary: 'rgba(147, 197, 253, 0)' },
+        { primary: 'rgba(59, 130, 246, 0.6)', secondary: 'rgba(37, 99, 235, 0)' },
+        { primary: 'rgba(96, 165, 250, 0.5)', secondary: 'rgba(59, 130, 246, 0)' },
+        { primary: 'rgba(147, 197, 253, 0.4)', secondary: 'rgba(96, 165, 250, 0)' },
+        { primary: 'rgba(191, 219, 254, 0.3)', secondary: 'rgba(147, 197, 253, 0)' },
       ];
       
-      if (isMobile && isPortrait) {
-        // Portrait mobile: optimized vertical layout
+      if (isMobile) {
+        // Mobile: fewer, larger blobs
         blobs = [
-          new Blob(width * 0.25, height * 0.25, baseRadius, colors[0].primary, colors[0].secondary),
-          new Blob(width * 0.75, height * 0.45, baseRadius + radiusVariation, colors[1].primary, colors[1].secondary),
-          new Blob(width * 0.35, height * 0.75, baseRadius - radiusVariation * 0.5, colors[2].primary, colors[2].secondary),
-          new Blob(width * 0.65, height * 0.15, baseRadius - radiusVariation * 0.3, colors[3].primary, colors[3].secondary),
-        ];
-      } else if (isMobile && !isPortrait) {
-        // Landscape mobile: optimized horizontal layout
-        blobs = [
-          new Blob(width * 0.2, height * 0.4, baseRadius, colors[0].primary, colors[0].secondary),
-          new Blob(width * 0.6, height * 0.7, baseRadius + radiusVariation, colors[1].primary, colors[1].secondary),
-          new Blob(width * 0.8, height * 0.3, baseRadius - radiusVariation * 0.3, colors[2].primary, colors[2].secondary),
+          new Blob(width * 0.25, height * 0.35, baseRadius, colors[0].primary, colors[0].secondary),
+          new Blob(width * 0.75, height * 0.65, baseRadius + radiusVariation, colors[1].primary, colors[1].secondary),
         ];
       } else {
         // Desktop: enhanced layout with more blobs
@@ -150,6 +146,7 @@ const LavaLampBackground = () => {
     
     // Enhanced animation loop with delta time for consistent performance
     const animate = (currentTime: number) => {
+      if (lastTime === 0) lastTime = currentTime;
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
       
@@ -176,7 +173,7 @@ const LavaLampBackground = () => {
 
     // Enhanced resize handler with better performance
     const handleResize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2); // Limit DPR for performance
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5); // Limit DPR for mobile performance
       const rect = canvas.getBoundingClientRect();
       
       // Set canvas size with device pixel ratio for crisp rendering
@@ -190,7 +187,7 @@ const LavaLampBackground = () => {
       
       // Optimize canvas rendering
       ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
+      ctx.imageSmoothingQuality = 'medium'; // Use 'medium' for a balance of performance and quality
       
       createBlobs(rect.width, rect.height);
     };
@@ -199,7 +196,7 @@ const LavaLampBackground = () => {
     let resizeTimeout: NodeJS.Timeout;
     const throttledResize = () => {
       clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(handleResize, 100);
+      resizeTimeout = setTimeout(handleResize, 150); // Increased throttle time
     };
 
     window.addEventListener('resize', throttledResize);
