@@ -6,7 +6,7 @@ import { Target, Eye, Star, Users, Award, TrendingUp } from 'lucide-react';
 const AboutUs = () => {
   const founders = [
     {
-      name: "Olapiwa Nwanganga",
+      name: "Olapeju Nwanganga",
       role: "Co-Founder & CEO",
       image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=400",
       description: "Olapiwa Nwanganga, who brings the CEO and has 8 years track record in financial management, accounting, and business operations. She has worked at various organizations, including banks, fintech companies, and consulting firms. She has a wealth of experience in financial management and is passionate about helping businesses achieve their financial goals."
