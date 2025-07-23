@@ -63,7 +63,7 @@ const otherServices: OtherService[] = [
   },
   {
       icon: AnimatedFileText,
-      title: 'Book-keeping Services',
+      title: 'Bookkeeping Services',
       description: 'Maintain accurate financial records.',
       link: '/bookkeeping-services',
       iconColor: 'text-blue-400',
