@@ -9,6 +9,7 @@ const AnimatedCalculatorIcon: React.FC<{ className?: string }> = ({ className })
   const targetNumber = '1,234.56';
 
   useEffect(() => {
+    // Always run animations regardless of device type
     const cleanup = () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);

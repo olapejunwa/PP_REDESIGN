@@ -100,6 +100,15 @@ html {
     scroll-behavior: auto !important;
   }
   
+  /* Exception: Allow service icon animations on mobile */
+  .animate-file-text *,
+  .animate-trending-up *,
+  .animate-file-text,
+  .animate-trending-up {
+    animation-duration: 2s !important;
+    animation-iteration-count: infinite !important;
+  }
+  
   /* Reset transforms to prevent layout issues */
   .translate-y-8,
   .translate-x-8,

@@ -13,7 +13,7 @@ const AnimatedTrendingUp: React.FC<AnimatedTrendingUpProps> = ({ className }) =>
     strokeWidth="2" 
     strokeLinecap="round" 
     strokeLinejoin="round" 
-    className={className}
+    className={`${className} animate-trending-up`}
   >
     <polyline 
       className="animate-draw-line" 
