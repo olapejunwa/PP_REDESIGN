@@ -90,47 +90,32 @@ html {
 
 /* Mobile-optimized animations */
 @media (max-width: 767px) {
-  .animate-slide-up {
-    animation-duration: 0.6s;
+  /* Disable all animations and transitions on mobile */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
   
-  .animate-slide-left {
-    animation-duration: 0.6s;
-  }
-  
-  .animate-slide-right {
-    animation-duration: 0.6s;
-  }
-  
-  .animate-scale-in {
-    animation-duration: 0.6s;
-  }
-  
-  /* Reduce transform distances on mobile */
-  .translate-y-8 {
-    transform: translateY(1rem);
-  }
-  
-  .translate-x-8 {
-    transform: translateX(1rem);
-  }
-  
+  /* Reset transforms to prevent layout issues */
+  .translate-y-8,
+  .translate-x-8,
   .-translate-x-8 {
-    transform: translateX(-1rem);
+    transform: none !important;
+  }
+  
+  /* Disable scroll animations */
+  html {
+    scroll-behavior: auto !important;
   }
 }
 
 /* Performance optimizations */
 .will-change-transform {
   will-change: transform, opacity;
-}
-
-/* Ensure smooth animations on mobile */
-@media (max-width: 767px) {
-  * {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-  }
 }
 
 @keyframes slide-in-from-top {

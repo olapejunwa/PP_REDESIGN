@@ -17,16 +17,13 @@ export const useScrollAnimation = (options: UseScrollAnimationOptions = {}) => {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    // Check if device is mobile
+    // Check if device is mobile and disable animations
     const isMobile = window.innerWidth < 768;
-    
-    // Adjust options for mobile
-    const mobileThreshold = isMobile ? 0.02 : threshold;
-    const mobileRootMargin = isMobile ? '0px 0px -10px 0px' : rootMargin;
     
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          // On mobile, set visible immediately without animation
           setIsVisible(true);
           if (triggerOnce && ref.current) {
             observer.unobserve(ref.current);
@@ -36,8 +33,8 @@ export const useScrollAnimation = (options: UseScrollAnimationOptions = {}) => {
         }
       },
       {
-        threshold: mobileThreshold,
-        rootMargin: mobileRootMargin,
+        threshold: isMobile ? 0.01 : threshold,
+        rootMargin: isMobile ? '0px' : rootMargin,
       }
     );
 
@@ -62,9 +59,14 @@ export const useStaggeredAnimation = (itemCount: number, delay: number = 100) =>
 
   useEffect(() => {
     if (isContainerVisible) {
-      // Reduce delay on mobile for faster animations
+      // Check if mobile and disable staggered animations
       const isMobile = window.innerWidth < 768;
-      const mobileDelay = isMobile ? delay * 0.6 : delay;
+      
+      if (isMobile) {
+        // On mobile, show all items immediately
+        setVisibleItems(new Array(itemCount).fill(true));
+        return;
+      }
       
       const timers: NodeJS.Timeout[] = [];
       
@@ -75,7 +77,7 @@ export const useStaggeredAnimation = (itemCount: number, delay: number = 100) =>
             newState[i] = true;
             return newState;
           });
-        }, i * mobileDelay);
+        }, i * delay);
         
         timers.push(timer);
       }

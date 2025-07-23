@@ -46,37 +46,45 @@ const useInView = (options: IntersectionObserverInit) => {
 // A component for each individual value item to handle its own animation state
 const ValueItem = ({ value, index }: { value: any; index: number }) => {
   // Trigger the animation when 30% of the item is visible
-  const [ref, isInView] = useInView({ threshold: 0.2 }); // Lower threshold for mobile
+  const [ref, isInView] = useInView({ threshold: 0.2 });
   const [renderIcon, setRenderIcon] = useState(false);
   const isEven = index % 2 === 0;
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   useEffect(() => {
-    if (isInView && !renderIcon) {
-      // This timer creates a delay between the container animating in and the icon animation starting.
+    if (isMobile) {
+      // On mobile, render icon immediately
+      setRenderIcon(true);
+    } else if (isInView && !renderIcon) {
       const timer = setTimeout(() => {
         setRenderIcon(true);
-      }, isMobile ? 300 : 500); // Faster on mobile
+      }, 500);
       return () => clearTimeout(timer);
     }
-  }, [isInView, renderIcon]);
+  }, [isInView, renderIcon, isMobile]);
 
 
   return (
     <div
       ref={ref}
-      className={`flex flex-col md:flex-row items-center gap-8 md:gap-12 transition-all ease-in-out ${isMobile ? 'duration-700' : 'duration-1000'} ${
-        isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      className={`flex flex-col md:flex-row items-center gap-8 md:gap-12 ${
+        isMobile ? '' : 'transition-all ease-in-out duration-1000'
+      } ${
+        isMobile || isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       } ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`} // Alternates layout
     >
       {/* Icon Container with its own transition. This is the "pre-transition" for the icon animation. */}
-      <div className={`${isMobile ? 'w-48 h-36' : 'w-64 h-48'} ${value.bgColor} rounded-2xl flex items-center justify-center flex-shrink-0 p-4 transition-all ${isMobile ? 'duration-500' : 'duration-700'} ease-out ${isInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
+      <div className={`${isMobile ? 'w-48 h-36' : 'w-64 h-48'} ${value.bgColor} rounded-2xl flex items-center justify-center flex-shrink-0 p-4 ${
+        isMobile ? '' : 'transition-all duration-700 ease-out'
+      } ${isMobile || isInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
         {/* The icon is only rendered after the pre-transition has started, triggering its animation. */}
         {renderIcon && <value.icon />}
       </div>
 
       {/* Text Content Container with its own transition */}
-      <div className={`text-center ${isEven ? 'md:text-left' : 'md:text-right'} transition-opacity ${isMobile ? 'duration-500 delay-200' : 'duration-700 delay-300'} ease-out ${isInView ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`text-center ${isEven ? 'md:text-left' : 'md:text-right'} ${
+        isMobile ? '' : 'transition-opacity duration-700 delay-300 ease-out'
+      } ${isMobile || isInView ? 'opacity-100' : 'opacity-0'}`}>
         <h3 className={`${isMobile ? 'text-unified-xl' : 'text-unified-2xl'} font-primary font-unified-bold text-gray-900 mb-4`}>{value.title}</h3>
         <p className={`${isMobile ? 'text-unified-sm' : 'text-unified-base'} font-primary font-unified-normal text-gray-700 leading-unified-relaxed`}>{value.description}</p>
       </div>
