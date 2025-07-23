@@ -105,13 +105,13 @@ const About = () => {
       icon: AnimatedEyeIcon,
       title: "Efficiency and Accuracy",
       description: "Our team is dedicated to the utilization of automated, repetitive tasks, reduce manual errors, and improve the accuracy of financial data. By automating routine bookkeeping processes, we help our customers save time and focus on growing their businesses.",
-      bgColor: 'bg-yellow-100'
+      bgColor: 'bg-[#F5A038]'
     },
     {
       icon: AnimatedStarIcon,
       title: "Insightful Reporting",
       description: "Our bookkeeping software provides real-time insights and business finances through customizable reports and dashboards. By offering valuable financial insights, we empower our customers to make informed business decisions.",
-      bgColor: 'bg-orange-100'
+      bgColor: 'bg-[#5D6467]'
     }
   ];
 
