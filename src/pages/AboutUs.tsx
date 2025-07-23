@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // 👈 Import Link
+import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { Target, Eye, Star, Users, Award, TrendingUp } from 'lucide-react';
@@ -57,11 +57,9 @@ const AboutUs = () => {
               <p className="text-base text-gray-600 mb-8">
                 At Ploutos Page we are passionate about helping businesses succeed by providing them with the tools and support they need to manage their finances effectively. We believe that every business, regardless of its size, deserves access to high-quality financial services and innovative solutions to drive growth.
               </p>
-              {/* === MODIFIED CODE START === */}
               <Link to="/contact" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">
                 Get Started
               </Link>
-              {/* === MODIFIED CODE END === */}
             </div>
             <div className="relative">
               <div className="bg-gray-200 rounded-2xl p-8 relative overflow-hidden">
@@ -120,7 +118,8 @@ const AboutUs = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6"">
+            {/* === MODIFIED LINE === */}
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               The founders
             </h2>
             <p className="text-lg text-gray-600">
