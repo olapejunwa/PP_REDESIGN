@@ -91,7 +91,7 @@ const AboutUs = () => {
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <p className="text-blue-400 font-semibold mb-4">Our Mission</p>
+            <p className="text-3xl md:text-4xl font-bold text-blue-400 mb-6">Our Mission</p>
             <h2 className="text-2xl md:text-3xl font-bold mb-8">
               At the core of our mission is the commitment to delivering value to our customers by:
             </h2>
