@@ -11,12 +11,6 @@ const AboutUs = () => {
       image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=400",
       description: "Olapiwa Nwanganga, who brings the CEO and has 8 years track record in financial management, accounting, and business operations. She has worked at various organizations, including banks, fintech companies, and consulting firms. She has a wealth of experience in financial management and is passionate about helping businesses achieve their financial goals."
     },
-    {
-      name: "Genevieve Olatunii",
-      role: "Co-Founder & CTO",
-      image: "https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=400",
-      description: "Technical Product Manager at Decentrahub who was 3 years of industry experience in product management, software development, and project management. She is an expert in Data Science and Machine Learning, leveraging her technical knowledge to drive innovation and growth."
-    }
   ];
 
   const values = [
