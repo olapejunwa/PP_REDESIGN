@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // 👈 Import Link
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { Target, Eye, Star, Users, Award, TrendingUp } from 'lucide-react';
@@ -44,7 +45,7 @@ const AboutUs = () => {
   return (
     <div className="min-h-screen">
       <Navigation />
-      
+
       {/* Hero Section */}
       <section className="pt-32 pb-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,11 +56,12 @@ const AboutUs = () => {
               </h1>
               <p className="text-base text-gray-600 mb-8">
                 At Ploutos Page we are passionate about helping businesses succeed by providing them with the tools and support they need to manage their finances effectively. We believe that every business, regardless of its size, deserves access to high-quality financial services and innovative solutions to drive growth.
-               </p>
+              </p>
+              {/* === MODIFIED CODE START === */}
               <Link to="/contact" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">
-              Get Started
+                Get Started
               </Link>
-              </button>
+              {/* === MODIFIED CODE END === */}
             </div>
             <div className="relative">
               <div className="bg-gray-200 rounded-2xl p-8 relative overflow-hidden">
@@ -97,7 +99,7 @@ const AboutUs = () => {
               At the core of our mission is the commitment to delivering value to our customers by:
             </h2>
           </div>
-          
+
           <div className="space-y-8">
             {values.map((value, index) => (
               <div key={index} className="flex items-start space-x-6 p-6 bg-gray-800 rounded-xl">
@@ -125,13 +127,13 @@ const AboutUs = () => {
               Building the future of financial management, one business at a time.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {founders.map((founder, index) => (
               <div key={index} className="text-center">
                 <div className="w-64 h-80 mx-auto mb-6 rounded-2xl overflow-hidden">
-                  <img 
-                    src={founder.image} 
+                  <img
+                    src={founder.image}
                     alt={founder.name}
                     className="w-full h-full object-cover"
                   />
