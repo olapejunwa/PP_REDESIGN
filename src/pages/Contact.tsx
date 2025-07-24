@@ -28,24 +28,20 @@ const AccordionItem = ({ title, children }: { title: string, children: React.Rea
 const Contact = () => {
     const faqs = [
     {
-      question: "What can I do with Ploutos?",
-      answer: "Ploutos offers a comprehensive suite of tools for financial management, including bookkeeping, tax services, and inventory management, to help streamline your business operations."
+      question: "How much does Pepcode cost?",
+      answer: "We offer a range of pricing plans to suit different business needs and budgets. Please contact us for a custom quote or visit our services pages for more details."
     },
     {
-      question: "Is Ploutos a good fit for my business?",
-      answer: "Ploutos is designed for businesses of all sizes, from startups to established enterprises. Our scalable solutions can be tailored to meet your specific needs."
+      question: "Can I use ÓWÀ without a smartphone?",
+      answer: "Yes. ÓWÀ is designed for market women without internet access. Our field agents keep your records in a paper logbook during weekly visits and send you a simple SMS summary — no smartphone needed."
     },
     {
-      question: "How easy is Ploutos to use?",
-      answer: "Our platform is built with a user-friendly interface to ensure that you can manage your finances with ease, regardless of your technical expertise."
+      question: "Who performs the audit on AuditMe?",
+      answer: "All audits are carried out by ICAN‑ and ANAN‑certified chartered accountants who adhere to International Standards on Auditing (ISA), ensuring every report is fully compliant."
     },
     {
-      question: "How much does Ploutos cost?",
-      answer: "We offer a range of pricing plans to suit different business needs and budgets. Please visit our services pages for more details."
-    },
-    {
-      question: "How do I get started with Ploutos?",
-      answer: "Getting started is easy! Simply contact us through the form on this page, and one of our team members will be in touch to guide you through the process."
+      question: "Can I get loans through ÓWÀ?",
+      answer: "Yes. While ÓWÀ itself doesn’t lend money, the verified transaction history it creates makes it easier for our micro‑finance partners to approve small business loans. Your agent can guide you through the process whenever you’re ready."
     }
   ];
 
@@ -153,7 +149,7 @@ const Contact = () => {
                 <p className="text-sm font-bold text-blue-400 uppercase">FAQ</p>
                 <h2 className="text-4xl font-bold text-white mt-2 mb-4">Frequently Asked Questions</h2>
                 <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-                    We'd love to hear from you and discuss how Ploutos can simplify your financial management.
+                    We'd love to hear from you and discuss how we can simplify your financial management.
                 </p>
             </div>
             <div className="bg-gray-800/50 rounded-xl overflow-hidden">
