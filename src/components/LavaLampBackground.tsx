@@ -37,8 +37,8 @@ const LavaLampBackground: React.FC = () => {
               This is the key to the "gooey" effect.
             */
             filter: url(#goo);
-            /* EDIT: Changed background to a dark navy blue */
-            background: #020C1B;
+            /* EDIT: Changed background to a light blue */
+            background: #E1F3FE;
           }
 
           /* FIX: Define the keyframe animation for the blobs.
