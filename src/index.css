@@ -116,7 +116,7 @@ html {
 
 /* Mobile-optimized animations */
 @media (max-width: 767px) {
-  /* Disable all animations and transitions on mobile */
+  /* Disable most animations and transitions on mobile, but allow specific optimized ones */
   *,
   *::before,
   *::after {
@@ -126,12 +126,26 @@ html {
     scroll-behavior: auto !important;
   }
   
-  /* Exception: Allow service icon animations on mobile */
+  /* Exception: Allow optimized service icon animations on mobile */
   .animate-file-text *,
   .animate-trending-up *,
   .animate-file-text,
   .animate-trending-up {
     animation-duration: 2s !important;
+    animation-iteration-count: infinite !important;
+  }
+  
+  /* Exception: Allow optimized star icon animations on mobile */
+  .chart-bars rect {
+    transition-duration: 0.3s !important;
+  }
+  
+  .magnifying-glass {
+    transition-duration: 0.5s !important;
+  }
+  
+  .sparkles circle {
+    animation-duration: 1s !important;
     animation-iteration-count: infinite !important;
   }
   
@@ -146,6 +160,14 @@ html {
   html {
     scroll-behavior: auto !important;
   }
+  
+  /* Mobile performance optimizations */
+  * {
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
 }
 
 /* Performance optimizations */
@@ -153,6 +175,38 @@ html {
   will-change: transform, opacity;
 }
 
+/* Hardware acceleration utilities */
+.gpu-accelerated {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Mobile-optimized animations */
+@media (max-width: 767px) {
+  .gpu-accelerated {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .gpu-accelerated {
+    will-change: auto;
+  }
+  
+  .sparkles circle {
+    animation: none !important;
+  }
+  
+  .magnifying-glass {
+    transition: none !important;
+  }
+}
 @keyframes slide-in-from-top {
   from {
     opacity: 0;
