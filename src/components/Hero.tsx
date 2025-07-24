@@ -14,7 +14,7 @@ const Hero = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <AnimatedSection animationType="fadeUp" delay={200}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-primary font-unified-bold text-gray-900 leading-unified-tight">
-             SIMPLIFYING FINANCE FOR BUSINESSES AT EVERY LEVEL.
+             SIMPLIFYING FINANCE FOR BUSINESSES.
             </h1>
           </AnimatedSection>
           
