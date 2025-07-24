@@ -17,11 +17,30 @@ import Footer from "./components/Footer";
 function App() {
   const { pathname } = useLocation();
 
-  // FIX: This useEffect hook listens for changes in the URL's pathname.
-  // When the pathname changes (i.e., you navigate to a new page),
-  // it scrolls the window to the top (0, 0).
+  // Enhanced scroll-to-top implementation
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Use requestAnimationFrame to ensure DOM is fully rendered
+    const scrollToTop = () => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'instant' // Immediate scroll, no smooth animation
+      });
+    };
+
+    // Multiple approaches to ensure scroll works
+    scrollToTop(); // Immediate scroll
+    
+    // Backup scroll after a short delay for slow-loading content
+    const timeoutId = setTimeout(scrollToTop, 100);
+    
+    // Additional scroll after animation frame for React rendering
+    const rafId = requestAnimationFrame(scrollToTop);
+
+    return () => {
+      clearTimeout(timeoutId);
+      cancelAnimationFrame(rafId);
+    };
   }, [pathname]);
 
   const location = useLocation();
