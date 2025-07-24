@@ -29,7 +29,7 @@ const carouselProducts: CarouselProduct[] = [
   {
     icon: '/images/pepcode logo.webp',
     title: 'PEPCODE',
-    description: 'Advanced bookkeeping software designed to simplify your financial management processes.',
+    description: 'Pepcode is our digital bookkeeping software built for businesses that want to grow without the stress of spreadsheets.',
     link: 'https://pepcodeinc.com',
     cardColor: 'bg-white',
     logoBg: 'bg-gray-100',
@@ -37,7 +37,7 @@ const carouselProducts: CarouselProduct[] = [
   {
     icon: '/images/Owa Logo 3_062657.ai (A2 (Landscape)) (1).png',
     title: 'OWA by PEPCODE',
-    description: 'Helps market women track inventory by converting paper entries into accurate, synced digital records.',
+    description: 'ÓWÀ (Openmarket Women Amplifier) is an agent‑led, hybrid solution helping informal women traders track sales, expenses, and profit in local markets.',
     link: 'https://owabypepcode.com.ng/',
     cardColor: 'bg-white',
     logoBg: 'bg-gray-100',
@@ -45,7 +45,7 @@ const carouselProducts: CarouselProduct[] = [
   {
     icon: '/images/auditme.webp',
     title: 'AUDITME',
-    description: 'Fast-tracked audited accounts platform for streamlined compliance and reporting.',
+    description: 'AuditMe connects businesses with certified auditors who deliver legally compliant audited reports within 7 days.',
     link: 'https://auditme.com.ng/',
     cardColor: 'bg-white',
     logoBg: 'bg-gray-100',
