@@ -82,7 +82,7 @@ const AboutUs = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
             We're empowering you for financial excellence
           </h2>
-          <p className="text-lg text-gray-600 max-w-4xl mx-auto">
+          <p className="text-base text-gray-600 mb-8">
             Ploutos Page Limited is a fintech and professional services company helping MSMEs and market traders grow with smart, simple, and human‑centered bookkeeping and financial tools.
 Whether you're a startup, a small business, or a woman selling in the open market — we’ve got you covered.
           </p>
