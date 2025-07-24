@@ -83,7 +83,8 @@ const AboutUs = () => {
             We're empowering you for financial excellence
           </h2>
           <p className="text-lg text-gray-600 max-w-4xl mx-auto">
-            At Ploutos, we are on a mission to empower businesses of all sizes to manage their finances with ease and confidence through innovative bookkeeping solutions and creative software experiences, tools they, and world-class education.
+            Ploutos Page Limited is a fintech and professional services company helping MSMEs and market traders grow with smart, simple, and human‑centered bookkeeping and financial tools.
+Whether you're a startup, a small business, or a woman selling in the open market — we’ve got you covered.
           </p>
         </div>
       </section>
