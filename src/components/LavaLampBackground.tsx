@@ -1,13 +1,8 @@
 import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 
 /**
- * FIXED LAVA LAMP BACKGROUND - Mobile Optimized
- * 
- * Key Fixes Applied:
- * 1. Simplified device detection that actually works
- * 2. Proper blob physics to prevent sinking
- * 3. Scroll isolation to prevent jank
- * 4. Performance optimization for iPhone 12 Pro Max
+ * SIMPLE WORKING LAVA LAMP BACKGROUND
+ * Fixed to always render properly on all devices including iPhone 12 Pro Max
  */
 
 // Simplified performance tiers
@@ -21,7 +16,7 @@ interface DeviceCapabilities {
 }
 
 /**
- * WORKING device performance detection
+ * Simple device detection that actually works
  */
 const useDevicePerformance = (): DeviceCapabilities => {
   const capabilities = useMemo((): DeviceCapabilities => {
@@ -46,7 +41,7 @@ const useDevicePerformance = (): DeviceCapabilities => {
     const cores = navigator.hardwareConcurrency || 4;
     const memory = (navigator as any).deviceMemory || 4;
     
-    // Tier classification - iPhone 12 Pro Max should get 'high'
+    // Simple tier classification
     let tier: PerformanceTier = 'medium';
     
     if (cores <= 2 || memory <= 2) {
@@ -89,7 +84,7 @@ const performanceSettings = {
 };
 
 /**
- * FIXED Blob class with proper physics
+ * Fixed Blob class with proper physics
  */
 class Blob {
   x: number;
@@ -110,7 +105,7 @@ class Blob {
     this.r = r;
     this.color = color;
     
-    // FIXED: Better initial velocity to prevent sinking
+    // Better initial velocity to prevent sinking
     const speed = 0.5 + Math.random() * 0.5;
     const angle = Math.random() * Math.PI * 2;
     this.vx = Math.cos(angle) * speed;
@@ -127,7 +122,7 @@ class Blob {
   update(width: number, height: number, deltaTime: number) {
     const normalizedDelta = Math.min(deltaTime / 16.67, 2);
     
-    // FIXED: Orbital motion prevents sinking
+    // Orbital motion prevents sinking
     this.phase += this.orbitSpeed * normalizedDelta;
     const orbitX = Math.cos(this.phase) * this.orbitRadius * 0.3;
     const orbitY = Math.sin(this.phase * 0.7) * this.orbitRadius * 0.2;
@@ -157,7 +152,7 @@ class Blob {
     this.x += this.vx * normalizedDelta;
     this.y += this.vy * normalizedDelta;
     
-    // FIXED: Better boundary handling
+    // Better boundary handling
     const margin = this.r;
     if (this.x < margin) {
       this.x = margin;
@@ -195,44 +190,18 @@ class Blob {
 }
 
 /**
- * MAIN COMPONENT - Fixed and Working
+ * MAIN COMPONENT - Simple and Working
  */
 const LavaLampBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>();
   const blobsRef = useRef<Blob[]>([]);
   const lastFrameTimeRef = useRef<number>(0);
-  const isScrollingRef = useRef<boolean>(false);
   
   const capabilities = useDevicePerformance();
   const settings = performanceSettings[capabilities.tier];
 
-  // FIXED: Scroll handling
-  useEffect(() => {
-    let scrollTimeout: NodeJS.Timeout;
-    
-    const handleScroll = () => {
-      isScrollingRef.current = true;
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        isScrollingRef.current = false;
-      }, 100);
-    };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(scrollTimeout);
-    };
-  }, []);
-
   const createBlobs = useCallback((width: number, height: number) => {
-    if (capabilities.prefersReducedMotion) {
-      blobsRef.current = [];
-      return;
-    }
-
     const count = settings.blobCount;
     const colors = [
       'rgba(59, 130, 246, 0.7)',
@@ -261,7 +230,7 @@ const LavaLampBackground: React.FC = () => {
     }
     
     blobsRef.current = newBlobs;
-  }, [capabilities.prefersReducedMotion, settings.blobCount]);
+  }, [settings.blobCount]);
 
   const animate = useCallback((currentTime: number) => {
     if (!canvasRef.current) return;
@@ -281,16 +250,10 @@ const LavaLampBackground: React.FC = () => {
     
     lastFrameTimeRef.current = currentTime;
     
-    // Skip expensive operations during scrolling on lower-end devices
-    if (isScrollingRef.current && capabilities.tier === 'low') {
-      animationFrameRef.current = requestAnimationFrame(animate);
-      return;
-    }
-    
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // FIXED: Always draw background gradient
+    // ALWAYS draw background gradient
     const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
     gradient.addColorStop(0, '#f0f9ff');
     gradient.addColorStop(0.3, '#e0f2fe');
@@ -299,8 +262,8 @@ const LavaLampBackground: React.FC = () => {
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Apply blur for metaball effect
-    if (capabilities.tier !== 'low') {
+    // Only add blur if not reduced motion
+    if (!capabilities.prefersReducedMotion) {
       ctx.filter = `blur(${settings.blurRadius}px)`;
     }
     
@@ -317,7 +280,7 @@ const LavaLampBackground: React.FC = () => {
     ctx.filter = 'none';
     
     // Metaball effect
-    if (capabilities.tier !== 'low') {
+    if (!capabilities.prefersReducedMotion) {
       ctx.globalCompositeOperation = 'source-atop';
       ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -359,25 +322,12 @@ const LavaLampBackground: React.FC = () => {
     
     window.addEventListener('resize', debouncedResize, { passive: true });
 
-    // Intersection Observer for performance
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !animationFrameRef.current) {
-          lastFrameTimeRef.current = performance.now();
-          animationFrameRef.current = requestAnimationFrame(animate);
-        } else if (!entry.isIntersecting && animationFrameRef.current) {
-          cancelAnimationFrame(animationFrameRef.current);
-          animationFrameRef.current = undefined;
-        }
-      },
-      { threshold: 0.01 }
-    );
-
-    observer.observe(canvas);
+    // Start animation immediately
+    lastFrameTimeRef.current = performance.now();
+    animationFrameRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('resize', debouncedResize);
-      observer.unobserve(canvas);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -385,7 +335,7 @@ const LavaLampBackground: React.FC = () => {
     };
   }, [animate, createBlobs, capabilities]);
 
-  // FIXED: Fallback for reduced motion
+  // Fallback for reduced motion
   if (capabilities.prefersReducedMotion) {
     return (
       <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-sky-50 to-sky-200 -z-10" />
@@ -401,7 +351,6 @@ const LavaLampBackground: React.FC = () => {
           transform: 'translate3d(0, 0, 0)',
           backfaceVisibility: 'hidden',
           WebkitBackfaceVisibility: 'hidden',
-          willChange: isScrollingRef.current ? 'auto' : 'transform',
           pointerEvents: 'none',
         }}
       />
