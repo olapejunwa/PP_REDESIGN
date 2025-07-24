@@ -116,17 +116,7 @@ html {
 
 /* Mobile-optimized animations */
 @media (max-width: 767px) {
-  /* Disable most animations and transitions on mobile, but allow specific optimized ones */
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  
-  /* Exception: Allow optimized service icon animations on mobile */
+  /* Mobile-specific animation optimizations */
   .animate-file-text *,
   .animate-trending-up *,
   .animate-file-text,
@@ -135,38 +125,20 @@ html {
     animation-iteration-count: infinite !important;
   }
   
-  /* Exception: Allow optimized star icon animations on mobile */
-  .chart-bars rect {
-    transition-duration: 0.3s !important;
+  /* Mobile performance optimizations for specific elements */
+  svg {
+    shape-rendering: optimizeSpeed;
+    image-rendering: -webkit-optimize-contrast;
   }
   
-  .magnifying-glass {
-    transition-duration: 0.5s !important;
-  }
-  
+  /* Hardware acceleration for mobile animations */
+  .chart-bars rect,
+  .magnifying-glass,
   .sparkles circle {
-    animation-duration: 1s !important;
-    animation-iteration-count: infinite !important;
-  }
-  
-  /* Reset transforms to prevent layout issues */
-  .translate-y-8,
-  .translate-x-8,
-  .-translate-x-8 {
-    transform: none !important;
-  }
-  
-  /* Disable scroll animations */
-  html {
-    scroll-behavior: auto !important;
-  }
-  
-  /* Mobile performance optimizations */
-  * {
-    -webkit-backface-visibility: hidden !important;
-    backface-visibility: hidden !important;
-    -webkit-transform: translate3d(0, 0, 0) !important;
-    transform: translate3d(0, 0, 0) !important;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -195,6 +167,15 @@ html {
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
+  /* Disable all animations for accessibility */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
   .gpu-accelerated {
     will-change: auto;
   }
@@ -204,6 +185,11 @@ html {
   }
   
   .magnifying-glass {
+    transition: none !important;
+  }
+  
+  /* Static fallback for reduced motion */
+  .chart-bars rect {
     transition: none !important;
   }
 }
