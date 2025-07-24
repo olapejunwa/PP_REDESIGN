@@ -21,7 +21,7 @@ const AboutUs = () => {
     {
         name: "Oyindamola Adebowale",
         role: "Product Manager",
-        image: "images/Oyinda.JPG",
+        image: "public/images/Oyinda.jpg",
         description: "A passionate product manager dedicated to building user-centric financial tools that empower businesses to thrive and succeed in a competitive market."
     }
   ];
@@ -134,7 +134,7 @@ Whether you're a startup, a small business, or a woman selling in the open marke
           <div className="flex justify-center">
             {founders.map((founder, index) => (
               <div key={index} className="text-center max-w-sm">
-                <div className="w-64 h-80 mx-auto mb-6 rounded-2xl overflow-hidden shadow-lg">
+                <div className="w-64 h-64 mx-auto mb-6 rounded-full overflow-hidden shadow-lg">
                   <img
                     src={founder.image}
                     alt={founder.name}
@@ -165,7 +165,7 @@ Whether you're a startup, a small business, or a woman selling in the open marke
           <div className="flex justify-center">
             {team.map((member, index) => (
               <div key={index} className="text-center max-w-sm">
-                <div className="w-64 h-80 mx-auto mb-6 rounded-2xl overflow-hidden shadow-lg">
+                <div className="w-64 h-64 mx-auto mb-6 rounded-full overflow-hidden shadow-lg">
                   <img
                     src={member.image}
                     alt={member.name}
