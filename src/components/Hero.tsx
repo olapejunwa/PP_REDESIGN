@@ -14,13 +14,13 @@ const Hero = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <AnimatedSection animationType="fadeUp" delay={200}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-primary font-unified-bold text-gray-900 leading-unified-tight">
-              YOUR PARTNER IN
+              Simplifying Finance for Businesses at Every Level.
             </h1>
           </AnimatedSection>
           
           <AnimatedSection animationType="fadeUp" delay={400}>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-primary font-unified-bold text-gray-900 mt-2 leading-unified-tight">
-              BOOKKEEPING SUCCESS
+              
             </h2>
           </AnimatedSection>
           
