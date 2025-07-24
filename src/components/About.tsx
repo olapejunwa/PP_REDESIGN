@@ -131,7 +131,8 @@ const About = () => {
           </AnimatedSection>
           <AnimatedSection animationType="fadeUp" delay={400}>
             <p className="text-unified-lg font-primary font-unified-normal text-gray-700 max-w-3xl mx-auto leading-unified-relaxed">
-              At Ploutos, we are on a mission to empower businesses of all sizes to manage their finances with ease and confidence through innovative bookkeeping solutions and creative software experiences, tools they, and world-class education.
+              Ploutos Page Limited is a fintech and professional services company helping MSMEs and market traders grow with smart, simple, and human‑centered bookkeeping and financial tools.
+Whether you're a startup, a small business, or a woman selling in the open market — we’ve got you covered.
             </p>
           </AnimatedSection>
         </AnimatedSection>
