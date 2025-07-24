@@ -1,21 +1,25 @@
 import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 
 /**
- * Optimized and Corrected LavaLampBackground Component
- *
- * FIXES IMPLEMENTED:
- * 1.  Movement Logic: Blobs now float in multiple directions using corrected velocity vectors.
- * 2.  Smooth Rendering: Hardware acceleration and proper device pixel ratio handling eliminate grainy/laggy visuals.
- * 3.  Scroll Twitching: Absolute positioning decouples the canvas from page scroll.
- * 4.  Performance: The animation is throttled and optimized for various devices.
+ * Optimized LavaLampBackground Component for Mobile Performance
+ * 
+ * Key Mobile Optimizations:
+ * - Hardware acceleration with transform3d and will-change
+ * - Reduced blob count and complexity on mobile
+ * - Frame rate throttling (30fps on mobile, 60fps on desktop)
+ * - Simplified rendering path for mobile devices
+ * - Memory-efficient blob management
+ * - Proper pixel density handling for high-DPI screens
+ * - Special exclusion from mobile animation fallbacks (critical UI component)
  */
 
-// Interface for device capability detection
 interface DeviceCapabilities {
   isMobile: boolean;
   isLowEnd: boolean;
-  prefersReducedMotion: boolean;
+  isHighEndMobile: boolean;
+  supportsHardwareAcceleration: boolean;
   devicePixelRatio: number;
+  prefersReducedMotion: boolean;
 }
 
 const LavaLampBackground: React.FC = () => {
@@ -24,143 +28,345 @@ const LavaLampBackground: React.FC = () => {
   const lastFrameTimeRef = useRef<number>(0);
   const blobsRef = useRef<Blob[]>([]);
 
-  // Memoized device capabilities detection for performance
+  // Memoized device capabilities detection
   const deviceCapabilities = useMemo((): DeviceCapabilities => {
     if (typeof window === 'undefined') {
-      return { isMobile: false, isLowEnd: false, prefersReducedMotion: false, devicePixelRatio: 1 };
+      return {
+        isMobile: false,
+        isLowEnd: false,
+        isHighEndMobile: false,
+        supportsHardwareAcceleration: true,
+        devicePixelRatio: 1,
+        prefersReducedMotion: false
+      };
     }
+
     const userAgent = navigator.userAgent.toLowerCase();
-    const isMobile = window.innerWidth < 768 || /android|iphone|ipad/i.test(userAgent);
-    const isLowEnd = isMobile && ((navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || (window.devicePixelRatio < 2));
+    const isMobile = window.innerWidth < 768 || /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+    
+    // Enhanced device detection for high-end mobile devices
+    const isHighEndMobile = isMobile && (
+      // iPhone 12 Pro Max and similar high-end devices (iOS 14+)
+      /iphone.*os (1[4-9]|[2-9][0-9])/.test(userAgent) ||
+      // Specific iPhone models that are high-end
+      /iphone1[2-9]|iphone[2-9][0-9]/.test(userAgent) ||
+      // High-end Android devices
+      (navigator.hardwareConcurrency >= 6) ||
+      (navigator.deviceMemory >= 4) ||
+      // High pixel density indicates premium device
+      (window.devicePixelRatio >= 2.5) ||
+      // Screen resolution indicators for high-end devices
+      (window.screen.width >= 390 && window.screen.height >= 844) // iPhone 12 Pro Max dimensions
+    );
+    
+    // Only consider truly low-end devices for fallback - be more restrictive
+    const isLowEnd = isMobile && !isHighEndMobile && (
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) ||
+      (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
+      (window.devicePixelRatio < 1.5) ||
+      // Old iOS versions
+      /iphone.*os ([1-9]|1[0-3])/.test(userAgent)
+    );
+    
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     
-    // FIX: Clamp device pixel ratio to prevent performance issues on high-DPI displays
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-    return { isMobile, isLowEnd, prefersReducedMotion, devicePixelRatio: dpr };
+    return {
+      isMobile,
+      isLowEnd,
+      isHighEndMobile,
+      supportsHardwareAcceleration: 'transform3d' in document.createElement('div').style,
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 3), // Limit DPR on mobile
+      prefersReducedMotion
+    };
   }, []);
 
-  // Blob class with corrected physics and movement
+  // Performance-optimized Blob class with mobile considerations
   class Blob {
     x: number;
     y: number;
     r: number;
+    color1: string;
+    color2: string;
     vx: number;
     vy: number;
-    color: string;
+    phase: number;
+    morphIntensity: number;
 
-    constructor(width: number, height: number, color: string) {
-      this.x = Math.random() * width;
-      this.y = Math.random() * height;
-      this.r = (Math.random() * 0.15 + 0.15) * Math.min(width, height);
-      this.color = color;
+    constructor(x: number, y: number, r: number, color1: string, color2: string) {
+      this.x = x;
+      this.y = y;
+      this.r = r;
+      this.color1 = color1;
+      this.color2 = color2;
       
-      const speed = deviceCapabilities.isLowEnd ? 0.5 : 1;
-      // FIX 1: Ensure blobs move in all directions, not just down.
-      // Math.random() - 0.5 creates a value between -0.5 and 0.5, allowing for negative (up/left) and positive (down/right) velocity.
-      this.vx = (Math.random() - 0.5) * speed;
-      this.vy = (Math.random() - 0.5) * speed;
+      // Reduced velocity on mobile for smoother performance
+      const speedMultiplier = deviceCapabilities.isMobile ? 0.8 : 1.2;
+      this.vx = (Math.random() - 0.5) * speedMultiplier;
+      this.vy = (Math.random() - 0.5) * speedMultiplier;
+      
+      this.phase = Math.random() * Math.PI * 2;
+      // Reduced morphing on mobile to save GPU resources
+      this.morphIntensity = deviceCapabilities.isMobile ? 0.05 : 0.1;
     }
 
-    update(width: number, height: number) {
-      // Apply velocity
-      this.x += this.vx;
-      this.y += this.vy;
+    // Optimized drawing with hardware acceleration hints
+    draw(ctx: CanvasRenderingContext2D) {
+      ctx.save();
+      
+      // Use hardware-accelerated transforms
+      ctx.translate(this.x, this.y);
+      
+      // Simplified gradient creation for mobile
+      const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.r);
+      gradient.addColorStop(0, this.color1);
+      gradient.addColorStop(0.7, this.color1);
+      gradient.addColorStop(1, this.color2);
+      ctx.fillStyle = gradient;
+      
+      ctx.beginPath();
+      
+      if (deviceCapabilities.isMobile || deviceCapabilities.prefersReducedMotion) {
+        // Simple circle on mobile for better performance
+        ctx.arc(0, 0, this.r, 0, Math.PI * 2);
+      } else {
+        // Morphing blob on desktop
+        const morphFactor = Math.sin(this.phase) * this.morphIntensity;
+        const radiusX = this.r * (1 + morphFactor);
+        const radiusY = this.r * (1 - morphFactor * 0.5);
+        
+        ctx.scale(radiusX / this.r, radiusY / this.r);
+        ctx.arc(0, 0, this.r, 0, Math.PI * 2);
+      }
+      
+      ctx.fill();
+      ctx.restore();
+    }
 
-      // Reverse direction when hitting horizontal or vertical boundaries to keep them floating
+    // Optimized update with frame-rate independent movement
+    update(width: number, height: number, deltaTime: number) {
+      // Throttle morphing updates on mobile
+      if (!deviceCapabilities.isMobile) {
+        this.phase += deltaTime * 0.001;
+      }
+      
+      // Simplified physics on mobile
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const distanceToCenter = Math.sqrt(
+        Math.pow(this.x - centerX, 2) + Math.pow(this.y - centerY, 2)
+      );
+      
+      // Gentle center attraction
+      if (distanceToCenter > Math.min(width, height) * 0.35) {
+        const attractionForce = deviceCapabilities.isMobile ? 0.00005 : 0.0001;
+        this.vx += (centerX - this.x) * attractionForce;
+        this.vy += (centerY - this.y) * attractionForce;
+      }
+      
+      // Boundary collision with performance-optimized checks
       if (this.x < this.r || this.x > width - this.r) {
-        this.vx *= -1;
+        this.vx *= -0.7;
+        this.x = Math.max(this.r, Math.min(width - this.r, this.x));
       }
       if (this.y < this.r || this.y > height - this.r) {
-        this.vy *= -1;
+        this.vy *= -0.7;
+        this.y = Math.max(this.r, Math.min(height - this.r, this.y));
       }
-    }
-
-    draw(ctx: CanvasRenderingContext2D) {
-      ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fill();
+      
+      // Apply velocity with frame-rate independent movement
+      const normalizedDelta = deltaTime / 16.67; // Normalize to 60fps baseline
+      this.vx *= 0.998;
+      this.vy *= 0.998;
+      this.x += this.vx * normalizedDelta;
+      this.y += this.vy * normalizedDelta;
     }
   }
 
-  // Memoized function to create blobs
+  // Memoized blob creation with mobile optimization
   const createBlobs = useCallback((width: number, height: number) => {
+    const baseRadius = Math.min(width, height) * (deviceCapabilities.isMobile ? 0.18 : 0.12);
+    const radiusVariation = baseRadius * 0.4;
+    
+    // High-contrast colors optimized for mobile displays
+    const colors = [
+      { primary: 'rgba(59, 130, 246, 0.7)', secondary: 'rgba(37, 99, 235, 0.1)' },
+      { primary: 'rgba(96, 165, 250, 0.6)', secondary: 'rgba(59, 130, 246, 0.1)' },
+      { primary: 'rgba(147, 197, 253, 0.5)', secondary: 'rgba(96, 165, 250, 0.1)' },
+      { primary: 'rgba(191, 219, 254, 0.4)', secondary: 'rgba(147, 197, 253, 0.1)' },
+    ];
+    
+    // CRITICAL: LavaLampBackground ALWAYS renders - prioritize high-end mobile devices
     if (deviceCapabilities.prefersReducedMotion) {
-      blobsRef.current = [];
-      return;
+      // Respect accessibility preferences with minimal animation
+      blobsRef.current = [
+        new Blob(width * 0.3, height * 0.4, baseRadius, colors[0].primary, colors[0].secondary),
+      ];
+    } else if (deviceCapabilities.isHighEndMobile) {
+      // iPhone 12 Pro Max and similar high-end devices get FULL experience
+      blobsRef.current = [
+        new Blob(width * 0.2, height * 0.3, baseRadius, colors[0].primary, colors[0].secondary),
+        new Blob(width * 0.8, height * 0.7, baseRadius + radiusVariation, colors[1].primary, colors[1].secondary),
+        new Blob(width * 0.5, height * 0.5, baseRadius - radiusVariation * 0.2, colors[2].primary, colors[2].secondary),
+        new Blob(width * 0.15, height * 0.8, baseRadius - radiusVariation * 0.4, colors[3].primary, colors[3].secondary),
+      ];
+    } else if (deviceCapabilities.isLowEnd) {
+      // Only truly low-end devices get reduced blob count
+      blobsRef.current = [
+        new Blob(width * 0.25, height * 0.35, baseRadius, colors[0].primary, colors[0].secondary),
+        new Blob(width * 0.75, height * 0.65, baseRadius + radiusVariation, colors[1].primary, colors[1].secondary),
+      ];
+    } else if (deviceCapabilities.isMobile) {
+      // Standard mobile devices get moderate experience
+      blobsRef.current = [
+        new Blob(width * 0.25, height * 0.35, baseRadius, colors[0].primary, colors[0].secondary),
+        new Blob(width * 0.75, height * 0.65, baseRadius + radiusVariation, colors[1].primary, colors[1].secondary),
+        new Blob(width * 0.5, height * 0.5, baseRadius - radiusVariation * 0.2, colors[2].primary, colors[2].secondary),
+      ];
+    } else {
+      // Desktop gets full experience
+      blobsRef.current = [
+        new Blob(width * 0.2, height * 0.3, baseRadius, colors[0].primary, colors[0].secondary),
+        new Blob(width * 0.8, height * 0.7, baseRadius + radiusVariation, colors[1].primary, colors[1].secondary),
+        new Blob(width * 0.5, height * 0.5, baseRadius - radiusVariation * 0.2, colors[2].primary, colors[2].secondary),
+        new Blob(width * 0.15, height * 0.8, baseRadius - radiusVariation * 0.4, colors[3].primary, colors[3].secondary),
+      ];
     }
-    const blobCount = deviceCapabilities.isLowEnd ? 3 : 5;
-    const colors = ['rgba(59, 130, 246, 0.6)', 'rgba(96, 165, 250, 0.6)', 'rgba(147, 197, 253, 0.6)'];
-    blobsRef.current = Array.from({ length: blobCount }, (_, i) => new Blob(width, height, colors[i % colors.length]));
   }, [deviceCapabilities]);
 
-  // Main animation loop
-  const animate = useCallback(() => {
+  // Frame-rate throttled animation loop
+  const animate = useCallback((currentTime: number) => {
     if (!canvasRef.current) return;
+    
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Frame rate throttling: 60fps on high-end mobile (iPhone 12 Pro Max), 30fps on low-end, 60fps desktop
+    const targetFrameRate = deviceCapabilities.isHighEndMobile ? 16.67 : // 60fps for iPhone 12 Pro Max
+                           deviceCapabilities.isLowEnd ? 33.33 : 
+                           deviceCapabilities.isMobile ? 33.33 : 16.67; // ms per frame
+    const deltaTime = currentTime - lastFrameTimeRef.current;
+    
+    if (deltaTime < targetFrameRate) {
+      animationFrameRef.current = requestAnimationFrame(animate);
+      return;
+    }
+    
+    lastFrameTimeRef.current = currentTime;
+    
+    // Clear canvas with optimized background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Apply a subtle blur filter for the "lava" effect and smoother appearance
-    ctx.filter = 'blur(40px)';
-
+    
+    // Background gradient - enhanced for high-end mobile devices
+    if (deviceCapabilities.isLowEnd) {
+      // Simplest gradient for low-end devices
+      const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      bgGradient.addColorStop(0, '#f0f9ff');
+      bgGradient.addColorStop(1, '#7dd3fc');
+      ctx.fillStyle = bgGradient;
+    } else if (deviceCapabilities.isHighEndMobile) {
+      // Full desktop-quality gradient for iPhone 12 Pro Max and similar
+      const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      bgGradient.addColorStop(0, '#f0f9ff');
+      bgGradient.addColorStop(0.3, '#e0f2fe');
+      bgGradient.addColorStop(0.7, '#7dd3fc');
+      bgGradient.addColorStop(1, '#38bdf8');
+      ctx.fillStyle = bgGradient;
+    } else if (deviceCapabilities.isMobile) {
+      // Standard mobile gradient
+      const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      bgGradient.addColorStop(0, '#f0f9ff');
+      bgGradient.addColorStop(0.5, '#e0f2fe');
+      bgGradient.addColorStop(1, '#7dd3fc');
+      ctx.fillStyle = bgGradient;
+    } else {
+      // Full desktop gradient
+      const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      bgGradient.addColorStop(0, '#f0f9ff');
+      bgGradient.addColorStop(0.3, '#e0f2fe');
+      bgGradient.addColorStop(0.7, '#7dd3fc');
+      bgGradient.addColorStop(1, '#38bdf8');
+      ctx.fillStyle = bgGradient;
+    }
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Update and draw blobs with performance monitoring
     blobsRef.current.forEach(blob => {
-      blob.update(canvas.width, canvas.height);
+      blob.update(canvas.width, canvas.height, deltaTime);
       blob.draw(ctx);
     });
 
     animationFrameRef.current = requestAnimationFrame(animate);
-  }, []);
+  }, [deviceCapabilities]);
 
-  // Resize handler
+  // Optimized resize handler with debouncing
   const handleResize = useCallback(() => {
     if (!canvasRef.current) return;
+    
     const canvas = canvasRef.current;
-    const rect = canvas.parentElement!.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
+    
+    // Optimized pixel ratio handling for mobile
     const dpr = deviceCapabilities.devicePixelRatio;
-
-    // FIX 2: Set canvas resolution based on Device Pixel Ratio for crisp rendering
+    
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
-    canvas.style.width = `${rect.width}px`;
-    canvas.style.height = `${rect.height}px`;
-
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      ctx.scale(dpr, dpr); // Scale context to match DPR
+      ctx.scale(dpr, dpr);
+      
+      // Rendering settings optimized for device capability
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = deviceCapabilities.isHighEndMobile ? 'high' : 
+                                 deviceCapabilities.isMobile ? 'medium' : 'high';
     }
     
     createBlobs(rect.width, rect.height);
   }, [createBlobs, deviceCapabilities]);
 
-  // Effect to initialize and clean up animation
   useEffect(() => {
-    handleResize();
-    window.addEventListener('resize', handleResize, { passive: true });
+    // Debounced resize handler for better performance
+    let resizeTimeout: NodeJS.Timeout;
+    const debouncedResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(handleResize, deviceCapabilities.isHighEndMobile ? 100 : 
+                                              deviceCapabilities.isMobile ? 200 : 100);
+    };
+
+    window.addEventListener('resize', debouncedResize, { passive: true });
+    handleResize(); // Initial setup
     
+    // CRITICAL: ALWAYS start animation for LavaLampBackground - it's essential for the hero section
+    // Force animation even on mobile devices, only respect reduced motion for accessibility
     animationFrameRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', debouncedResize);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
+      clearTimeout(resizeTimeout);
     };
   }, [handleResize, animate]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      // FIX 3: Use absolute positioning to prevent twitching on scroll.
-      // This detaches the canvas from the document's scrollable flow.
-      className="absolute top-0 left-0 -z-10 w-full h-full"
+    <canvas 
+      ref={canvasRef} 
+      className="absolute inset-0 w-full h-full"
       style={{
-        // FIX 2 & 4: Force hardware acceleration for smooth animation.
-        willChange: 'transform',
-        transform: 'translate3d(0, 0, 0)',
+        // Hardware acceleration and performance optimizations
+        willChange: deviceCapabilities.prefersReducedMotion ? 'auto' : 'transform, opacity',
+        transform: 'translate3d(0, 0, 0)', // Force hardware acceleration
+        backfaceVisibility: 'hidden', // Prevent flickering
+        WebkitBackfaceVisibility: 'hidden',
+        imageRendering: deviceCapabilities.isLowEnd ? '-webkit-optimize-contrast' : 'auto',
+        touchAction: 'none', // Prevent scroll interference on mobile
+        // Anti-aliasing for crisp rendering
+        WebkitFontSmoothing: 'antialiased',
+        MozOsxFontSmoothing: 'grayscale',
       }}
     />
   );
