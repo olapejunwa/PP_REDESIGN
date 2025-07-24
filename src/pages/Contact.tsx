@@ -29,7 +29,7 @@ const Contact = () => {
     const faqs = [
     {
       question: "How much does Pepcode cost?",
-      answer: "We offer a range of pricing plans to suit different business needs and budgets. Please contact us for a custom quote or visit our services pages for more details."
+      answer: "We offer a range of pricing plans to suit different business needs and budgets. Please contact us for a custom quote.
     },
     {
       question: "Can I use ÓWÀ without a smartphone?",
