@@ -125,7 +125,7 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection animationType="fadeUp" className="text-center mb-16">
           <AnimatedSection animationType="fadeUp" delay={200}>
-            <h2 className="text-unified-3xl md:text-unified-3xl font-primary font-unified-bold text-gray-900 mb-4">
+            <h2 className="text-unified-4xl md:text-unified-3xl font-primary font-unified-bold text-gray-900 mb-4">
               We're empowering you for financial excellence
             </h2>
           </AnimatedSection>
