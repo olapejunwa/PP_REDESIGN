@@ -1,32 +1,55 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import AboutUs from './pages/AboutUs';
-import Products from './pages/Products';
-import BookkeepingServices from './pages/BookkeepingServices';
-import TaxServices from './pages/TaxServices';
-import InventoryManagement from './pages/InventoryManagement';
-import Contact from './pages/Contact';
-import Careers from './pages/Careers';
-import Blog from './pages/Blog'; // Import the new Blog component
-import BlogCMS from './components/BlogCMS'; // Import the new BlogCMS component
+import { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+
+import Navigation from "./components/Navigation";
+import HomePage from "./pages/HomePage";
+import AboutUs from "./pages/AboutUs";
+import TaxServices from "./pages/TaxServices";
+import BookkeepingServices from "./pages/BookkeepingServices";
+import InventoryManagement from "./pages/InventoryManagement";
+import Products from "./pages/Products";
+import Blog from "./pages/Blog";
+import Careers from "./pages/Careers";
+import Contact from "./pages/Contact";
+import Footer from "./components/Footer";
 
 function App() {
+  const { pathname } = useLocation();
+
+  // FIX: This useEffect hook listens for changes in the URL's pathname.
+  // When the pathname changes (i.e., you navigate to a new page),
+  // it scrolls the window to the top (0, 0).
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  const location = useLocation();
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/bookkeeping-services" element={<BookkeepingServices />} />
-        <Route path="/tax-services" element={<TaxServices />} />
-        <Route path="/inventory-management" element={<InventoryManagement />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/careers" element={<Careers />} />
-        <Route path="/blog" element={<Blog />} /> {/* Add the new Blog route */}
-        <Route path="/admin/blog" element={<BlogCMS />} /> {/* Add the new BlogCMS route */}
-      </Routes>
-    </Router>
+    <div className="bg-primary-light dark:bg-primary-dark">
+      <Navigation />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route index element={<HomePage />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/tax-services" element={<TaxServices />} />
+          <Route
+            path="/bookkeeping-services"
+            element={<BookkeepingServices />}
+          />
+          <Route
+            path="/inventory-management"
+            element={<InventoryManagement />}
+          />
+          <Route path="/products" element={<Products />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </AnimatePresence>
+      <Footer />
+    </div>
   );
 }
 
