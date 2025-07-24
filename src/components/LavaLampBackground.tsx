@@ -10,11 +10,13 @@ import React, { useRef, useEffect, useCallback, useMemo } from 'react';
  * - Simplified rendering path for mobile devices
  * - Memory-efficient blob management
  * - Proper pixel density handling for high-DPI screens
+ * - Special exclusion from mobile animation fallbacks (critical UI component)
  */
 
 interface DeviceCapabilities {
   isMobile: boolean;
   isLowEnd: boolean;
+  isHighEndMobile: boolean;
   supportsHardwareAcceleration: boolean;
   devicePixelRatio: number;
   prefersReducedMotion: boolean;
@@ -32,6 +34,7 @@ const LavaLampBackground: React.FC = () => {
       return {
         isMobile: false,
         isLowEnd: false,
+        isHighEndMobile: false,
         supportsHardwareAcceleration: true,
         devicePixelRatio: 1,
         prefersReducedMotion: false
@@ -39,12 +42,32 @@ const LavaLampBackground: React.FC = () => {
     }
 
     const isMobile = window.innerWidth < 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const isLowEnd = isMobile && (navigator.hardwareConcurrency <= 2 || navigator.deviceMemory <= 2);
+    
+    // Enhanced device detection for high-end mobile devices
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isHighEndMobile = isMobile && (
+      // iPhone 12 Pro Max and similar high-end devices
+      /iphone.*os (14|15|16|17)/.test(userAgent) ||
+      // High-end Android devices
+      (navigator.hardwareConcurrency >= 6) ||
+      (navigator.deviceMemory >= 4) ||
+      // High pixel density indicates premium device
+      (window.devicePixelRatio >= 3)
+    );
+    
+    // Only consider truly low-end devices for fallback
+    const isLowEnd = isMobile && !isHighEndMobile && (
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) ||
+      (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
+      (window.devicePixelRatio < 2)
+    );
+    
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     
     return {
       isMobile,
       isLowEnd,
+      isHighEndMobile,
       supportsHardwareAcceleration: 'transform3d' in document.createElement('div').style,
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 3), // Limit DPR on mobile
       prefersReducedMotion
@@ -166,17 +189,27 @@ const LavaLampBackground: React.FC = () => {
       { primary: 'rgba(191, 219, 254, 0.4)', secondary: 'rgba(147, 197, 253, 0.1)' },
     ];
     
-    // Reduced blob count on mobile and low-end devices
-    if (deviceCapabilities.isLowEnd || deviceCapabilities.prefersReducedMotion) {
+    // CRITICAL: LavaLampBackground always renders - only reduce complexity for truly low-end devices
+    if (deviceCapabilities.prefersReducedMotion) {
+      // Respect accessibility preferences with minimal animation
       blobsRef.current = [
         new Blob(width * 0.3, height * 0.4, baseRadius, colors[0].primary, colors[0].secondary),
       ];
-    } else if (deviceCapabilities.isMobile) {
+    } else if (deviceCapabilities.isLowEnd && !deviceCapabilities.isHighEndMobile) {
+      // Only truly low-end devices get reduced blob count
       blobsRef.current = [
         new Blob(width * 0.25, height * 0.35, baseRadius, colors[0].primary, colors[0].secondary),
         new Blob(width * 0.75, height * 0.65, baseRadius + radiusVariation, colors[1].primary, colors[1].secondary),
       ];
+    } else if (deviceCapabilities.isMobile) {
+      // High-end mobile devices (iPhone 12 Pro Max, etc.) get full mobile experience
+      blobsRef.current = [
+        new Blob(width * 0.25, height * 0.35, baseRadius, colors[0].primary, colors[0].secondary),
+        new Blob(width * 0.75, height * 0.65, baseRadius + radiusVariation, colors[1].primary, colors[1].secondary),
+        new Blob(width * 0.5, height * 0.5, baseRadius - radiusVariation * 0.2, colors[2].primary, colors[2].secondary),
+      ];
     } else {
+      // Desktop gets full experience
       blobsRef.current = [
         new Blob(width * 0.2, height * 0.3, baseRadius, colors[0].primary, colors[0].secondary),
         new Blob(width * 0.8, height * 0.7, baseRadius + radiusVariation, colors[1].primary, colors[1].secondary),
@@ -194,8 +227,10 @@ const LavaLampBackground: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Frame rate throttling: 30fps on mobile, 60fps on desktop
-    const targetFrameRate = deviceCapabilities.isMobile ? 33.33 : 16.67; // ms per frame
+    // Frame rate throttling: 30fps on low-end mobile, 45fps on high-end mobile, 60fps on desktop
+    const targetFrameRate = deviceCapabilities.isLowEnd ? 33.33 : 
+                           deviceCapabilities.isHighEndMobile ? 22.22 : 
+                           deviceCapabilities.isMobile ? 33.33 : 16.67; // ms per frame
     const deltaTime = currentTime - lastFrameTimeRef.current;
     
     if (deltaTime < targetFrameRate) {
@@ -208,13 +243,22 @@ const LavaLampBackground: React.FC = () => {
     // Clear canvas with optimized background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Simplified background gradient for mobile
-    if (deviceCapabilities.isMobile) {
+    // Background gradient optimization based on device capability
+    if (deviceCapabilities.isLowEnd) {
+      // Simplest gradient for low-end devices
       const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       bgGradient.addColorStop(0, '#f0f9ff');
       bgGradient.addColorStop(1, '#7dd3fc');
       ctx.fillStyle = bgGradient;
+    } else if (deviceCapabilities.isMobile) {
+      // Enhanced mobile gradient for high-end devices
+      const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      bgGradient.addColorStop(0, '#f0f9ff');
+      bgGradient.addColorStop(0.5, '#e0f2fe');
+      bgGradient.addColorStop(1, '#7dd3fc');
+      ctx.fillStyle = bgGradient;
     } else {
+      // Full desktop gradient
       const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       bgGradient.addColorStop(0, '#f0f9ff');
       bgGradient.addColorStop(0.3, '#e0f2fe');
@@ -271,9 +315,13 @@ const LavaLampBackground: React.FC = () => {
     window.addEventListener('resize', debouncedResize, { passive: true });
     handleResize(); // Initial setup
     
-    // Start animation with reduced motion check
+    // CRITICAL: Always start animation for LavaLampBackground (hero section requirement)
+    // Only respect reduced motion preference for accessibility
     if (!deviceCapabilities.prefersReducedMotion) {
       animationFrameRef.current = requestAnimationFrame(animate);
+    } else {
+      // Even with reduced motion, show static background
+      handleResize();
     }
 
     return () => {
@@ -291,11 +339,11 @@ const LavaLampBackground: React.FC = () => {
       className="absolute inset-0 w-full h-full"
       style={{
         // Hardware acceleration and performance optimizations
-        willChange: 'transform, opacity',
+        willChange: deviceCapabilities.prefersReducedMotion ? 'auto' : 'transform, opacity',
         transform: 'translate3d(0, 0, 0)', // Force hardware acceleration
         backfaceVisibility: 'hidden', // Prevent flickering
         WebkitBackfaceVisibility: 'hidden',
-        imageRendering: deviceCapabilities.isMobile ? '-webkit-optimize-contrast' : 'auto',
+        imageRendering: deviceCapabilities.isLowEnd ? '-webkit-optimize-contrast' : 'auto',
         touchAction: 'none', // Prevent scroll interference on mobile
         // Anti-aliasing for crisp rendering
         WebkitFontSmoothing: 'antialiased',
