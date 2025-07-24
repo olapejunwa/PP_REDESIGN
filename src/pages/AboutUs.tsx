@@ -119,7 +119,7 @@ Whether you're a startup, a small business, or a woman selling in the open marke
                 <img
                   src={client.src}
                   alt={client.alt}
-                  className="h-12 lg:h-16 object-contain transition-transform duration-300 ease-in-out hover:scale-110"
+                  className="h-24 lg:h-32 object-contain transition-transform duration-300 ease-in-out hover:scale-110"
                 />
               </div>
             ))}
