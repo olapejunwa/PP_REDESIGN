@@ -37,7 +37,8 @@ const LavaLampBackground: React.FC = () => {
               This is the key to the "gooey" effect.
             */
             filter: url(#goo);
-            background: #0c0c1d; /* Match hero background */
+            /* EDIT: Changed background to a dark navy blue */
+            background: #020C1B;
           }
 
           /* FIX: Define the keyframe animation for the blobs.
@@ -54,7 +55,8 @@ const LavaLampBackground: React.FC = () => {
           .blob {
             position: absolute;
             border-radius: 50%;
-            background: linear-gradient(45deg, #4f46e5, #c026d3);
+            /* EDIT: Changed gradient to shades of blue */
+            background: linear-gradient(45deg, #7ED3FC, #3B82F6);
             
             /* OPTIMIZATION: Use the 'will-change' property to hint to the browser
               that the transform property will be animated. This allows for pre-optimization.
