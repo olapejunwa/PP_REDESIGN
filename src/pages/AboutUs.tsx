@@ -21,7 +21,7 @@ const AboutUs = () => {
     {
         name: "Oyindamola Adebowale",
         role: "Product Manager",
-        image: "public/images/Oyinda.JPG",
+        image: "images/Oyinda.JPG",
         description: "A passionate product manager dedicated to building user-centric financial tools that empower businesses to thrive and succeed in a competitive market."
     }
   ];
