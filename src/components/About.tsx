@@ -4,7 +4,6 @@ import { useStaggeredAnimation } from '../hooks/useScrollAnimation';
 import AnimatedTargetIcon from './AnimatedTargetIcon.tsx';
 import AnimatedEyeIcon from './AnimatedEyeIcon.tsx';
 import AnimatedStarIcon from './AnimatedStarIcon.tsx';
-import { Target, Eye, Star } from 'lucide-react';
 
 // Custom hook to detect when an element enters the viewport
 const useInView = (options: IntersectionObserverInit) => {
@@ -51,13 +50,6 @@ const ValueItem = ({ value, index }: { value: any; index: number }) => {
   const [renderIcon, setRenderIcon] = useState(false);
   const isEven = index % 2 === 0;
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  
-  // Static icon mapping for mobile
-  const staticIcons = {
-    AnimatedTargetIcon: Target,
-    AnimatedEyeIcon: Eye,
-    AnimatedStarIcon: Star
-  };
 
   useEffect(() => {
     if (isMobile) {
@@ -85,16 +77,8 @@ const ValueItem = ({ value, index }: { value: any; index: number }) => {
       <div className={`${isMobile ? 'w-48 h-36' : 'w-64 h-48'} ${value.bgColor} rounded-2xl flex items-center justify-center flex-shrink-0 p-4 ${
         isMobile ? '' : 'transition-all duration-700 ease-out'
       } ${isMobile || isInView ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
-        {/* Render static icon on mobile, animated icon on desktop */}
-        {renderIcon && (
-          isMobile ? (
-            React.createElement(staticIcons[value.icon.name] || staticIcons.AnimatedTargetIcon, {
-              className: "w-24 h-24 text-white"
-            })
-          ) : (
-            <value.icon />
-          )
-        )}
+        {/* The icon is only rendered after the pre-transition has started, triggering its animation. */}
+        {renderIcon && <value.icon />}
       </div>
 
       {/* Text Content Container with its own transition */}
@@ -127,7 +111,7 @@ const About = () => {
       icon: AnimatedStarIcon,
       title: "Insightful Reporting",
       description: "Our bookkeeping software provides real-time insights and business finances through customizable reports and dashboards. By offering valuable financial insights, we empower our customers to make informed business decisions.",
-      bgColor: 'bg-[#5D6467]'
+      bgColor: 'bg-[#3C00FF]'
     }
   ];
 
