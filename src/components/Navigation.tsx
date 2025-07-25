@@ -15,6 +15,10 @@ const Navigation = () => {
   // State to hold the timer IDs for dropdowns
   const [companyCloseTimer, setCompanyCloseTimer] = useState<NodeJS.Timeout | null>(null);
   const [productCloseTimer, setProductCloseTimer] = useState<NodeJS.Timeout | null>(null);
+  
+  // State for mobile dropdowns
+  const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,7 +77,15 @@ const Navigation = () => {
   
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-  }
+  };
+
+  const toggleMobileProducts = () => {
+    setIsMobileProductsOpen(!isMobileProductsOpen);
+  };
+  
+  const toggleMobileServices = () => {
+    setIsMobileServicesOpen(!isMobileServicesOpen);
+  };
 
   return (
     <>
@@ -151,107 +163,4 @@ const Navigation = () => {
                     }`} />
                   </button>
 
-                  {isProductDropdownOpen && (
-                    <div className="absolute top-full right-0 mt-2 w-[480px] bg-white rounded-2xl shadow-xl border border-gray-100 p-5 z-50 animate-in">
-                      <div className="flex gap-5">
-                        {/* Other Services - Left side */}
-                        <div className="flex-1 space-y-1">
-                          <div className="px-4 py-2 text-sm font-semibold text-gray-500 uppercase tracking-wide">
-                            Other Services
-                          </div>
-                          <Link to="/bookkeeping-services" className="flex items-center space-x-4 px-4 py-3 text-base text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
-                            <BookOpen className="w-5 h-5 text-blue-600" />
-                            <span className="font-medium">Bookkeeping Services</span>
-                          </Link>
-                          <Link to="/tax-services" className="flex items-center space-x-4 px-4 py-3 text-base text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
-                            <Calculator className="w-5 h-5 text-blue-600" />
-                            <span className="font-medium">Tax Services</span>
-                          </Link>
-                          <Link to="/inventory-management" className="flex items-center space-x-4 px-4 py-3 text-base text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 hover:text-blue-600">
-                            <Package className="w-5 h-5 text-blue-600" />
-                            <span className="font-medium">Inventory Management</span>
-                          </Link>
-                        </div>
-
-                        {/* Main Products - Right side cards */}
-                        <div className="w-64 space-y-3">
-                          <div className="px-4 py-2 text-sm font-semibold text-gray-500 uppercase tracking-wide">
-                            Main Products
-                          </div>
-
-                          {/* PEPCODE */}
-                          <a href="https://pepcodeinc.com/" target="_blank" rel="noopener noreferrer" className="flex items-center p-4 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                            <img src="/images/pepcode logo.webp" alt="PEPCODE Logo" className="w-10 h-10 mr-4 object-contain"/>
-                            <div>
-                                <div className="font-semibold text-blue-900 text-base">PEPCODE</div>
-                                <div className="text-sm text-blue-700 mt-1">Bookkeeping Software</div>
-                            </div>
-                          </a>
-
-                          {/* AUDITME */}
-                          <a href="https://auditme.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-4 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                              <img src="/images/auditme.webp" alt="AUDITME Logo" className="w-10 h-10 mr-4 object-contain"/>
-                              <div>
-                                  <div className="font-semibold text-blue-900 text-base">AUDITME</div>
-                                  <div className="text-sm text-blue-700 mt-1">Audit Platform</div>
-                              </div>
-                          </a>
-
-                          {/* OWA by PEPCODE */}
-                          <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="flex items-center p-4 hover:bg-blue-50 rounded-xl transition-all duration-200">
-                              <img src="/images/Owa Logo 3_062657.ai (A2 (Landscape)) (1).png" alt="OWA by PEPCODE Logo" className="w-10 h-10 mr-4 object-contain"/>
-                              <div>
-                                  <div className="font-semibold text-blue-900 text-base">OWA by PEPCODE</div>
-                                  <div className="text-sm text-blue-700 mt-1">Recordkeeping simplicity</div>
-                              </div>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                <Link to="/blog" className="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:bg-blue-50">
-                  <span>BLOG</span>
-                </Link>
-              </div>
-              
-              {/* Mobile Menu Button */}
-              <div className="md:hidden">
-                  <button onClick={toggleMobileMenu} className="p-2 rounded-full hover:bg-gray-100">
-                      {isMobileMenuOpen ? <X className="w-6 h-6"/> : <Menu className="w-6 h-6"/>}
-                  </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-      
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-          <div className="fixed inset-0 bg-white z-40 pt-20 md:hidden">
-              <div className="container mx-auto px-4 py-8 space-y-4">
-                  <Link to="/" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Home</Link>
-                  <Link to="/about-us" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>About Us</Link>
-                  <Link to="/contact" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Contact</Link>
-                  <Link to="/blog" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Blog</Link>
-                   <div className="pt-4 border-t">
-                      <h3 className="text-sm font-bold uppercase text-gray-500 mb-2">Main Products</h3>
-                      <a href="https://pepcodeinc.com/" target="_blank" rel="noopener noreferrer" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>PEPCODE</a>
-                      <a href="https://auditme.com.ng/" target="_blank" rel="noopener noreferrer" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>AUDITME</a>
-                      <a href="https://owabypepcode.com.ng/" target="_blank" rel="noopener noreferrer" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>OWA by PEPCODE</a>
-                  </div>
-                  <div className="pt-4 border-t">
-                      <h3 className="text-sm font-bold uppercase text-gray-500 mb-2">Other Services</h3>
-                      <Link to="/bookkeeping-services" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Bookkeeping Services</Link>
-                      <Link to="/tax-services" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Tax Services</Link>
-                      <Link to="/inventory-management" className="block text-lg font-semibold text-gray-800 hover:text-blue-600" onClick={toggleMobileMenu}>Inventory Management</Link>
-                  </div>
-              </div>
-          </div>
-      )}
-    </>
-  );
-};
-
-export default Navigation;
+                  {isProductDropdownOpen &&
