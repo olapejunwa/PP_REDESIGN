@@ -12,7 +12,6 @@ import Products from "./pages/Products";
 import Blog from "./pages/Blog";
 import Careers from "./pages/Careers";
 import Contact from "./pages/Contact";
-import Footer from "./components/Footer";
 
 function App() {
   const { pathname } = useLocation();
@@ -67,7 +66,6 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </AnimatePresence>
-      <Footer />
     </div>
   );
 }
