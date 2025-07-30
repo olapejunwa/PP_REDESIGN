@@ -11,11 +11,11 @@ const LogoCarousel = ({ logos, duration = 40 }) => {
     const extendedLogos = [...logos, ...logos];
 
     return (
-        <div className="slider" style={{ '--duration': `${duration}s`, '--logo-count': logos.length }}>
+        <div className="slider" style={{ '--duration': `${duration}s`, '--logo-count': logos.length, height: '200px' }}>
             <div className="slide-track">
                 {extendedLogos.map((logo, index) => (
                     <div className="slide" key={index}>
-                        <img src={logo.src} alt={logo.alt} className="mx-auto" />
+                        <img src={logo.src} alt={logo.alt} className="mx-auto max-w-full max-h-full object-contain" />
                     </div>
                 ))}
             </div>
