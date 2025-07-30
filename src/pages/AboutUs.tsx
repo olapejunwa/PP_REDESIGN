@@ -24,7 +24,7 @@ const AboutUs = () => {
         image: "/images/Oyinda.JPG",
         description: "Oyindamola Adebowale is a dynamic and results-oriented professional with a strong foundation in both Product Management and Social Media Management. Demonstrating a keen ability to translate technical expertise into strategic insights, driving effective communication and collaboration. Oyindamola possesses a unique skill set that allows for a holistic approach to problem-solving."
     }
-    {
+  {
         name: "Evelyn Ita",
         role: "Product Manager",
         image: "/images/EVELYN.jpg",
