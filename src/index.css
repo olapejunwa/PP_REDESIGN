@@ -443,7 +443,7 @@ html {
 
 .slider {
   background: white;
-  height: 200px;
+  height: 300px;
   margin: auto;
   overflow: hidden;
   position: relative;
@@ -454,9 +454,9 @@ html {
 .slider::after {
   background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
   content: "";
-  height: 200px;
+  height: 300px;
   position: absolute;
-  width: 200px;
+  width: 250px;
   z-index: 2;
 }
 
@@ -474,7 +474,7 @@ html {
 .slider .slide-track {
   animation: scroll var(--duration) linear infinite;
   display: flex;
-  width: calc(250px * var(--logo-count) * 2);
+  width: calc(350px * var(--logo-count) * 2);
 }
 
 .slider:hover .slide-track {
@@ -482,17 +482,17 @@ html {
 }
 
 .slider .slide {
-  height: 200px;
-  width: 250px;
+  height: 300px;
+  width: 350px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 .slider .slide img {
   max-width: 100%;
-  max-height: 140px;
+  max-height: 220px;
   object-fit: contain;
   filter: none;
   transition: filter 0.3s ease-in-out;

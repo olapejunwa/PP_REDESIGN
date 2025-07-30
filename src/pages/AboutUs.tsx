@@ -11,7 +11,7 @@ const LogoCarousel = ({ logos, duration = 40 }) => {
     const extendedLogos = [...logos, ...logos];
 
     return (
-        <div className="slider" style={{ '--duration': `${duration}s`, '--logo-count': logos.length, height: '200px' }}>
+        <div className="slider" style={{ '--duration': `${duration}s`, '--logo-count': logos.length, height: '300px' }}>
             <div className="slide-track">
                 {extendedLogos.map((logo, index) => (
                     <div className="slide" key={index}>
