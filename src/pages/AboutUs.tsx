@@ -11,11 +11,38 @@ const LogoCarousel = ({ logos, duration = 50 }) => {
     const extendedLogos = [...logos, ...logos];
 
     return (
-        <div className="slider" style={{ '--duration': `${duration}s`, '--logo-count': logos.length, height: '400px' }}>
+        <div className="slider" style={{ '--duration': `${duration}s`, '--logo-count': logos.length }}>
             <div className="slide-track">
                 {extendedLogos.map((logo, index) => (
                     <div className="slide" key={index}>
-                        <img src={logo.src} alt={logo.alt} className="mx-auto w-full h-full object-contain p-4" />
+                        <img 
+                            src={logo.src} 
+                            alt={logo.alt} 
+                            className="dynamic-logo" 
+                            onLoad={(e) => {
+                                const img = e.target as HTMLImageElement;
+                                const container = img.parentElement;
+                                if (container) {
+                                    const aspectRatio = img.naturalWidth / img.naturalHeight;
+                                    if (aspectRatio > 2) {
+                                        // Wide logo - prioritize width
+                                        img.style.width = '90%';
+                                        img.style.height = 'auto';
+                                        img.style.maxHeight = '80%';
+                                    } else if (aspectRatio < 0.8) {
+                                        // Tall logo - prioritize height
+                                        img.style.height = '90%';
+                                        img.style.width = 'auto';
+                                        img.style.maxWidth = '80%';
+                                    } else {
+                                        // Square-ish logo - balanced sizing
+                                        img.style.width = '80%';
+                                        img.style.height = '80%';
+                                        img.style.objectFit = 'contain';
+                                    }
+                                }
+                            }}
+                        />
                     </div>
                 ))}
             </div>
