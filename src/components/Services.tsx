@@ -126,7 +126,7 @@ const Services: React.FC = () => {
         }}
       >
         <div className="container mx-auto px-4">
-          <h2 className="text-unified-5xl md:text-unified-4xl font-primary font-unified-bold text-gray-900 mb-4 text-center">What do we Offer?</h2>
+          <h2 className="text-unified-5xl md:text-unified-4xl font-primary font-unified-bold text-gray-900 mb-4 text-center">What do we offer?</h2>
           <p className="text-unified-xl font-primary font-unified-normal text-gray-700 max-w-3xl mx-auto leading-unified-relaxed text-center mb-12">
             We provide cutting-edge solutions to streamline your business operations.
           </p>
