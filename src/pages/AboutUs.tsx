@@ -98,7 +98,7 @@ const AboutUs = () => {
     // Data for the new "Who Supports Us" section
     const investors = [
         { src: "/images/IN 1.jpeg", alt: "Investor Logo 1" },
-        { src: "/images/LBS.png", alt: "Investor Logo 2" },
+        { src: "/images/LBS-Logo-1.png", alt: "Investor Logo 2" },
         { src: "/images/IN 3.jpeg", alt: "Investor Logo 3" },
         { src: "/images/IN 4.jpeg", alt: "Investor Logo 4" },
         { src: "/images/IN 5.jpeg", alt: "Investor Logo 5" },
