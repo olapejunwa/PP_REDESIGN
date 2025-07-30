@@ -38,11 +38,11 @@ const AboutUs = () => {
   const whyPloutos = [
     {
       icon: Users,
-      text: "Built for real people, not just accountants"
+      text: "Built for real people, not just Accountants"
     },
     {
       icon: LifeBuoy,
-      text: "Human + digital support for every user level"
+      text: "Human + Digital support for every user level"
     },
     {
       icon: ShieldCheck,
