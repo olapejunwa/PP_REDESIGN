@@ -6,12 +6,17 @@ import Footer from '../components/Footer';
 import { Users, LifeBuoy, ShieldCheck, ThumbsUp } from 'lucide-react';
 
 // A reusable carousel component for logos
-const LogoCarousel = ({ logos, duration = 50 }) => {
+const LogoCarousel = ({ logos, duration = 50, height = '150px', slideWidth = '250px' }) => {
     // Duplicate logos for a seamless loop
     const extendedLogos = [...logos, ...logos];
 
     return (
-        <div className="slider" style={{ '--duration': `${duration}s`, '--logo-count': logos.length, height: '400px' }}>
+        <div className="slider" style={{ 
+                '--duration': `${duration}s`, 
+                '--logo-count': logos.length, 
+                '--slide-width': slideWidth,
+                height: height 
+            }}>
             <div className="slide-track">
                 {extendedLogos.map((logo, index) => (
                     <div className="slide" key={index}>
