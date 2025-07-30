@@ -22,7 +22,19 @@ const AboutUs = () => {
         name: "Oyindamola Adebowale",
         role: "Product Manager",
         image: "/images/Oyinda.JPG",
-        description: "A passionate product manager dedicated to building user-centric financial tools that empower businesses to thrive and succeed in a competitive market."
+        description: "Oyindamola Adebowale is a dynamic and results-oriented professional with a strong foundation in both Product Management and Social Media Management. Demonstrating a keen ability to translate technical expertise into strategic insights, driving effective communication and collaboration. Oyindamola possesses a unique skill set that allows for a holistic approach to problem-solving."
+    }
+    {
+        name: "Evelyn Ita",
+        role: "Product Manager",
+        image: "/images/EVELYN.jpg",
+        description: "Evelyn Ita is a Product Manager at Ploutos Page, where she oversees the development and delivery of user-centered financial tools that empower small businesses to grow sustainably. With a background in sales, customer service, and product design, Evelyn blends strategy with empathy ensuring every product, meets the real needs of everyday entrepreneurs. She is passionate about simplifying finance through accessible, functional, and inclusive solutions."
+    }
+  {
+        name: "Adebukola Deile-Olawale",
+        role: "Operations Manager",
+        image: "/images/ADEBUKOLA.jpg,
+        description: "A dynamic and adaptable professional with a diverse background spanning microbiology, public service and financial technology. Driven by a passion for systems improvement and operational effeciency, she leverages her analytical skills, public sector experience and process-oriented mindset to streamline workflows, optimize service delivery and align internal operations with strategic business goals."
     }
   ];
 
