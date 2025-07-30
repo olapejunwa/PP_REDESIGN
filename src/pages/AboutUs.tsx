@@ -64,6 +64,8 @@ const AboutUs = () => {
         { src: "/images/CL 5.jpg", alt: "Client Logo 5" },
         { src: "/images/CL 6.jpg", alt: "Client Logo 6" },
         { src: "/images/CL 7.webp", alt: "Client Logo 7" },
+        { src: "/images/IN 7.jpeg", alt: "Client Logo 7" },
+        { src: "/images/IN 8.jpeg", alt: "Client Logo 8" },
     ];
 
     // Data for the new "Who Supports Us" section
@@ -74,8 +76,7 @@ const AboutUs = () => {
         { src: "/images/IN 4.jpeg", alt: "Investor Logo 4" },
         { src: "/images/IN 5.jpeg", alt: "Investor Logo 5" },
         { src: "/images/IN 6.jpeg", alt: "Investor Logo 6" },
-        { src: "/images/IN 7.jpeg", alt: "Investor Logo 7" },
-        { src: "/images/IN 8.jpeg", alt: "Investor Logo 8" },
+       
     ];
 
     const whyPloutos = [
