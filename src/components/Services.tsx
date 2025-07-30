@@ -208,3 +208,4 @@ const Services: React.FC = () => {
     </AnimatedSection>
   );
 };
+export default Services;
