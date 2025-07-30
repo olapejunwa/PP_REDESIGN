@@ -26,7 +26,7 @@ const Hero = () => {
           </AnimatedSection>
           
           <AnimatedSection animationType="fadeUp" delay={600}>
-            <p className="mt-8 text-unified-lg md:text-unified-xl font-primary font-unified-bold text-gray-800 max-w-3xl mx-auto leading-unified-relaxed">
+            <p className="mt-8 text-unified-lg md:text-unified-xl font-primary font-unified-normal text-gray-800 max-w-3xl mx-auto leading-unified-relaxed">
               Empowering businesses with simplified financial management solutions and expert guidance for sustainable growth.
             </p>
           </AnimatedSection>
