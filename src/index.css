@@ -28,10 +28,10 @@
 
 /* Apply consistent font family globally */
 body, html {
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
-  font-weight: var(--font-weight-normal);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-normal);
 }
 
 /* Ensure all elements inherit the primary font */
