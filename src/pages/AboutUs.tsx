@@ -12,7 +12,7 @@ const AboutUs = () => {
       role: "Co-Founder & CEO",
       // === TASK 2: Updated image source ===
       image: "/images/Mrs Peju.jpg",
-      description: "Olapeju Nwanganga, who brings the CEO and has 8 years track record in financial management, accounting, and business operations. She has worked at various organizations, including banks, fintech companies, and consulting firms. She has a wealth of experience in financial management and is passionate about helping businesses achieve their financial goals."
+      description: "Olapeju Nwanganga is a finance expert and the founder of Ploutos Page Limited, a leading bookkeeping and financial management firm dedicated to helping MSMEs and startups streamline their finances for sustainable growth. With over 10 years of cross-industry experience in FMCG, oil & gas, healthcare, and luxury goods, she has worked with top organizations like RusselSmith, BellaNaija, Pace gate Limited driving financial strategy and operational efficiency."
     },
   ];
 
