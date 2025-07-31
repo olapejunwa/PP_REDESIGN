@@ -2,14 +2,156 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { Users, LifeBuoy, ShieldCheck, ThumbsUp } from 'lucide-react';
+import { Users, LifeBuoy, ShieldCheck, ThumbsUp, ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Universal carousel component optimized for all mobile devices
-const LogoCarousel = ({ logos, duration = 40 }) => {
-    // Create seamless loop by duplicating logos
+// Enhanced carousel component with manual scroll fallback
+const LogoCarousel = ({ logos, duration = 40, title = "Carousel" }) => {
+    const [currentIndex, setCurrentIndex] = React.useState(0);
+    const [isManualMode, setIsManualMode] = React.useState(false);
+    const [canScroll, setCanScroll] = React.useState(false);
+    const carouselRef = React.useRef(null);
+    const touchStartX = React.useRef(0);
+    const touchEndX = React.useRef(0);
+
+    // Detect if we're on mobile and if animation is working
+    React.useEffect(() => {
+        const isMobile = window.innerWidth <= 768;
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        
+        // Enable manual mode on mobile devices or if animation fails
+        if (isMobile || isIOS) {
+            setIsManualMode(true);
+            setCanScroll(true);
+        }
+        
+        // Test if CSS animations are working
+        const testElement = document.createElement('div');
+        testElement.style.animation = 'test 1s linear';
+        document.body.appendChild(testElement);
+        
+        setTimeout(() => {
+            const computedStyle = window.getComputedStyle(testElement);
+            if (computedStyle.animationName === 'none') {
+                setIsManualMode(true);
+                setCanScroll(true);
+            }
+            document.body.removeChild(testElement);
+        }, 100);
+    }, []);
+
+    // Handle manual navigation
+    const goToNext = () => {
+        setCurrentIndex((prev) => (prev + 1) % logos.length);
+    };
+
+    const goToPrev = () => {
+        setCurrentIndex((prev) => (prev - 1 + logos.length) % logos.length);
+    };
+
+    // Handle touch events for swipe navigation
+    const handleTouchStart = (e) => {
+        touchStartX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e) => {
+        touchEndX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+        if (!canScroll) return;
+        
+        const difference = touchStartX.current - touchEndX.current;
+        const threshold = 50;
+
+        if (Math.abs(difference) > threshold) {
+            if (difference > 0) {
+                goToNext();
+            } else {
+                goToPrev();
+            }
+        }
+    };
+
+    // Auto-advance in manual mode (slower than CSS animation)
+    React.useEffect(() => {
+        if (!isManualMode) return;
+        
+        const interval = setInterval(() => {
+            goToNext();
+        }, 4000); // 4 seconds per slide
+
+        return () => clearInterval(interval);
+    }, [isManualMode, currentIndex]);
+
+    if (isManualMode) {
+        // Manual scroll mode with navigation controls
+        return (
+            <div className="manual-carousel-container">
+                <div className="manual-carousel-wrapper">
+                    {/* Navigation arrows */}
+                    <button 
+                        onClick={goToPrev}
+                        className="carousel-nav-btn carousel-nav-prev"
+                        aria-label="Previous logos"
+                    >
+                        <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    
+                    <button 
+                        onClick={goToNext}
+                        className="carousel-nav-btn carousel-nav-next"
+                        aria-label="Next logos"
+                    >
+                        <ChevronRight className="w-6 h-6" />
+                    </button>
+
+                    {/* Carousel content */}
+                    <div 
+                        className="manual-carousel-track"
+                        ref={carouselRef}
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                        style={{
+                            transform: `translateX(-${currentIndex * (100 / 3)}%)`,
+                            transition: 'transform 0.5s ease-in-out'
+                        }}
+                    >
+                        {logos.map((logo, index) => (
+                            <div className="manual-carousel-slide" key={index}>
+                                <img 
+                                    src={logo.src} 
+                                    alt={logo.alt} 
+                                    className="manual-carousel-logo"
+                                    loading="lazy"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                
+                {/* Dots indicator */}
+                <div className="carousel-dots">
+                    {logos.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setCurrentIndex(index)}
+                            className={`carousel-dot ${index === currentIndex ? 'active' : ''}`}
+                            aria-label={`Go to slide ${index + 1}`}
+                        />
+                    ))}
+                </div>
+                
+                {/* Instructions for mobile users */}
+                <p className="carousel-instructions">
+                    Swipe left/right or use arrows to navigate • Auto-advances every 4 seconds
+                </p>
+            </div>
+        );
+    }
+
+    // Fallback to CSS animation mode
     const extendedLogos = [...logos, ...logos];
-    
-    // Calculate animation duration based on number of logos for consistent speed
     const animationDuration = Math.max(20, logos.length * 3);
 
     return (
@@ -20,6 +162,15 @@ const LogoCarousel = ({ logos, duration = 40 }) => {
                 '--animation-duration': `${animationDuration}s`
             }}
         >
+            <div className="carousel-fallback-notice">
+                <p>If logos aren't moving, tap to enable manual navigation</p>
+                <button 
+                    onClick={() => setIsManualMode(true)}
+                    className="enable-manual-btn"
+                >
+                    Enable Manual Navigation
+                </button>
+            </div>
             <div className="carousel-track">
                 {extendedLogos.map((logo, index) => (
                     <div className="carousel-slide" key={index}>
@@ -163,14 +314,14 @@ const AboutUs = () => {
             <section className="py-20 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
+                        <h2 className="text-xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
                             Our Trusted Clients
                         </h2>
-                        <p className="text-base md:text-xl text-gray-600">
+                        <p className="text-sm md:text-xl text-gray-600">
                             We are proud to have worked with a diverse range of businesses.
                         </p>
                     </div>
-                        <LogoCarousel logos={clients} duration={40} />
+                        <LogoCarousel logos={clients} duration={40} title="Our Trusted Clients" />
                 </div>
             </section>
 
@@ -178,14 +329,14 @@ const AboutUs = () => {
             <section className="py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
+                        <h2 className="text-xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
                             Who Supports Us
                         </h2>
-                        <p className="text-base md:text-xl text-gray-600">
+                        <p className="text-sm md:text-xl text-gray-600">
                             We are backed by a network of forward-thinking investors.
                         </p>
                     </div>
-                        <LogoCarousel logos={investors} duration={50} />
+                        <LogoCarousel logos={investors} duration={50} title="Who Supports Us" />
                 </div>
             </section>
 

@@ -553,4 +553,199 @@ html {
   .carousel-container:hover .carousel-track {
     animation: none;
   }
+  
+  .manual-carousel-track {
+    transition: none !important;
+  }
+}
+
+/* Manual Carousel Styles */
+.manual-carousel-container {
+  width: 100%;
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  padding: 20px 0;
+}
+
+.manual-carousel-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 200px;
+}
+
+.manual-carousel-track {
+  display: flex;
+  width: calc(100% * var(--total-logos, 9));
+  height: 100%;
+  will-change: transform;
+}
+
+.manual-carousel-slide {
+  flex: 0 0 33.333%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.manual-carousel-logo {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Navigation buttons */
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #e5e7eb;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-nav-btn:hover {
+  background: white;
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav-prev {
+  left: 10px;
+}
+
+.carousel-nav-next {
+  right: 10px;
+}
+
+/* Dots indicator */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.carousel-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  background: #d1d5db;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+  background: #3b82f6;
+  transform: scale(1.2);
+}
+
+.carousel-dot:hover {
+  background: #6b7280;
+}
+
+/* Instructions */
+.carousel-instructions {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Fallback notice */
+.carousel-fallback-notice {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  background: rgba(59, 130, 246, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  text-align: center;
+  opacity: 0;
+  animation: fadeInDelay 0.5s ease-in-out 3s forwards;
+}
+
+.enable-manual-btn {
+  background: white;
+  color: #3b82f6;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  margin-top: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@keyframes fadeInDelay {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mobile optimizations for manual carousel */
+@media (max-width: 768px) {
+  .manual-carousel-wrapper {
+    height: 150px;
+  }
+  
+  .manual-carousel-slide {
+    padding: 15px;
+  }
+  
+  .carousel-nav-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .carousel-nav-prev {
+    left: 5px;
+  }
+  
+  .carousel-nav-next {
+    right: 5px;
+  }
+  
+  .carousel-instructions {
+    font-size: 12px;
+    margin-top: 8px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .manual-carousel-wrapper {
+    height: 120px;
+  }
+  
+  .manual-carousel-slide {
+    padding: 10px;
+  }
+  
+  .carousel-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
 }
