@@ -31,10 +31,10 @@ const TaxServices = () => {
       <section className="pt-32 pb-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-blue-600 font-semibold mb-4">Services</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+          <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8">
             Tax Services
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto">
+          <p className="text-base md:text-xl text-gray-600 max-w-4xl mx-auto">
             Navigate the complexities of tax compliance with ease. Our tax experts offer comprehensive tax planning, preparation, and filing services to ensure compliance with tax regulations and maximize tax savings.
           </p>
         </div>
@@ -48,7 +48,7 @@ const TaxServices = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
                 Get Your Custom Tax Services Quote
               </h2>
-              <p className="text-base md:text-lg text-gray-600 mb-8 text-center">
+              <p className="text-sm md:text-lg text-gray-600 mb-8 text-center">
                 Help us understand your business needs to provide you with the most suitable tax service package and pricing.
               </p>
               

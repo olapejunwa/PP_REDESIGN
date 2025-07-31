@@ -135,10 +135,10 @@ const AboutUs = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div>
-                            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                            <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
                                 Make better accounting decisions with Ploutos
                             </h1>
-                            <p className="text-lg md:text-xl text-gray-600 mb-8">
+                            <p className="text-base md:text-xl text-gray-600 mb-8">
                                 At Ploutos Page we are passionate about helping businesses succeed by providing them with the tools and support they need to manage their finances effectively. We believe that every business, regardless of its size, deserves access to high-quality financial services and innovative solutions to drive growth.
                             </p>
                             <Link to="/contact" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">
@@ -163,10 +163,10 @@ const AboutUs = () => {
             {/* Mission Section */}
             <section className="py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                    <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
                         We're empowering you for financial excellence
                     </h2>
-                    <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                    <p className="text-base md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
                         Ploutos Page Limited is a fintech and professional services company helping MSMEs and market traders grow with smart, simple, and human‑centered bookkeeping and financial tools.
                         Whether you're a startup, a small business, or a woman selling in the open market — we've got you covered.
                     </p>
@@ -177,10 +177,10 @@ const AboutUs = () => {
             <section className="py-20 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
                             Our Trusted Clients
                         </h2>
-                        <p className="text-lg md:text-xl text-gray-600">
+                        <p className="text-base md:text-xl text-gray-600">
                             We are proud to have worked with a diverse range of businesses.
                         </p>
                     </div>
@@ -192,10 +192,10 @@ const AboutUs = () => {
             <section className="py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
                             Who Supports Us
                         </h2>
-                        <p className="text-lg md:text-xl text-gray-600">
+                        <p className="text-base md:text-xl text-gray-600">
                             We are backed by a network of forward-thinking investors.
                         </p>
                     </div>
@@ -208,7 +208,7 @@ const AboutUs = () => {
             <section className="py-20 bg-gray-900 text-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-blue-400 mb-6">
+                        <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-blue-400 mb-6">
                             WHY PLOUTOS PAGE?
                         </h2>
                     </div>
@@ -220,7 +220,7 @@ const AboutUs = () => {
                                     <item.icon className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-lg md:text-xl text-gray-200">{item.text}</p>
+                                    <p className="text-base md:text-xl text-gray-200">{item.text}</p>
                                 </div>
                             </div>
                         ))}
@@ -232,10 +232,10 @@ const AboutUs = () => {
             <section className="py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                        <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
                             The founder
                         </h2>
-                        <p className="text-lg md:text-xl text-gray-600">
+                        <p className="text-base md:text-xl text-gray-600">
                             Building the future of financial management, one business at a time.
                         </p>
                     </div>
@@ -263,10 +263,10 @@ const AboutUs = () => {
             <section className="py-20 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                        <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
                             The Team
                         </h2>
-                        <p className="text-lg md:text-xl text-gray-600">
+                        <p className="text-base md:text-xl text-gray-600">
                             The dedicated individuals making it all happen.
                         </p>
                     </div>

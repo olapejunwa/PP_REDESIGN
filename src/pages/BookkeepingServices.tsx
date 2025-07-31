@@ -33,10 +33,10 @@ const BookkeepingServices = () => {
       <section className="pt-32 pb-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-blue-600 font-semibold mb-4">Product & Services</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+          <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8">
             Bookkeeping Services subscriptions
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto">
+          <p className="text-base md:text-xl text-gray-600 max-w-4xl mx-auto">
             Our bookkeeping services are tailored to meet the unique needs of SMEs and medium-sized businesses. Whether you need assistance with day-to-day bookkeeping tasks, or financial reporting, our team is here to help. We ensure accuracy, compliance, and efficiency, allowing you to focus on growing your business.
           </p>
         </div>
@@ -50,7 +50,7 @@ const BookkeepingServices = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
                 Get Your Custom Bookkeeping Services Quote
               </h2>
-              <p className="text-base md:text-lg text-gray-600 mb-8 text-center">
+              <p className="text-sm md:text-lg text-gray-600 mb-8 text-center">
                 Tell us about your business to receive a tailored bookkeeping package that fits your specific needs and budget.
               </p>
               

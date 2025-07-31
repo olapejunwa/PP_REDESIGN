@@ -93,10 +93,10 @@ const Careers = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
             Join Our Team
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
             Be part of a dynamic team that's revolutionizing financial management for businesses across Nigeria. We're always looking for talented individuals who share our passion for excellence.
           </p>
         </div>
@@ -109,7 +109,7 @@ const Careers = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Why Work With Us?
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
               At Ploutos Page, we believe our people are our greatest asset. We offer a supportive environment where you can grow your career while making a real impact.
             </p>
           </div>
@@ -135,7 +135,7 @@ const Careers = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Current Openings
             </h2>
-            <p className="text-lg md:text-xl text-gray-600">
+            <p className="text-base md:text-xl text-gray-600">
               Explore our available positions and find your next career opportunity.
             </p>
           </div>
@@ -192,7 +192,7 @@ const Careers = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Application Process
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
               Our hiring process is designed to be thorough yet efficient, ensuring we find the right fit for both you and our team.
             </p>
           </div>

@@ -51,10 +51,10 @@ const Blog = () => {
       <main className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-primary">
+            <h1 className="text-2xl md:text-5xl font-bold text-gray-900 mb-6 font-primary">
               Our Blog
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto font-primary">
+            <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto font-primary">
               Insights, news, and articles on financial management and business growth.
             </p>
           </div>
@@ -67,7 +67,7 @@ const Blog = () => {
                 </svg>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 font-primary">No blogs at the moment</h2>
-              <p className="text-base md:text-lg text-gray-600 max-w-md mx-auto font-primary">
+              <p className="text-sm md:text-lg text-gray-600 max-w-md mx-auto font-primary">
                 We're working on creating valuable content for you. Check back soon for insights on financial management and business growth.
               </p>
             </div>
