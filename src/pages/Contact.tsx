@@ -73,7 +73,7 @@ const Contact = () => {
                 </div>
                 <div className="flex items-center space-x-4">
                   <MapPin className="w-6 h-6 text-gray-700" />
-                  <span className="text-lg text-gray-800 font-medium">8 Rock drive Lekki Phase One</span>
+                  <span className="text-lg text-gray-800 font-medium">Suite 5, Mojisola Mall, Ibeshe, Ikorodu</span>
                 </div>
               </div>
             </div>
