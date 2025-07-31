@@ -2,46 +2,32 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-// === MODIFIED ICONS ===
 import { Users, LifeBuoy, ShieldCheck, ThumbsUp } from 'lucide-react';
 
-// A reusable carousel component for logos
-const LogoCarousel = ({ logos, duration = 50 }) => {
-    // Duplicate logos for a seamless loop
+// Universal carousel component optimized for all mobile devices
+const LogoCarousel = ({ logos, duration = 40 }) => {
+    // Create seamless loop by duplicating logos
     const extendedLogos = [...logos, ...logos];
+    
+    // Calculate animation duration based on number of logos for consistent speed
+    const animationDuration = Math.max(20, logos.length * 3);
 
     return (
-        <div className="slider" style={{ '--duration': `${duration}s`, '--logo-count': logos.length }}>
-            <div className="slide-track">
+        <div 
+            className="carousel-container"
+            style={{
+                '--total-logos': logos.length,
+                '--animation-duration': `${animationDuration}s`
+            }}
+        >
+            <div className="carousel-track">
                 {extendedLogos.map((logo, index) => (
-                    <div className="slide" key={index}>
+                    <div className="carousel-slide" key={index}>
                         <img 
                             src={logo.src} 
                             alt={logo.alt} 
-                            className="dynamic-logo" 
-                            onLoad={(e) => {
-                                const img = e.target as HTMLImageElement;
-                                const container = img.parentElement;
-                                if (container) {
-                                    const aspectRatio = img.naturalWidth / img.naturalHeight;
-                                    if (aspectRatio > 2) {
-                                        // Wide logo - prioritize width
-                                        img.style.width = '90%';
-                                        img.style.height = 'auto';
-                                        img.style.maxHeight = '80%';
-                                    } else if (aspectRatio < 0.8) {
-                                        // Tall logo - prioritize height
-                                        img.style.height = '90%';
-                                        img.style.width = 'auto';
-                                        img.style.maxWidth = '80%';
-                                    } else {
-                                        // Square-ish logo - balanced sizing
-                                        img.style.width = '80%';
-                                        img.style.height = '80%';
-                                        img.style.objectFit = 'contain';
-                                    }
-                                }
-                            }}
+                            className="carousel-logo"
+                            loading="lazy"
                         />
                     </div>
                 ))}
@@ -184,9 +170,7 @@ const AboutUs = () => {
                             We are proud to have worked with a diverse range of businesses.
                         </p>
                     </div>
-                    <div style={{ '--logo-count': clients.length, '--duration': '40s' }}>
                         <LogoCarousel logos={clients} duration={40} />
-                    </div>
                 </div>
             </section>
 
@@ -201,9 +185,7 @@ const AboutUs = () => {
                             We are backed by a network of forward-thinking investors.
                         </p>
                     </div>
-                    <div style={{ '--logo-count': investors.length, '--duration': '50s' }}>
                         <LogoCarousel logos={investors} duration={50} />
-                    </div>
                 </div>
             </section>
 
