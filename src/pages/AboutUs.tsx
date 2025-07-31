@@ -201,7 +201,7 @@ const AboutUs = () => {
     const founders = [
         {
             name: "Olapeju Nwanganga",
-            role: "Co-Founder & CEO",
+            role: "Founder & CEO",
             image: "/images/Mrs Peju.jpg",
             description: "Olapeju Nwanganga is a finance expert and the founder of Ploutos Page Limited, a leading bookkeeping and financial management firm dedicated to helping MSMEs and startups streamline their finances for sustainable growth. With over 10 years of cross-industry experience in FMCG, oil & gas, healthcare, and luxury goods, she has worked with top organizations like RusselSmith, BellaNaija, Pace gate Limited driving financial strategy and operational efficiency."
         },
