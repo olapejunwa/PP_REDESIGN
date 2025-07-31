@@ -184,7 +184,9 @@ const AboutUs = () => {
                             We are proud to have worked with a diverse range of businesses.
                         </p>
                     </div>
-                    <LogoCarousel logos={clients} duration={40} />
+                    <div style={{ '--logo-count': clients.length, '--duration': '40s' }}>
+                        <LogoCarousel logos={clients} duration={40} />
+                    </div>
                 </div>
             </section>
 
@@ -199,7 +201,9 @@ const AboutUs = () => {
                             We are backed by a network of forward-thinking investors.
                         </p>
                     </div>
-                    <LogoCarousel logos={investors} duration={50} />
+                    <div style={{ '--logo-count': investors.length, '--duration': '50s' }}>
+                        <LogoCarousel logos={investors} duration={50} />
+                    </div>
                 </div>
             </section>
 
