@@ -342,7 +342,7 @@ const AboutUs = () => {
                             Who Supports Us
                         </h2>
                         <p className="text-sm md:text-xl text-gray-600">
-                            We are backed by a network of forward-thinking companies or investors.
+                            We are backed by a network of forward-thinking companies or organisations.
                         </p>
                     </div>
                         <LogoCarousel logos={investors} duration={50} title="Who Supports Us" />
