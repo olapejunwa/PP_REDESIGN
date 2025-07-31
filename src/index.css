@@ -437,7 +437,7 @@ html {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-400px * var(--logo-count)));
+    transform: translateX(calc(-400px * var(--logo-count, 9)));
   }
 }
 
@@ -449,6 +449,8 @@ html {
   overflow: hidden;
   position: relative;
   width: 100%;
+  --logo-count: 9;
+  --duration: 40s;
 }
 
 .slider::before,
@@ -475,7 +477,7 @@ html {
 .slider .slide-track {
   animation: scroll var(--duration) linear infinite;
   display: flex;
-  width: calc(400px * var(--logo-count) * 2);
+  width: calc(400px * var(--logo-count, 9) * 2);
   height: 100%;
 }
 
@@ -516,6 +518,8 @@ html {
   .slider {
     height: 200px;
     min-height: 180px;
+    --logo-count: 9;
+    --duration: 30s;
   }
   
   .slider .slide {
@@ -525,15 +529,21 @@ html {
   }
   
   .slider .slide-track {
-    width: calc(300px * var(--logo-count) * 2);
+    width: calc(300px * var(--logo-count, 9) * 2);
+    animation: scroll-mobile var(--duration) linear infinite;
   }
   
-  @keyframes scroll {
+  .slider::before,
+  .slider::after {
+    width: 100px;
+  }
+  
+  @keyframes scroll-mobile {
     0% {
       transform: translateX(0);
     }
     100% {
-      transform: translateX(calc(-300px * var(--logo-count)));
+      transform: translateX(calc(-300px * var(--logo-count, 9)));
     }
   }
 }
