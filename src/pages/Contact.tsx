@@ -33,7 +33,7 @@ const Contact = () => {
     },
     {
       question: "Can I use ÓWÀ without a smartphone?",
-      answer: "Yes. ÓWÀ is designed for market women without internet access. Our field agents keep your records in a paper logbook during weekly visits and send you a simple SMS summary — no smartphone needed."
+      answer: "Yes. ÓWÀ is designed for market women without internet access. Our field agents keep your records in a record book during weekly visits and send you a simple SMS summary — no smartphone needed."
     },
     {
       question: "Who performs the audit on AuditMe?",
