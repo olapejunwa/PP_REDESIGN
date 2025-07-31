@@ -113,12 +113,13 @@ const LogoCarousel = ({ logos, duration = 40, title = "Carousel" }) => {
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
                         style={{
-                            transform: `translateX(-${currentIndex * 33.333}%)`,
+                            transform: `translateX(-${currentIndex * (100 / logos.length)}%)`,
+                            width: `${logos.length * 100}%`,
                             transition: 'transform 0.5s ease-in-out'
                         }}
                     >
                         {logos.map((logo, index) => (
-                            <div className="manual-carousel-slide" key={index}>
+                            <div className="manual-carousel-slide" style={{ width: `${100 / logos.length}%` }} key={index}>
                                 <div className="carousel-card">
                                     <div className="carousel-card-content">
                                         <img 
