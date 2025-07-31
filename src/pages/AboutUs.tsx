@@ -138,7 +138,7 @@ const AboutUs = () => {
                             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                                 Make better accounting decisions with Ploutos
                             </h1>
-                            <p className="text-base text-gray-600 mb-8">
+                            <p className="text-lg md:text-xl text-gray-600 mb-8">
                                 At Ploutos Page we are passionate about helping businesses succeed by providing them with the tools and support they need to manage their finances effectively. We believe that every business, regardless of its size, deserves access to high-quality financial services and innovative solutions to drive growth.
                             </p>
                             <Link to="/contact" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">
@@ -166,9 +166,9 @@ const AboutUs = () => {
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                         We're empowering you for financial excellence
                     </h2>
-                    <p className="text-base text-gray-600 mb-8 max-w-3xl mx-auto">
+                    <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
                         Ploutos Page Limited is a fintech and professional services company helping MSMEs and market traders grow with smart, simple, and human‑centered bookkeeping and financial tools.
-                        Whether you're a startup, a small business, or a woman selling in the open market — we’ve got you covered.
+                        Whether you're a startup, a small business, or a woman selling in the open market — we've got you covered.
                     </p>
                 </div>
             </section>
@@ -180,7 +180,7 @@ const AboutUs = () => {
                         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                             Our Trusted Clients
                         </h2>
-                        <p className="text-lg text-gray-600">
+                        <p className="text-lg md:text-xl text-gray-600">
                             We are proud to have worked with a diverse range of businesses.
                         </p>
                     </div>
@@ -195,7 +195,7 @@ const AboutUs = () => {
                         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                             Who Supports Us
                         </h2>
-                        <p className="text-lg text-gray-600">
+                        <p className="text-lg md:text-xl text-gray-600">
                             We are backed by a network of forward-thinking investors.
                         </p>
                     </div>
@@ -220,7 +220,7 @@ const AboutUs = () => {
                                     <item.icon className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-lg text-gray-200">{item.text}</p>
+                                    <p className="text-lg md:text-xl text-gray-200">{item.text}</p>
                                 </div>
                             </div>
                         ))}
@@ -235,7 +235,7 @@ const AboutUs = () => {
                         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                             The founder
                         </h2>
-                        <p className="text-lg text-gray-600">
+                        <p className="text-lg md:text-xl text-gray-600">
                             Building the future of financial management, one business at a time.
                         </p>
                     </div>
@@ -252,7 +252,7 @@ const AboutUs = () => {
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-2">{founder.name}</h3>
                                 <p className="text-blue-600 font-semibold mb-4">{founder.role}</p>
-                                <p className="text-sm text-gray-600 leading-relaxed">{founder.description}</p>
+                                <p className="text-base text-gray-600 leading-relaxed">{founder.description}</p>
                             </div>
                         ))}
                     </div>
@@ -266,7 +266,7 @@ const AboutUs = () => {
                         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                             The Team
                         </h2>
-                        <p className="text-lg text-gray-600">
+                        <p className="text-lg md:text-xl text-gray-600">
                             The dedicated individuals making it all happen.
                         </p>
                     </div>
@@ -283,7 +283,7 @@ const AboutUs = () => {
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
                                 <p className="text-blue-600 font-semibold mb-4">{member.role}</p>
-                                <p className="text-sm text-gray-600 leading-relaxed">{member.description}</p>
+                                <p className="text-base text-gray-600 leading-relaxed">{member.description}</p>
                             </div>
                         ))}
                     </div>

@@ -96,7 +96,7 @@ const Careers = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
             Join Our Team
           </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
             Be part of a dynamic team that's revolutionizing financial management for businesses across Nigeria. We're always looking for talented individuals who share our passion for excellence.
           </p>
         </div>
@@ -109,7 +109,7 @@ const Careers = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Why Work With Us?
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
               At Ploutos Page, we believe our people are our greatest asset. We offer a supportive environment where you can grow your career while making a real impact.
             </p>
           </div>
@@ -121,7 +121,7 @@ const Careers = () => {
                   <benefit.icon className="w-8 h-8 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-4">{benefit.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">{benefit.description}</p>
+                <p className="text-base text-gray-600 leading-relaxed">{benefit.description}</p>
               </div>
             ))}
           </div>
@@ -135,7 +135,7 @@ const Careers = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Current Openings
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg md:text-xl text-gray-600">
               Explore our available positions and find your next career opportunity.
             </p>
           </div>
@@ -166,7 +166,7 @@ const Careers = () => {
                   </button>
                 </div>
                 
-                <p className="text-gray-600 mb-6">{job.description}</p>
+                <p className="text-base md:text-lg text-gray-600 mb-6">{job.description}</p>
                 
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-3">Requirements:</h4>
@@ -174,7 +174,7 @@ const Careers = () => {
                     {job.requirements.map((requirement, reqIndex) => (
                       <li key={reqIndex} className="flex items-start">
                         <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        <span className="text-sm text-gray-600">{requirement}</span>
+                        <span className="text-base text-gray-600">{requirement}</span>
                       </li>
                     ))}
                   </ul>
@@ -192,7 +192,7 @@ const Careers = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Application Process
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
               Our hiring process is designed to be thorough yet efficient, ensuring we find the right fit for both you and our team.
             </p>
           </div>
@@ -203,7 +203,7 @@ const Careers = () => {
                 1
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Apply Online</h3>
-              <p className="text-sm text-gray-600">Submit your application and resume through our online portal.</p>
+              <p className="text-base text-gray-600">Submit your application and resume through our online portal.</p>
             </div>
             
             <div className="text-center">
@@ -211,7 +211,7 @@ const Careers = () => {
                 2
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Initial Review</h3>
-              <p className="text-sm text-gray-600">Our HR team reviews your application and qualifications.</p>
+              <p className="text-base text-gray-600">Our HR team reviews your application and qualifications.</p>
             </div>
             
             <div className="text-center">
@@ -219,7 +219,7 @@ const Careers = () => {
                 3
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Interview</h3>
-              <p className="text-sm text-gray-600">Meet with our team to discuss your experience and fit.</p>
+              <p className="text-base text-gray-600">Meet with our team to discuss your experience and fit.</p>
             </div>
             
             <div className="text-center">
@@ -227,7 +227,7 @@ const Careers = () => {
                 4
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Welcome Aboard</h3>
-              <p className="text-sm text-gray-600">Join our team and start making an impact from day one.</p>
+              <p className="text-base text-gray-600">Join our team and start making an impact from day one.</p>
             </div>
           </div>
         </div>

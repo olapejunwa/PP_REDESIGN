@@ -15,7 +15,7 @@ const Products = () => {
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                 Our Products at Ploutos Improves Lives & Businesses
               </h1>
-              <p className="text-base text-gray-600 mb-8">
+              <p className="text-lg md:text-xl text-gray-600 mb-8">
                 At Ploutos Page we are passionate about helping businesses succeed by providing them with the tools and support they need to manage their finances effectively.
               </p>
               <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">
@@ -45,7 +45,7 @@ const Products = () => {
               <h2 className="text-2xl font-bold mb-6">
                 Bookkeeping Software: PEPCODE
               </h2>
-              <p className="text-sm text-blue-100 mb-8">
+              <p className="text-base md:text-lg text-blue-100 mb-8">
                 Our bookkeeping software is designed to simplify and streamline your financial management processes.
               </p>
               <div className="bg-white rounded-lg p-6 mb-8">
@@ -56,7 +56,7 @@ const Products = () => {
               </button>
             </div>
             <div className="space-y-6">
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-base md:text-lg text-gray-600 leading-relaxed">
                 With user-friendly interfaces, customizable features, and robust functionality, our software empowers you to take control of your finances and analysis, our software has everything you need to stay organized and informed.
               </p>
               <div className="bg-white rounded-lg shadow-lg p-6">
@@ -75,7 +75,7 @@ const Products = () => {
               <h2 className="text-2xl font-bold mb-6">
                 Fast-Tracked Audited Accounts Platform: AuditMe
               </h2>
-              <p className="text-sm text-blue-100 mb-8">
+              <p className="text-base md:text-lg text-blue-100 mb-8">
                 Simply upload your trial balance and audited accounts. Say goodbye to lengthy audit processes and hello to audited accounts in just days.
               </p>
               <div className="bg-white rounded-lg p-6 mb-8">
@@ -110,7 +110,7 @@ const Products = () => {
                     <p className="text-sm text-gray-600">Get audited accounts</p>
                   </div>
                 </div>
-                <p className="text-gray-600 text-xs">
+                <p className="text-gray-600 text-sm">
                   Our platform integrates advanced technology and streamlined workflows to expedite the auditing process without compromising accuracy or quality. With our platform, you can enjoy peace of mind knowing that your financial statements are audit-ready in record time.
                 </p>
               </div>

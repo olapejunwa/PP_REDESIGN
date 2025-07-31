@@ -54,7 +54,7 @@ const Blog = () => {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-primary">
               Our Blog
             </h1>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto font-primary">
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto font-primary">
               Insights, news, and articles on financial management and business growth.
             </p>
           </div>
@@ -67,7 +67,7 @@ const Blog = () => {
                 </svg>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 font-primary">No blogs at the moment</h2>
-              <p className="text-gray-600 max-w-md mx-auto font-primary">
+              <p className="text-base md:text-lg text-gray-600 max-w-md mx-auto font-primary">
                 We're working on creating valuable content for you. Check back soon for insights on financial management and business growth.
               </p>
             </div>
@@ -81,7 +81,7 @@ const Blog = () => {
                         <h2 className="text-xl font-semibold text-gray-900 mb-3 font-primary line-clamp-2">
                           {post.title}
                         </h2>
-                        <p className="mt-3 text-base text-gray-500 font-primary leading-relaxed">
+                        <p className="mt-3 text-base md:text-lg text-gray-500 font-primary leading-relaxed">
                           {post.excerpt || truncateContent(post.content)}
                         </p>
                       </div>

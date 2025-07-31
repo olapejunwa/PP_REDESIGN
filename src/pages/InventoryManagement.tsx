@@ -36,7 +36,7 @@ const InventoryManagement = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
             Inventory Management
           </h1>
-          <p className="text-lg text-gray-600 max-w-4xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto">
             Simplify inventory tracking, manage stock levels, and optimize inventory turnover with our advanced inventory management solutions. Stay on top of stock levels, reduce costs, and improve efficiency.
           </p>
         </div>
@@ -50,7 +50,7 @@ const InventoryManagement = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
                 Get Your Custom Inventory Management Quote
               </h2>
-              <p className="text-gray-600 mb-8 text-center">
+              <p className="text-base md:text-lg text-gray-600 mb-8 text-center">
                 Help us understand your inventory needs to provide you with the most suitable management solution and pricing.
               </p>
               

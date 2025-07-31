@@ -59,7 +59,7 @@ const Contact = () => {
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-6">
                 Approachable & Conversational
               </h1>
-              <p className="text-lg text-gray-600 mb-10">
+              <p className="text-lg md:text-xl text-gray-600 mb-10">
                 No question is too big or too small. We're happy to chat!
               </p>
               <div className="space-y-6">
@@ -148,7 +148,7 @@ const Contact = () => {
             <div className="text-center mb-12">
                 <p className="text-sm font-bold text-blue-400 uppercase">FAQ</p>
                 <h2 className="text-4xl font-bold text-white mt-2 mb-4">Frequently Asked Questions</h2>
-                <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+                <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
                     We'd love to hear from you and discuss how we can simplify your financial management.
                 </p>
             </div>
