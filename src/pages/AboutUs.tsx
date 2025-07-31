@@ -113,18 +113,22 @@ const LogoCarousel = ({ logos, duration = 40, title = "Carousel" }) => {
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
                         style={{
-                            transform: `translateX(-${currentIndex * (100 / 3)}%)`,
+                            transform: `translateX(-${currentIndex * 33.333}%)`,
                             transition: 'transform 0.5s ease-in-out'
                         }}
                     >
                         {logos.map((logo, index) => (
                             <div className="manual-carousel-slide" key={index}>
-                                <img 
-                                    src={logo.src} 
-                                    alt={logo.alt} 
-                                    className="manual-carousel-logo"
-                                    loading="lazy"
-                                />
+                                <div className="carousel-card">
+                                    <div className="carousel-card-content">
+                                        <img 
+                                            src={logo.src} 
+                                            alt={logo.alt} 
+                                            className="carousel-card-logo"
+                                            loading="lazy"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -151,7 +155,7 @@ const LogoCarousel = ({ logos, duration = 40, title = "Carousel" }) => {
     }
 
     // Fallback to CSS animation mode
-    const extendedLogos = [...logos, ...logos];
+    const extendedLogos = [...logos, ...logos]; // Duplicate for seamless loop
     const animationDuration = Math.max(20, logos.length * 3);
 
     return (
@@ -174,12 +178,16 @@ const LogoCarousel = ({ logos, duration = 40, title = "Carousel" }) => {
             <div className="carousel-track">
                 {extendedLogos.map((logo, index) => (
                     <div className="carousel-slide" key={index}>
-                        <img 
-                            src={logo.src} 
-                            alt={logo.alt} 
-                            className="carousel-logo"
-                            loading="lazy"
-                        />
+                        <div className="carousel-card">
+                            <div className="carousel-card-content">
+                                <img 
+                                    src={logo.src} 
+                                    alt={logo.alt} 
+                                    className="carousel-card-logo"
+                                    loading="lazy"
+                                />
+                            </div>
+                        </div>
                     </div>
                 ))}
             </div>
