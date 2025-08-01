@@ -212,6 +212,18 @@ const AboutUs = () => {
             role: "Operations Manager",
             image: "/images/ADEBUKOLA.jpg",
             description: "A dynamic and adaptable professional with a diverse background spanning microbiology, public service and financial technology. Driven by a passion for systems improvement and operational effeciency, she leverages her analytical skills, public sector experience and process-oriented mindset to streamline workflows, optimize service delivery and align internal operations with strategic business goals."
+        },
+        {
+            name: "Hafeedh Balogun",
+            role: "Frontend Engineer",
+            image: "/images/Hafeedh.jpeg",
+            description: "A data-centric engineer with a passion for turning raw data into actionable insights."
+        },
+        {
+            name: "Emmanuel Andy Eze",
+            role: "Backend Engineer",
+            image: "/images/Emmanuel.jpeg",
+            description: "An experienced engineer with a passion for creating unique digital experiences acrross all platforms: mobile, web—name it!."
         }
     ];
 
