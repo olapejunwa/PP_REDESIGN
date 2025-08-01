@@ -2,50 +2,101 @@ import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { Mail, Phone, MapPin, Plus, Minus } from 'lucide-react';
+import axios from 'axios';
 
-const AccordionItem = ({ title, children }: { title: string, children: React.ReactNode }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const AccordionItem = ({
+	title,
+	children,
+}: {
+	title: string;
+	children: React.ReactNode;
+}) => {
+	const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <div className="border-b border-gray-700">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center text-left py-5 px-6 text-white hover:bg-gray-800 transition-colors"
-      >
-        <span className="text-lg font-medium">{title}</span>
-        {isOpen ? <Minus className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
-      </button>
-      {isOpen && (
-        <div className="px-6 pb-5 text-gray-300">
-          {children}
-        </div>
-      )}
-    </div>
-  );
+	return (
+		<div className="border-b border-gray-700">
+			<button
+				onClick={() => setIsOpen(!isOpen)}
+				className="w-full flex justify-between items-center text-left py-5 px-6 text-white hover:bg-gray-800 transition-colors"
+			>
+				<span className="text-lg font-medium">{title}</span>
+				{isOpen ? (
+					<Minus className="w-6 h-6" />
+				) : (
+					<Plus className="w-6 h-6" />
+				)}
+			</button>
+			{isOpen && (
+				<div className="px-6 pb-5 text-gray-300">
+					{children}
+				</div>
+			)}
+		</div>
+	);
 };
 
-
 const Contact = () => {
-    const faqs = [
-    {
-      question: "How much does Pepcode cost?",
-      answer: "We offer a range of pricing plans to suit different business needs and budgets. Please contact us for a custom quote."
-    },
-    {
-      question: "Can I use ÓWÀ without a smartphone?",
-      answer: "Yes. ÓWÀ is designed for market women without internet access. Our field agents keep your records in a record book during weekly visits and send you a simple SMS summary — no smartphone needed."
-    },
-    {
-      question: "Who performs the audit on AuditMe?",
-      answer: "All audits are carried out by ICAN‑ and ANAN‑certified chartered accountants who adhere to International Standards on Auditing (ISA), ensuring every report is fully compliant."
-    },
-    {
-      question: "Can I get loans through ÓWÀ?",
-      answer: "Yes. While ÓWÀ itself doesn’t lend money, the verified transaction history it creates makes it easier for our micro‑finance partners to approve small business loans. Your agent can guide you through the process whenever you’re ready."
-    }
-  ];
+	const faqs = [
+		{
+			question: 'How much does Pepcode cost?',
+			answer:
+				'We offer a range of pricing plans to suit different business needs and budgets. Please contact us for a custom quote.',
+		},
+		{
+			question: 'Can I use ÓWÀ without a smartphone?',
+			answer:
+				'Yes. ÓWÀ is designed for market women without internet access. Our field agents keep your records in a record book during weekly visits and send you a simple SMS summary — no smartphone needed.',
+		},
+		{
+			question: 'Who performs the audit on AuditMe?',
+			answer:
+				'All audits are carried out by ICAN‑ and ANAN‑certified chartered accountants who adhere to International Standards on Auditing (ISA), ensuring every report is fully compliant.',
+		},
+		{
+			question: 'Can I get loans through ÓWÀ?',
+			answer:
+				'Yes. While ÓWÀ itself doesn’t lend money, the verified transaction history it creates makes it easier for our micro‑finance partners to approve small business loans. Your agent can guide you through the process whenever you’re ready.',
+		},
+	];
 
-  return (
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		const formData = new FormData(
+			e.target as HTMLFormElement,
+		);
+
+		const data = {
+			name: formData.get('name'),
+			email: formData.get('email'),
+			company: formData.get('company'),
+			message: formData.get('message'),
+		};
+
+		const res = axios.post(
+			'http://localhost:3000/contact/submit',
+			data,
+		);
+		res
+			.then((response) => {
+				if (response.status === 200) {
+					alert(
+						'Your message has been submitted successfully!',
+					);
+				} else {
+					alert(
+						'Sorry, there was an error submitting your message. Please try again later.',
+					);
+				}
+			})
+			.catch((error) => {
+				console.error('Error submitting form:', error);
+				alert(
+					'Sorry, there was an error submitting your message. Please try again later.',
+				);
+			});
+	};
+
+	return (
 		<div className="min-h-screen bg-white">
 			<Navigation />
 
@@ -87,7 +138,10 @@ const Contact = () => {
 
 						{/* Right Column: Contact Form */}
 						<div className="bg-white rounded-2xl p-8 shadow-2xl">
-							<form className="space-y-6">
+							<form
+								onSubmit={handleSubmit}
+								className="space-y-6"
+							>
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 									<div>
 										<label
@@ -99,6 +153,7 @@ const Contact = () => {
 										<input
 											type="text"
 											id="name"
+											name="name"
 											className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 											placeholder="Your Name"
 										/>
@@ -113,6 +168,7 @@ const Contact = () => {
 										<input
 											type="email"
 											id="email"
+											name="email"
 											className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 											placeholder="Work Email"
 										/>
@@ -129,6 +185,7 @@ const Contact = () => {
 									<input
 										type="text"
 										id="company"
+										name='company'
 										className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 										placeholder="Company Name"
 									/>
@@ -144,6 +201,7 @@ const Contact = () => {
 									<textarea
 										id="message"
 										rows={5}
+										name="message"
 										className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 										placeholder="Your Message"
 									></textarea>
