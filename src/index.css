@@ -431,42 +431,9 @@ html {
   animation: draw-line 2s infinite alternate ease-in-out;
 }
 
-/* START: Infinite Scroll Logo Carousel Styles 
-  - This replaces the previous manual and universal carousel styles.
-  - It uses a pure CSS animation for a continuous, seamless loop.
-  - All user interaction (hover, click, touch) is disabled via `pointer-events: none`.
-*/
-.infinite-scroll-container {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    -webkit-mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
-    mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
-    pointer-events: none;
-}
+/* START: Hybrid Carousel Styles (Infinite Auto-Scroll & Manual Scroll) */
 
-.infinite-scroll-track {
-    display: flex;
-    width: calc(250px * var(--total-logos) * 2);
-    animation: infinite-scroll var(--animation-duration) linear infinite;
-    will-change: transform;
-}
-
-@keyframes infinite-scroll {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(calc(-250px * var(--total-logos)));
-    }
-}
-
-.infinite-scroll-slide {
-    flex: 0 0 250px;
-    padding: 1rem;
-    box-sizing: border-box;
-}
-
+/* Base styles for cards and logos (shared between desktop and mobile) */
 .carousel-card {
     background-color: white;
     border-radius: 12px;
@@ -496,19 +463,103 @@ html {
     object-fit: contain;
 }
 
+/* Common slide styling */
+.infinite-scroll-slide, .carousel-slide {
+    flex: 0 0 250px;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+/* Desktop: Pure CSS Infinite Animation */
+.infinite-scroll-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    -webkit-mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+    mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+    pointer-events: none;
+}
+
+.infinite-scroll-track {
+    display: flex;
+    width: calc(250px * var(--total-logos) * 2);
+    animation: infinite-scroll var(--animation-duration) linear infinite;
+    will-change: transform;
+}
+
+@keyframes infinite-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-250px * var(--total-logos))); }
+}
+
+/* Mobile: Manual Scroll Fallback */
+.manual-scroll-container {
+    width: 100%;
+    position: relative;
+}
+
+.manual-scroll-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.manual-scroll-track::-webkit-scrollbar {
+    display: none;
+}
+
+.manual-scroll-track .carousel-slide {
+    scroll-snap-align: center;
+}
+
+/* Popup message for mobile guidance */
+.carousel-popup {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    z-index: 10;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: popup-fade-in 0.5s ease-out;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    text-align: center;
+    max-width: 90%;
+}
+
+.carousel-popup button {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+.carousel-popup button:hover {
+    color: white;
+}
+
+@keyframes popup-fade-in {
+    from { opacity: 0; transform: translate(-50%, 10px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
-    .infinite-scroll-track {
-        width: calc(200px * var(--total-logos) * 2);
-        animation-name: infinite-scroll-mobile;
-    }
-
-    .infinite-scroll-slide {
+    .infinite-scroll-slide, .carousel-slide {
         flex-basis: 200px;
-    }
-
-    @keyframes infinite-scroll-mobile {
-        from { transform: translateX(0); }
-        to { transform: translateX(calc(-200px * var(--total-logos))); }
     }
 
     .carousel-card {
@@ -516,9 +567,10 @@ html {
     }
 }
 
+/* Accessibility: Stop animation if the user prefers reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .infinite-scroll-track {
     animation: none;
   }
 }
-/* END: Infinite Scroll Logo Carousel Styles */
+/* END: Hybrid Carousel Styles */
