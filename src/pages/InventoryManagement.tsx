@@ -10,16 +10,16 @@ const InventoryManagement = () => {
     const trackingNeeds = formData.getAll('tracking');
     
     const data = {
-      service_type: 'inventory_management',
-      business_name: formData.get('businessName'),
-      email: formData.get('email'),
-      phone: formData.get('phone'),
-      inventory_size: formData.get('inventorySize'),
-      turnover_rate: formData.get('turnoverRate'),
-      business_type: formData.get('businessType'),
-      tracking_needs: trackingNeeds,
-      submitted_at: new Date().toISOString()
-    };
+			service_type: 'inventory_management',
+			business_name: formData.get('businessName'),
+			email: formData.get('email'),
+			phone: formData.get('phone'),
+			inventory_size: formData.get('inventorySize'),
+			turnover_rate: formData.get('turnoverRate'),
+			business_type: formData.get('businessType'),
+			tracking_needs: trackingNeeds,
+			submitted_at: new Date().toISOString(),
+		}; 
     
     // TODO: Submit to Supabase
     console.log('Inventory Management Form Data:', data);

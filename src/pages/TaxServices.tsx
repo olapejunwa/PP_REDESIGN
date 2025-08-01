@@ -8,16 +8,16 @@ const TaxServices = () => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const data = {
-      service_type: 'tax_services',
-      business_name: formData.get('businessName'),
-      email: formData.get('email'),
-      phone: formData.get('phone'),
-      business_type: formData.get('businessType'),
-      annual_revenue: formData.get('annualRevenue'),
-      years_in_operation: formData.get('yearsInOperation'),
-      tax_complexity: formData.get('taxComplexity'),
-      submitted_at: new Date().toISOString()
-    };
+			service_type: 'tax_services',
+			business_name: formData.get('businessName'),
+			email: formData.get('email'),
+			phone: formData.get('phone'),
+			business_type: formData.get('businessType'),
+			annual_revenue: formData.get('annualRevenue'),
+			years_in_operation: formData.get('yearsInOperation'),
+			tax_complexity: formData.get('taxComplexity'),
+			submitted_at: new Date().toISOString(),
+		}; 
     
     // TODO: Submit to Supabase
     console.log('Tax Services Form Data:', data);
