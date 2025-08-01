@@ -217,8 +217,9 @@ const AboutUs = () => {
 
     const clients = [
         { src: "/images/CL1.png", alt: "Jabulani Express Logo" },
-        { src: "/images/CL 2.webp", alt: "Nutrition Kids Logo" },
-        { src: "/images/CL 3.webp", alt: "Unknown Logo 1" },
+        { src: "/images/CL 11.jpeg", alt: "Nutrition Kids Logo" },
+        { src: "/images/CL 12.jpeg", alt: "Nutrition Kids Logo" },
+        { src: "/images/CL 13.jpeg", alt: "Unknown Logo 1" },
         { src: "/images/CL 4.png", alt: "Aish Naturals Logo" },
         { src: "/images/CL 5.jpg", alt: "DaddyPlug.ng Logo" },
         { src: "/images/CL 6.jpg", alt: "Dharkag Empire Logo" },
