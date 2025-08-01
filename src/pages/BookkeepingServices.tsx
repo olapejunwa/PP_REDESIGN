@@ -2,6 +2,7 @@ import React from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { Send } from 'lucide-react';
+import axios from 'axios';
 
 const BookkeepingServices = () => {
 	const handleSubmit = (e: React.FormEvent) => {
@@ -25,8 +26,28 @@ const BookkeepingServices = () => {
 			submitted_at: new Date().toISOString(),
 		};
 
-		// TODO: Submit to Supabase
-		console.log('Bookkeeping Services Form Data:', data);
+		const res = axios.post(
+			'https://ploutospage-server.onrender.com/bookkeeping/submit',
+			data,
+		);
+		res
+			.then((response) => {
+				if (response.status === 200) {
+					alert(
+						'Your custom bookkeeping services quote has been submitted successfully!',
+					);
+				} else {
+					alert(
+						'Sorry, there was an error submitting your request. Please try again later.',
+					);
+				}
+			})
+			.catch((error) => {
+				console.error('Error submitting form:', error);
+				alert(
+					'Sorry, there was an error submitting your request. Please try again later.',
+				);
+			});
 	};
 
 	return (
