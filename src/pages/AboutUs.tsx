@@ -5,6 +5,23 @@ import Footer from '../components/Footer';
 import { Users, LifeBuoy, ShieldCheck, ThumbsUp } from 'lucide-react';
 
 /**
+ * @description Custom hook to detect if the user is on a mobile device based on window width.
+ * @returns {boolean} True if the window width is 768px or less.
+ */
+const useIsMobile = () => {
+    const [isMobile, setIsMobile] = React.useState(false);
+    React.useEffect(() => {
+        const checkDevice = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+        checkDevice();
+        window.addEventListener('resize', checkDevice);
+        return () => window.removeEventListener('resize', checkDevice);
+    }, []);
+    return isMobile;
+};
+
+/**
  * @description Custom hook to determine the orientation of an image from its source.
  * This is used to apply appropriate styling to fit landscape or portrait images
  * correctly within the portrait-oriented cards.
@@ -28,7 +45,6 @@ const useImageOrientation = (src: string): 'landscape' | 'portrait' | 'square' |
             }
         };
         img.onerror = () => {
-            // Handle image loading errors if necessary
             console.error(`Failed to load image: ${src}`);
         }
     }, [src]);
@@ -44,17 +60,15 @@ const useImageOrientation = (src: string): 'landscape' | 'portrait' | 'square' |
 const LogoCard = ({ src, alt }: { src: string; alt: string }) => {
     const orientation = useImageOrientation(src);
 
-    // This logic dynamically adjusts the styling of the image based on its aspect ratio
-    // to ensure it fits well within the portrait-oriented card.
     const imageClass = () => {
         switch (orientation) {
             case 'landscape':
-                return 'w-full h-auto'; // Landscape images are constrained by width
+                return 'w-full h-auto';
             case 'portrait':
-                return 'h-full w-auto'; // Portrait images are constrained by height
+                return 'h-full w-auto';
             case 'square':
             default:
-                return 'w-full h-full object-contain'; // Square and default images fit within the container
+                return 'w-full h-full object-contain';
         }
     };
 
@@ -73,16 +87,83 @@ const LogoCard = ({ src, alt }: { src: string; alt: string }) => {
 };
 
 /**
- * @description An infinite scroll carousel component that displays a list of logos.
- * It uses a CSS animation for continuous, smooth scrolling with no user interaction.
- * @param {{ logos: {src: string, alt: string}[]; duration?: number }} props - The list of logos and the animation duration.
+ * @description A hybrid carousel component. It displays a CSS-animated infinite scroll
+ * on desktop and a manually scrollable (touch/swipe) infinite carousel on mobile devices,
+ * complete with a helpful popup message.
+ * @param {{ logos: {src: string, alt: string}[]; duration?: number; popupText: string }} props
  */
-const LogoCarousel = ({ logos, duration = 40 }: { logos: {src: string, alt: string}[], duration?: number }) => {
-    // To create a seamless loop, we duplicate the logos. The CSS animation will
-    // scroll through the first set, and by the time it ends, the second set is
-    // in place, allowing the animation to reset without any visible jump.
-    const extendedLogos = [...logos, ...logos];
+const LogoCarousel = ({ logos, duration = 40, popupText }: { logos: {src: string, alt: string}[], duration?: number, popupText: string }) => {
+    const isMobile = useIsMobile();
+    const [showPopup, setShowPopup] = React.useState(false);
+    const scrollRef = React.useRef<HTMLDivElement>(null);
+    
+    // We use three sets of logos for the mobile manual scroll to create a seamless infinite loop.
+    // The user starts in the middle set. When they scroll near the edge, we silently jump them
+    // to the corresponding position in the middle set.
+    const extendedLogos = React.useMemo(() => [...logos, ...logos, ...logos], [logos]);
 
+    // On mobile, show a helpful popup after a short delay.
+    React.useEffect(() => {
+        if (isMobile) {
+            const timer = setTimeout(() => {
+                setShowPopup(true);
+            }, 3500);
+            return () => clearTimeout(timer);
+        }
+    }, [isMobile]);
+
+    // This effect implements the infinite scroll logic for manual scrolling on mobile.
+    React.useEffect(() => {
+        const track = scrollRef.current;
+        if (!isMobile || !track || logos.length === 0) return;
+
+        const logoSetWidth = track.scrollWidth / 3;
+        // Start the user in the middle set of logos.
+        track.scrollLeft = logoSetWidth;
+
+        const handleScroll = () => {
+            // If the user scrolls to the beginning of the first cloned set...
+            if (track.scrollLeft < 1) {
+                // ...jump them to the end of the middle set to continue scrolling left.
+                track.scrollLeft = logoSetWidth * 2 - track.clientWidth;
+            } 
+            // If the user scrolls to the end of the second cloned set...
+            else if (track.scrollLeft >= (logoSetWidth * 2)) {
+                // ...jump them back to the beginning of the middle set.
+                track.scrollLeft = logoSetWidth;
+            }
+        };
+
+        track.addEventListener('scroll', handleScroll, { passive: true });
+        return () => track.removeEventListener('scroll', handleScroll);
+
+    }, [isMobile, logos.length]);
+
+
+    // RENDER LOGIC:
+    // On mobile, render a manually scrollable carousel with a popup.
+    // On desktop, render the original CSS-only infinite animation.
+    if (isMobile) {
+        return (
+            <div className="manual-scroll-container">
+                {showPopup && (
+                    <div className="carousel-popup">
+                        <p>{popupText}</p>
+                        <button onClick={() => setShowPopup(false)} aria-label="Close message">&times;</button>
+                    </div>
+                )}
+                <div className="manual-scroll-track" ref={scrollRef}>
+                    {extendedLogos.map((logo, index) => (
+                        <div className="carousel-slide" key={index}>
+                            <LogoCard src={logo.src} alt={logo.alt} />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    // Desktop version with pure CSS animation
     return (
         <div className="infinite-scroll-container">
             <div
@@ -92,7 +173,7 @@ const LogoCarousel = ({ logos, duration = 40 }: { logos: {src: string, alt: stri
                     '--total-logos': logos.length
                 } as React.CSSProperties}
             >
-                {extendedLogos.map((logo, index) => (
+                {[...logos, ...logos].map((logo, index) => (
                     <div className="infinite-scroll-slide" key={index}>
                         <LogoCard src={logo.src} alt={logo.alt} />
                     </div>
@@ -136,9 +217,8 @@ const AboutUs = () => {
 
     const clients = [
         { src: "/images/CL1.png", alt: "Jabulani Express Logo" },
-        { src: "/images/CL 11.jpeg", alt: "Nutrition Kids Logo" },
-        { src: "/images/CL 12.jpeg", alt: "Unknown Logo 1" },
-        { src: "/images/CL 13.jpeg", alt: "Unknown Logo 1" },
+        { src: "/images/CL 2.webp", alt: "Nutrition Kids Logo" },
+        { src: "/images/CL 3.webp", alt: "Unknown Logo 1" },
         { src: "/images/CL 4.png", alt: "Aish Naturals Logo" },
         { src: "/images/CL 5.jpg", alt: "DaddyPlug.ng Logo" },
         { src: "/images/CL 6.jpg", alt: "Dharkag Empire Logo" },
@@ -234,7 +314,11 @@ const AboutUs = () => {
                             We are proud to have worked with a diverse range of businesses.
                         </p>
                     </div>
-                    <LogoCarousel logos={clients} duration={40} />
+                    <LogoCarousel 
+                        logos={clients} 
+                        duration={40} 
+                        popupText="If the carousel isn't scrolling for you swipe your finger to the right to see our distinguished clients"
+                    />
                 </div>
             </section>
 
@@ -249,7 +333,11 @@ const AboutUs = () => {
                             We are backed by a network of forward-thinking companies or organisations.
                         </p>
                     </div>
-                    <LogoCarousel logos={investors} duration={50} />
+                    <LogoCarousel 
+                        logos={investors} 
+                        duration={50} 
+                        popupText="If the carousel isn't scrolling for you swipe your finger to the right to see our distinguished supporters"
+                    />
                 </div>
             </section>
 
