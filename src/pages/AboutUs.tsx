@@ -330,7 +330,7 @@ const AboutUs = () => {
                             Who Supports Us
                         </h2>
                         <p className="text-sm md:text-xl text-gray-600">
-                            We are backed by a network of forward-thinking companies or organisations.
+                            We are backed by a network of forward-thinking organisations.
                         </p>
                     </div>
                     <LogoCarousel 
