@@ -2,193 +2,99 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { Users, LifeBuoy, ShieldCheck, ThumbsUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Users, LifeBuoy, ShieldCheck, ThumbsUp } from 'lucide-react';
 
-// Enhanced carousel component with manual scroll fallback
-const LogoCarousel = ({ logos, duration = 40, title = "Carousel" }) => {
-    const [currentIndex, setCurrentIndex] = React.useState(0);
-    const [isManualMode, setIsManualMode] = React.useState(false);
-    const [canScroll, setCanScroll] = React.useState(false);
-    const carouselRef = React.useRef(null);
-    const touchStartX = React.useRef(0);
-    const touchEndX = React.useRef(0);
+/**
+ * @description Custom hook to determine the orientation of an image from its source.
+ * This is used to apply appropriate styling to fit landscape or portrait images
+ * correctly within the portrait-oriented cards.
+ * @param {string} src - The source URL of the image.
+ * @returns {'landscape' | 'portrait' | 'square' | null} The detected orientation of the image.
+ */
+const useImageOrientation = (src: string): 'landscape' | 'portrait' | 'square' | null => {
+    const [orientation, setOrientation] = React.useState<'landscape' | 'portrait' | 'square' | null>(null);
 
-    // Detect if we're on mobile and if animation is working
     React.useEffect(() => {
-        const isMobile = window.innerWidth <= 768;
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        
-        // Enable manual mode on mobile devices or if animation fails
-        if (isMobile || isIOS) {
-            setIsManualMode(true);
-            setCanScroll(true);
-        }
-        
-        // Test if CSS animations are working
-        const testElement = document.createElement('div');
-        testElement.style.animation = 'test 1s linear';
-        document.body.appendChild(testElement);
-        
-        setTimeout(() => {
-            const computedStyle = window.getComputedStyle(testElement);
-            if (computedStyle.animationName === 'none') {
-                setIsManualMode(true);
-                setCanScroll(true);
-            }
-            document.body.removeChild(testElement);
-        }, 100);
-    }, []);
-
-    // Handle manual navigation
-    const goToNext = () => {
-        setCurrentIndex((prev) => (prev + 1) % logos.length);
-    };
-
-    const goToPrev = () => {
-        setCurrentIndex((prev) => (prev - 1 + logos.length) % logos.length);
-    };
-
-    // Handle touch events for swipe navigation
-    const handleTouchStart = (e) => {
-        touchStartX.current = e.touches[0].clientX;
-    };
-
-    const handleTouchMove = (e) => {
-        touchEndX.current = e.touches[0].clientX;
-    };
-
-    const handleTouchEnd = () => {
-        if (!canScroll) return;
-        
-        const difference = touchStartX.current - touchEndX.current;
-        const threshold = 50;
-
-        if (Math.abs(difference) > threshold) {
-            if (difference > 0) {
-                goToNext();
+        if (!src) return;
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+            if (img.width > img.height) {
+                setOrientation('landscape');
+            } else if (img.height > img.width) {
+                setOrientation('portrait');
             } else {
-                goToPrev();
+                setOrientation('square');
             }
+        };
+        img.onerror = () => {
+            // Handle image loading errors if necessary
+            console.error(`Failed to load image: ${src}`);
+        }
+    }, [src]);
+
+    return orientation;
+};
+
+/**
+ * @description A card component to display a single logo. It uses the useImageOrientation
+ * hook to dynamically adjust its styling for optimal display.
+ * @param {{ src: string; alt: string }} props - The image source and alt text for the logo.
+ */
+const LogoCard = ({ src, alt }: { src: string; alt: string }) => {
+    const orientation = useImageOrientation(src);
+
+    // This logic dynamically adjusts the styling of the image based on its aspect ratio
+    // to ensure it fits well within the portrait-oriented card.
+    const imageClass = () => {
+        switch (orientation) {
+            case 'landscape':
+                return 'w-full h-auto'; // Landscape images are constrained by width
+            case 'portrait':
+                return 'h-full w-auto'; // Portrait images are constrained by height
+            case 'square':
+            default:
+                return 'w-full h-full object-contain'; // Square and default images fit within the container
         }
     };
-
-    // Auto-advance in manual mode (slower than CSS animation)
-    React.useEffect(() => {
-        if (!isManualMode) return;
-        
-        const interval = setInterval(() => {
-            goToNext();
-        }, 4000); // 4 seconds per slide
-
-        return () => clearInterval(interval);
-    }, [isManualMode, currentIndex]);
-
-    if (isManualMode) {
-        // Manual scroll mode with navigation controls
-        return (
-            <div className="manual-carousel-container">
-                <div className="manual-carousel-wrapper">
-                    {/* Navigation arrows */}
-                    <button 
-                        onClick={goToPrev}
-                        className="carousel-nav-btn carousel-nav-prev"
-                        aria-label="Previous logos"
-                    >
-                        <ChevronLeft className="w-6 h-6" />
-                    </button>
-                    
-                    <button 
-                        onClick={goToNext}
-                        className="carousel-nav-btn carousel-nav-next"
-                        aria-label="Next logos"
-                    >
-                        <ChevronRight className="w-6 h-6" />
-                    </button>
-
-                    {/* Carousel content */}
-                    <div 
-                        className="manual-carousel-track"
-                        ref={carouselRef}
-                        onTouchStart={handleTouchStart}
-                        onTouchMove={handleTouchMove}
-                        onTouchEnd={handleTouchEnd}
-                        style={{
-                            transform: `translateX(-${currentIndex * (100 / logos.length)}%)`,
-                            width: `${logos.length * 100}%`,
-                            transition: 'transform 0.5s ease-in-out'
-                        }}
-                    >
-                        {logos.map((logo, index) => (
-                            <div className="manual-carousel-slide" style={{ width: `${100 / logos.length}%` }} key={index}>
-                                <div className="carousel-card">
-                                    <div className="carousel-card-content">
-                                        <img 
-                                            src={logo.src} 
-                                            alt={logo.alt} 
-                                            className="carousel-card-logo"
-                                            loading="lazy"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                
-                {/* Dots indicator */}
-                <div className="carousel-dots">
-                    {logos.map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setCurrentIndex(index)}
-                            className={`carousel-dot ${index === currentIndex ? 'active' : ''}`}
-                            aria-label={`Go to slide ${index + 1}`}
-                        />
-                    ))}
-                </div>
-                
-                {/* Instructions for mobile users */}
-                <p className="carousel-instructions">
-                    Swipe left/right or use arrows to navigate • Auto-advances every 4 seconds
-                </p>
-            </div>
-        );
-    }
-
-    // Fallback to CSS animation mode
-    const extendedLogos = [...logos, ...logos]; // Duplicate for seamless loop
-    const animationDuration = Math.max(20, logos.length * 3);
 
     return (
-        <div 
-            className="carousel-container"
-            style={{
-                '--total-logos': logos.length,
-                '--animation-duration': `${animationDuration}s`
-            }}
-        >
-            <div className="carousel-fallback-notice">
-                <p>If logos aren't moving, tap to enable manual navigation</p>
-                <button 
-                    onClick={() => setIsManualMode(true)}
-                    className="enable-manual-btn"
-                >
-                    Enable Manual Navigation
-                </button>
+        <div className="carousel-card">
+            <div className="carousel-card-content">
+                <img
+                    src={src}
+                    alt={alt}
+                    className={`carousel-card-logo ${imageClass()}`}
+                    loading="lazy"
+                />
             </div>
-            <div className="carousel-track">
+        </div>
+    );
+};
+
+/**
+ * @description An infinite scroll carousel component that displays a list of logos.
+ * It uses a CSS animation for continuous, smooth scrolling with no user interaction.
+ * @param {{ logos: {src: string, alt: string}[]; duration?: number }} props - The list of logos and the animation duration.
+ */
+const LogoCarousel = ({ logos, duration = 40 }: { logos: {src: string, alt: string}[], duration?: number }) => {
+    // To create a seamless loop, we duplicate the logos. The CSS animation will
+    // scroll through the first set, and by the time it ends, the second set is
+    // in place, allowing the animation to reset without any visible jump.
+    const extendedLogos = [...logos, ...logos];
+
+    return (
+        <div className="infinite-scroll-container">
+            <div
+                className="infinite-scroll-track"
+                style={{
+                    '--animation-duration': `${duration}s`,
+                    '--total-logos': logos.length
+                } as React.CSSProperties}
+            >
                 {extendedLogos.map((logo, index) => (
-                    <div className="carousel-slide" key={index}>
-                        <div className="carousel-card">
-                            <div className="carousel-card-content">
-                                <img 
-                                    src={logo.src} 
-                                    alt={logo.alt} 
-                                    className="carousel-card-logo"
-                                    loading="lazy"
-                                />
-                            </div>
-                        </div>
+                    <div className="infinite-scroll-slide" key={index}>
+                        <LogoCard src={logo.src} alt={logo.alt} />
                     </div>
                 ))}
             </div>
@@ -228,28 +134,25 @@ const AboutUs = () => {
         }
     ];
 
-    // Updated data for the trusted clients section
     const clients = [
-        { src: "/images/CL1.png", alt: "Client Logo 1" },
-        { src: "/images/CL 2.webp", alt: "Client Logo 2" },
-        { src: "/images/CL 3.webp", alt: "Client Logo 3" },
-        { src: "/images/CL 4.png", alt: "Client Logo 4" },
-        { src: "/images/CL 5.jpg", alt: "Client Logo 5" },
-        { src: "/images/CL 6.jpg", alt: "Client Logo 6" },
-        { src: "/images/CL 7.webp", alt: "Client Logo 7" },
-        { src: "/images/IN 7.jpeg", alt: "Client Logo 7" },
-        { src: "/images/IN 8.jpeg", alt: "Client Logo 8" },
+        { src: "/images/CL1.png", alt: "Jabulani Express Logo" },
+        { src: "/images/CL 2.webp", alt: "Nutrition Kids Logo" },
+        { src: "/images/CL 3.webp", alt: "Unknown Logo 1" },
+        { src: "/images/CL 4.png", alt: "Aish Naturals Logo" },
+        { src: "/images/CL 5.jpg", alt: "DaddyPlug.ng Logo" },
+        { src: "/images/CL 6.jpg", alt: "Dharkag Empire Logo" },
+        { src: "/images/CL 7.webp", alt: "My Food Angels Logo" },
+        { src: "/images/IN 7.jpeg", alt: "EssenceCare Logo" },
+        { src: "/images/IN 8.jpeg", alt: "EHCON Logo" },
     ];
 
-    // Data for the new "Who Supports Us" section
     const investors = [
-        { src: "/images/ge trust.jpg", alt: "Investor Logo 1" },
-        { src: "/images/LBS-Logo-1.png", alt: "Investor Logo 2" },
-        { src: "/images/IN 3.jpeg", alt: "Investor Logo 3" },
-        { src: "/images/IN 4.jpeg", alt: "Investor Logo 4" },
-        { src: "/images/IN 5.jpeg", alt: "Investor Logo 5" },
-        { src: "/images/IN 6.jpeg", alt: "Investor Logo 6" },
-       
+        { src: "/images/ge trust.jpg", alt: "Grooming Endowment Trust Logo" },
+        { src: "/images/LBS-Logo-1.png", alt: "Lagos Business School Logo" },
+        { src: "/images/IN 3.jpeg", alt: "The Tony Elumelu Foundation Logo" },
+        { src: "/images/IN 4.jpeg", alt: "54 Collective Logo" },
+        { src: "/images/IN 5.jpeg", alt: "H-R Startup Logo" },
+        { src: "/images/IN 6.jpeg", alt: "Senator Abiru Innovation Lab Logo" },
     ];
 
     const whyPloutos = [
@@ -330,7 +233,7 @@ const AboutUs = () => {
                             We are proud to have worked with a diverse range of businesses.
                         </p>
                     </div>
-                        <LogoCarousel logos={clients} duration={40} title="Our Trusted Clients" />
+                    <LogoCarousel logos={clients} duration={40} />
                 </div>
             </section>
 
@@ -345,7 +248,7 @@ const AboutUs = () => {
                             We are backed by a network of forward-thinking companies or organisations.
                         </p>
                     </div>
-                        <LogoCarousel logos={investors} duration={50} title="Who Supports Us" />
+                    <LogoCarousel logos={investors} duration={50} />
                 </div>
             </section>
 
