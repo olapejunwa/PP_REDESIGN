@@ -223,7 +223,7 @@ const AboutUs = () => {
             name: "Emmanuel Andy Eze",
             role: "Backend Engineer",
             image: "/images/Emmanuel.jpeg",
-            description: "An experienced engineer with a passion for creating unique digital experiences acrross all platforms: mobile, web—name it!."
+            description: "An experienced engineer with a passion for creating unique digital experiences across all platforms: mobile, web—name it!."
         }
     ];
 
