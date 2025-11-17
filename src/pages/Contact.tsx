@@ -74,7 +74,7 @@ const Contact = () => {
                 <div className="flex items-start space-x-4">
                   <MapPin className="w-6 h-6 text-gray-700 mt-1" />
                   <div className="flex flex-col space-y-2">
-                    <span className="text-lg text-gray-800 font-medium">Suite 5, Mojisola Mall, Ibeshe, Ikorodu</span>
+                    <span className="text-lg text-gray-800 font-medium">Suite 5 Mojisola Mall Beach Road Ibeshe Ikorodu Lagos</span>
                     <span className="text-lg text-gray-800 font-medium">15 Manhattan Mall, 4th Avenue Gwarinpa</span>
                   </div>
                 </div>
